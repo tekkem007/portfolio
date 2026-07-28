@@ -37,7 +37,7 @@ export function Home() {
 
       {/* --- The two disciplines, stated plainly ------------------------- */}
       <section className="section section--tight" aria-labelledby="disciplines-title">
-        <div className="shell">
+        <div className="shell shell--media">
           <h2 id="disciplines-title" className="visually-hidden">
             What I do
           </h2>
@@ -118,8 +118,11 @@ export function Home() {
       </section>
 
       {/* --- Capabilities ------------------------------------------------ */}
+      {/* A grid of short items rather than prose, so it takes the wider cap.
+          Tools, About and Contact deliberately stay at --page-max: they are
+          text-led, and widening them would cost readability for no gain. */}
       <section className="section" id="capabilities" aria-labelledby="capabilities-title">
-        <div className="shell">
+        <div className="shell shell--media">
           <div className="section-head">
             <p className="eyebrow">Capabilities</p>
             <h2 id="capabilities-title">What I actually do</h2>
