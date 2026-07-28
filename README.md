@@ -97,6 +97,55 @@ files and directories beginning with an underscore.
 
 ---
 
+## Layout and width system
+
+Widths are tokens in `src/styles/tokens.css`, not per-component values:
+
+| Token         | Governs                                          | Scales up? |
+| ------------- | ------------------------------------------------ | ---------- |
+| `--measure`   | Prose line length (68ch)                          | No — 68ch is 68ch |
+| `--page-max`  | Standard content column: text, timeline, cards    | Yes        |
+| `--media-max` | Images, galleries, flagship cards                 | Yes, further |
+| `--gutter`    | Page edge padding                                  | Yes        |
+| `--rail`      | Case-study metadata rail                           | Yes        |
+
+Steps at `100rem`, `130rem` and `150rem`. **Nothing below 1280px is affected** —
+that layout measured 1% dead margin and did not need changing. Media stops growing at
+`150rem` because past that the sources would upscale and text would sit too far from the artwork.
+
+Add `shell--media` to a section's `.shell` to let it follow `--media-max`. Add `section--railed`
+to give a section a sticky heading in the left margin on wide screens.
+
+### Case-study rail
+
+`CaseStudyRail` holds project facts plus a section index that follows reading position. The index
+is real anchor links against ids derived from the section headings — it works keyboard-only and
+with JavaScript off. The scroll-spy highlight uses `IntersectionObserver` and is decoration on top
+of working navigation, never the mechanism.
+
+### Study scenes
+
+`StudyScene` renders one of three demonstrations (`kit`, `material`, `lighting`) tied to the case
+study by slug in `src/components/StudyScene.tsx`. It imports `three` from the same chunk as the
+hero, so a case-study page downloads the library once. It loads only near the viewport, pauses
+off-screen, and is skipped entirely on mobile, touch, fewer than four cores, save-data,
+reduced-motion and no-WebGL — the caption above it is the accessible equivalent and always renders.
+
+> The `IntersectionObserver` loader has a timed fallback that measures position directly.
+> IO callbacks are delivered as part of the frame lifecycle, so a throttled or frozen frame loop
+> can leave them pending forever; without the fallback the panel would silently never load.
+
+### Diagrams
+
+`src/components/Diagrams.tsx` carries one rule, and it is not negotiable:
+
+> A diagram may only restate something Vishnu wrote in his own published breakdown. It must not
+> infer, elaborate, or fill gaps.
+
+This has already caught one error — the trim-sheet diagram originally drew leader lines from
+individual kit pieces to individual trim strips, a mapping the write-up never states. If you add a
+diagram, list the claims it makes and check each against the source text first.
+
 ## Editing content
 
 All copy lives in `src/content/`. Nothing is hard-coded in components.
