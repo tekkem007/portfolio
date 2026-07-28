@@ -264,11 +264,23 @@ ul {
 }
 
 /*
- * Narrow screens: the header wraps to two rows and the section links become a
+ * The role subtitle is the first thing to go: it is the widest, least load-
+ * bearing element in the header, and dropping it early keeps the single-row
+ * layout intact well below full desktop width.
+ */
+@media (max-width: 72rem) {
+  .wordmark span {
+    display: none;
+  }
+}
+
+/*
+ * Below the point where wordmark + four links + the CTA stop fitting on one
+ * line, the header wraps to two rows and the section links become a
  * horizontally scrollable strip. Hiding them entirely would leave a one-page
  * site with no way to jump between sections.
  */
-@media (max-width: 44rem) {
+@media (max-width: 60rem) {
   .site-header__inner {
     flex-wrap: wrap;
     row-gap: var(--sp-1);
@@ -285,6 +297,10 @@ ul {
     order: 3;
     justify-content: space-between;
     gap: var(--sp-4);
+    /* Without this the nav's automatic minimum size is its content width, so
+       the scrollable link strip pushes the whole header past the viewport
+       instead of scrolling within it. */
+    min-width: 0;
   }
 
   .site-nav__links {
@@ -293,6 +309,11 @@ ul {
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-block: var(--sp-1);
+    /* Flex items default to min-width:auto, which would let the strip's
+       content width push the header wider than the screen instead of
+       scrolling inside it. */
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .site-nav__links::-webkit-scrollbar {
