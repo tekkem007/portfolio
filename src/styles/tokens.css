@@ -61,16 +61,69 @@
   --sp-8: 4.5rem;
   --sp-9: 7rem;
 
-  /* --- Layout ----------------------------------------------------------- */
+  /* --- Layout -----------------------------------------------------------
+   *
+   * Four widths, not one. The old single --page-max capped everything at
+   * 78rem, which meant a 2560px display showed the site as a 1248px column
+   * with 650px of dead margin on each side — and, worse, showed the artwork
+   * smaller than the screen could take.
+   *
+   *   --measure     prose line length. Never scales: 68ch is 68ch.
+   *   --page-max    the standard content column (text, cards, timeline).
+   *   --media-max   images, galleries and flagship cards. Grows further.
+   *   --gutter      page edge padding.
+   *
+   * Only the last three scale up, and only past the point where the default
+   * genuinely looks stranded. The layout stays centred and symmetric.
+   */
   --measure: 68ch;
   --page-max: 78rem;
+  --media-max: 78rem;
   --gutter: clamp(1.15rem, 4vw, 3.5rem);
+
+  /* Width of the case-study metadata rail; 0 until it actually appears. */
+  --rail: 0rem;
 
   --radius: 3px;
   --radius-lg: 6px;
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur: 0.5s;
+}
+
+/*
+ * Ultrawide steps.
+ *
+ * 1280px and below is unchanged — that layout was measured at 1% dead margin
+ * and did not need fixing. The steps begin only where the emptiness was
+ * actually measured: 12% at 1440, 34% at 1920, 51% at 2560.
+ */
+
+/* ~1600px+ : large desktop */
+@media (min-width: 100rem) {
+  :root {
+    --page-max: 86rem;
+    --media-max: 100rem;
+    --rail: 15rem;
+  }
+}
+
+/* ~2080px+ : ultrawide */
+@media (min-width: 130rem) {
+  :root {
+    --page-max: 92rem;
+    --media-max: 118rem;
+    --rail: 17rem;
+  }
+}
+
+/* ~2400px+ : very wide. Media stops growing here — beyond this the source
+   images would be upscaled, and text would be too far from the artwork. */
+@media (min-width: 150rem) {
+  :root {
+    --page-max: 96rem;
+    --media-max: 132rem;
+  }
 }
 
 [data-domain='worlds'] {

@@ -198,5 +198,12 @@ export const MEDIA = [
   },
 ];
 
-/** Widths generated for each source image. */
-export const WIDTHS = [480, 960, 1600];
+/**
+ * Widths generated for each source image.
+ *
+ * The upper tiers exist for large and ultrawide displays, where flagship and
+ * case-study media is allowed to render well beyond the text column. The
+ * optimiser drops any width above a given source's natural width, so nothing is
+ * ever upscaled — a 1919px original simply stops at 1440.
+ */
+export const WIDTHS = [480, 960, 1440, 1920, 2560];

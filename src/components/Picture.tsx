@@ -1,5 +1,15 @@
 import { getMedia } from '../lib/media';
 
+/**
+ * `sizes` for media that follows --media-max (covers, galleries, flagship art).
+ *
+ * These mirror the ultrawide steps in tokens.css. Getting them wrong is not
+ * cosmetic: the browser picks a source from this hint before layout, so an
+ * under-stated width silently serves a small file that then gets upscaled.
+ */
+export const MEDIA_SIZES =
+  '(min-width: 150rem) 132rem, (min-width: 130rem) 118rem, (min-width: 100rem) 100rem, (min-width: 78rem) 78rem, 100vw';
+
 interface PictureProps {
   /** Key into the generated media manifest. */
   id: string;

@@ -89,6 +89,58 @@ ul {
   padding-inline: var(--gutter);
 }
 
+/*
+ * Media-led sections. Galleries, flagship cards and case-study imagery are the
+ * argument this site is making, so on large screens they are allowed past the
+ * text column — up to --media-max rather than --page-max.
+ *
+ * Below the first ultrawide step the two are identical, so nothing changes on
+ * laptops, tablets or phones.
+ */
+.shell--media {
+  max-width: var(--media-max);
+}
+
+/*
+ * Sticky section heading. At wide widths the heading holds the left edge while
+ * its content scrolls past, which gives the reclaimed margin a job and keeps
+ * the reader oriented in long sections.
+ */
+.section--railed > .shell {
+  display: grid;
+  gap: var(--sp-7);
+}
+
+@media (min-width: 100rem) {
+  .section--railed > .shell {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+
+  .section--railed .section-head {
+    position: sticky;
+    top: 7rem;
+    margin-bottom: 0;
+  }
+}
+
+.railed__body {
+  display: grid;
+  gap: var(--sp-6);
+}
+
+.railed__intro {
+  display: grid;
+  gap: var(--sp-4);
+  max-width: var(--measure);
+  color: var(--ink-dim);
+}
+
+.railed__body .timeline {
+  margin-top: var(--sp-4);
+}
+
 .section {
   padding-block: var(--sp-9);
   position: relative;
@@ -623,6 +675,21 @@ ul {
   }
 }
 
+/* Large desktop: supporting work goes three-up rather than growing to
+   uncomfortably wide two-column cards. Flagships still span the row. */
+@media (min-width: 100rem) {
+  .work-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-7);
+  }
+}
+
+@media (min-width: 150rem) {
+  .work-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .card {
   display: grid;
   gap: var(--sp-4);
@@ -830,6 +897,139 @@ ul {
   font-weight: 560;
 }
 
+/* Full-width cover between the case-study header and the body. */
+.cs-cover {
+  margin-block: var(--sp-7) 0;
+}
+
+.cs-cover .figure img {
+  width: 100%;
+}
+
+/* --- Case-study body: rail + prose ---------------------------------- */
+
+.cs-body > .shell {
+  display: grid;
+  gap: var(--sp-7);
+}
+
+@media (min-width: 100rem) {
+  .cs-body > .shell {
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: var(--sp-8);
+    align-items: start;
+  }
+}
+
+.cs-rail {
+  display: grid;
+  gap: var(--sp-6);
+  align-content: start;
+}
+
+@media (min-width: 100rem) {
+  .cs-rail {
+    position: sticky;
+    top: 7rem;
+    /* Never taller than the viewport, so a long index can scroll itself
+       rather than escaping off-screen. */
+    max-height: calc(100svh - 9rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-right: var(--sp-2);
+  }
+}
+
+.cs-rail__facts {
+  display: grid;
+  gap: var(--sp-4);
+  margin: 0;
+  padding-top: var(--sp-4);
+  border-top: 2px solid var(--accent);
+}
+
+/* Below the rail breakpoint the facts read better side by side than stacked. */
+@media (min-width: 40rem) and (max-width: 99.999rem) {
+  .cs-rail__facts {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--sp-5);
+  }
+}
+
+.cs-rail__facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--sp-2);
+}
+
+.cs-rail__facts dd {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+  line-height: 1.5;
+}
+
+.cs-rail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.cs-rail__index-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--sp-3);
+}
+
+.cs-rail__index ol {
+  display: grid;
+  gap: 0;
+  counter-reset: section;
+  list-style: none;
+}
+
+.cs-rail__index a {
+  display: block;
+  padding: var(--sp-2) 0 var(--sp-2) var(--sp-4);
+  border-left: 1px solid var(--line);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  text-decoration: none;
+  transition:
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+  min-height: 40px;
+}
+
+.cs-rail__index a:hover {
+  color: var(--ink);
+  border-left-color: var(--line-strong);
+}
+
+.cs-rail__index a[data-active='true'] {
+  color: var(--ink);
+  border-left-color: var(--accent);
+}
+
+/* The index is a convenience on wide screens only; below the rail breakpoint
+   the sections are close enough that a duplicate list is just noise. */
+@media (max-width: 99.999rem) {
+  .cs-rail__index {
+    display: none;
+  }
+}
+
+/* Anchor targets must clear the sticky header when jumped to. */
+.prose > section {
+  scroll-margin-top: 6rem;
+}
+
 .prose {
   display: grid;
   gap: var(--sp-8);
@@ -872,6 +1072,70 @@ ul {
 .gallery {
   display: grid;
   gap: var(--sp-6);
+}
+
+/* ============================================================ study ====== */
+
+.study__inner {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+}
+
+@media (min-width: 62rem) {
+  .study__inner {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    gap: var(--sp-8);
+  }
+}
+
+.study__text {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: center;
+  max-width: var(--measure);
+}
+
+.study__text h2 {
+  font-size: var(--step-2);
+}
+
+.study__text p {
+  color: var(--ink-dim);
+}
+
+.study__note {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+.study__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(70% 70% at 60% 30%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%),
+    var(--bg-sunk);
+  overflow: hidden;
+}
+
+.study__stage canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Nothing rendered: keep the panel out of the layout rather than showing an
+   empty framed box beside the caption. */
+.study__stage[data-active='false']:not(:has(canvas)) {
+  display: none;
+}
+
+@media (max-width: 60rem) {
+  .study__stage {
+    display: none;
+  }
 }
 
 /* ============================================================ experience = */

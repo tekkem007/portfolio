@@ -6,7 +6,7 @@
  * The app imports that manifest at build time so every <img> ships explicit
  * width/height and cannot cause layout shift.
  */
-import { mkdir, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -40,6 +40,13 @@ async function main() {
     const widths = WIDTHS.filter((w) => w <= naturalWidth);
     if (widths.length === 0) widths.push(naturalWidth);
 
+    // Always offer the source's own width as the top tier when the largest
+    // standard tier falls meaningfully short of it. Without this a 1919px
+    // original stops at 1440, and an ultrawide display that renders it at
+    // 2000px gets a visibly soft upscale of the 1440 file.
+    const largest = widths[widths.length - 1];
+    if (naturalWidth - largest > 64) widths.push(naturalWidth);
+
     /** @type {{ avif: string[], webp: string[] }} */
     const sources = { avif: [], webp: [] };
 
@@ -72,6 +79,27 @@ async function main() {
 
     process.stdout.write(`  optimised ${item.id} (${widths.join('/')})\n`);
   }
+
+  // Drop derivatives that are no longer referenced. Without this, changing
+  // WIDTHS leaves orphaned files behind that still get committed and deployed.
+  const expected = new Set();
+  for (const [id, entry] of Object.entries(manifest)) {
+    expected.add(`${id}.jpg`);
+    for (const set of [entry.avif, entry.webp]) {
+      for (const candidate of set.split(', ')) {
+        expected.add(candidate.split(' ')[0].replace('/media/', ''));
+      }
+    }
+  }
+
+  let removed = 0;
+  for (const file of await readdir(OUT_DIR)) {
+    if (!expected.has(file)) {
+      await rm(resolve(OUT_DIR, file));
+      removed += 1;
+    }
+  }
+  if (removed) console.log(`  removed ${removed} orphaned derivative(s)`);
 
   const manifestPath = resolve(ROOT, 'src', 'content', 'media.generated.json');
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');

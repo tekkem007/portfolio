@@ -20,10 +20,17 @@ export function ProjectCard({ project, flagship = false }: { project: Project; f
       data-reveal=""
     >
       <div className="card__media">
+        {/* Both cards sit in a --media-max shell, and the supporting grid goes
+            to three then four columns on large displays — so the per-card
+            share of the viewport shrinks as the screen grows. */}
         <Picture
           id={project.cover}
           priority={flagship}
-          sizes={flagship ? '(min-width: 62rem) 55vw, 100vw' : '(min-width: 46rem) 45vw, 100vw'}
+          sizes={
+            flagship
+              ? '(min-width: 62rem) 50vw, 100vw'
+              : '(min-width: 150rem) 22vw, (min-width: 100rem) 28vw, (min-width: 46rem) 45vw, 100vw'
+          }
         />
       </div>
 

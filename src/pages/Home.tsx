@@ -79,7 +79,7 @@ export function Home() {
 
       {/* --- Selected work ----------------------------------------------- */}
       <section className="section" id="work" aria-labelledby="work-title">
-        <div className="shell">
+        <div className="shell shell--media">
           <div className="section-head">
             <p className="eyebrow">Selected work</p>
             <h2 id="work-title">Three projects, in depth</h2>
@@ -99,7 +99,7 @@ export function Home() {
 
       {/* --- Supporting work --------------------------------------------- */}
       <section className="section" id="more-work" aria-labelledby="more-work-title">
-        <div className="shell">
+        <div className="shell shell--media">
           <div className="section-head">
             <p className="eyebrow">Props & studies</p>
             <h2 id="more-work-title">Assets, materials and studies</h2>
@@ -189,44 +189,51 @@ export function Home() {
       </section>
 
       {/* --- Experience -------------------------------------------------- */}
-      <section className="section" id="experience" aria-labelledby="experience-title">
+      <section className="section section--railed" id="experience" aria-labelledby="experience-title">
         <div className="shell">
+          {/* On wide screens this holds the left edge while the roles scroll
+              past it, so the reclaimed margin carries the section label. */}
           <div className="section-head">
             <p className="eyebrow">Experience</p>
             <h2 id="experience-title">{leadership.heading}</h2>
-            {leadership.body.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
           </div>
 
-          <dl className="factgrid" data-domain="worlds">
-            {leadership.facts.map((fact) => (
-              <div key={fact.label}>
-                <dt>{fact.label}</dt>
-                <dd>{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="railed__body">
+            <div className="railed__intro">
+              {leadership.body.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
 
-          <div className="timeline" style={{ marginTop: 'var(--sp-8)' }}>
-            {roles.map((role) => (
-              <div className="timeline__row" key={`${role.title}-${role.period}`} data-reveal="">
-                <div className="timeline__when">
-                  {role.current && <span className="badge-now">Current</span>}
-                  <span>{role.period}</span>
-                  <span>{role.location}</span>
+            <dl className="factgrid" data-domain="worlds">
+              {leadership.facts.map((fact) => (
+                <div key={fact.label}>
+                  <dt>{fact.label}</dt>
+                  <dd>{fact.value}</dd>
                 </div>
-                <div className="timeline__role">
-                  <h3>{role.title}</h3>
-                  <p className="timeline__org">{role.organisation}</p>
-                  <ul className="timeline__points">
-                    {role.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
+              ))}
+            </dl>
+
+            <div className="timeline">
+              {roles.map((role) => (
+                <div className="timeline__row" key={`${role.title}-${role.period}`} data-reveal="">
+                  <div className="timeline__when">
+                    {role.current && <span className="badge-now">Current</span>}
+                    <span>{role.period}</span>
+                    <span>{role.location}</span>
+                  </div>
+                  <div className="timeline__role">
+                    <h3>{role.title}</h3>
+                    <p className="timeline__org">{role.organisation}</p>
+                    <ul className="timeline__points">
+                      {role.points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -1,4 +1,6 @@
-import { Picture } from '../components/Picture';
+import { Picture, MEDIA_SIZES } from '../components/Picture';
+import { CaseStudyRail, slugifyHeading } from '../components/CaseStudyRail';
+import { StudyScene } from '../components/StudyScene';
 import { Link } from '../lib/router';
 import { getProject, flagshipProjects } from '../content/projects';
 import type { Project } from '../content/types';
@@ -39,25 +41,6 @@ export function CaseStudy({ slug }: { slug: string }) {
           <h1>{project.title}</h1>
           <p className="cs-hero__standfirst">{caseStudy.standfirst}</p>
 
-          <dl className="factgrid">
-            <div>
-              <dt>Year</dt>
-              <dd>{project.year}</dd>
-            </div>
-            <div>
-              <dt>Role</dt>
-              <dd>{caseStudy.role}</dd>
-            </div>
-            <div>
-              <dt>Software</dt>
-              <dd>{project.software.join(', ')}</dd>
-            </div>
-            <div>
-              <dt>Focus</dt>
-              <dd>{project.tags.join(', ')}</dd>
-            </div>
-          </dl>
-
           {/* Ownership is stated explicitly on every case study — a reviewer
               should never have to guess what was mine and what was a team's. */}
           <p className="ownership-note">
@@ -66,15 +49,22 @@ export function CaseStudy({ slug }: { slug: string }) {
         </div>
       </section>
 
-      <section className="section" data-domain={project.domain}>
+      {/* The cover runs to media width: on a large display this is the first
+          thing worth looking at, and it should not be letterboxed by the text
+          column. */}
+      <div className="shell shell--media cs-cover">
+        <figure className="figure">
+          <Picture id={project.cover} priority sizes={MEDIA_SIZES} />
+        </figure>
+      </div>
+
+      <section className="section cs-body" data-domain={project.domain}>
         <div className="shell">
-          <figure className="figure" style={{ marginBottom: 'var(--sp-8)' }}>
-            <Picture id={project.cover} priority sizes="(min-width: 78rem) 72rem, 100vw" />
-          </figure>
+          <CaseStudyRail project={project} headings={caseStudy.sections.map((s) => s.heading)} />
 
           <div className="prose">
             {caseStudy.sections.map((section) => (
-              <section key={section.heading} data-reveal="">
+              <section key={section.heading} id={slugifyHeading(section.heading)} data-reveal="">
                 <h2>{section.heading}</h2>
                 {section.body.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
@@ -85,8 +75,10 @@ export function CaseStudy({ slug }: { slug: string }) {
         </div>
       </section>
 
+      <StudyScene project={project} />
+
       <section className="section" aria-labelledby="gallery-title" data-domain={project.domain}>
-        <div className="shell">
+        <div className="shell shell--media">
           <div className="section-head">
             <p className="eyebrow">Gallery</p>
             <h2 id="gallery-title">The work</h2>
@@ -95,7 +87,7 @@ export function CaseStudy({ slug }: { slug: string }) {
           <div className="gallery">
             {caseStudy.gallery.map((item) => (
               <figure className="figure" key={item.id} data-reveal="">
-                <Picture id={item.id} sizes="(min-width: 78rem) 72rem, 100vw" />
+                <Picture id={item.id} sizes={MEDIA_SIZES} />
                 {item.caption && <figcaption>{item.caption}</figcaption>}
               </figure>
             ))}
