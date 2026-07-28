@@ -1,0 +1,58 @@
+/**
+ * Downloads the source images listed in media-manifest.mjs into media-src/.
+ *
+ * Run via `npm run media`. Downloads are skipped when the file already exists,
+ * so re-running is cheap. media-src/ is gitignored — only the optimised
+ * derivatives in public/media/ are committed.
+ */
+import { mkdir, writeFile, access } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { MEDIA } from './media-manifest.mjs';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const SRC_DIR = resolve(ROOT, 'media-src');
+
+const UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
+
+async function exists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function main() {
+  await mkdir(SRC_DIR, { recursive: true });
+
+  let downloaded = 0;
+  let skipped = 0;
+
+  for (const item of MEDIA) {
+    const ext = new URL(item.src).pathname.split('.').pop() ?? 'jpg';
+    const dest = resolve(SRC_DIR, `${item.id}.${ext}`);
+
+    if (await exists(dest)) {
+      skipped += 1;
+      continue;
+    }
+
+    const res = await fetch(item.src, { headers: { 'user-agent': UA } });
+    if (!res.ok) {
+      throw new Error(`Failed to download ${item.id}: HTTP ${res.status} ${item.src}`);
+    }
+    await writeFile(dest, Buffer.from(await res.arrayBuffer()));
+    downloaded += 1;
+    process.stdout.write(`  downloaded ${item.id}\n`);
+  }
+
+  console.log(`fetch-media: ${downloaded} downloaded, ${skipped} already present.`);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

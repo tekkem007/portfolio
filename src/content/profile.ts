@@ -1,0 +1,60 @@
+/**
+ * Identity, contact and site metadata.
+ *
+ * Source: résumé (July 2026) and the public ArtStation profile.
+ * The phone number on the résumé is deliberately NOT published here.
+ */
+
+export const SITE_URL = 'https://tekkem007.github.io';
+
+export const profile = {
+  name: 'Vishnu Vardhan Tekkem',
+  role: '3D Team Lead & Environment Artist',
+  location: 'Pune, Maharashtra, India',
+
+  /** Hero statement. Derived from the résumé summary, rewritten for the web. */
+  headline: 'I build worlds and the systems that hold them together.',
+
+  /** Two-sentence positioning under the hero. */
+  standfirst:
+    'Real-time environment art for Unreal Engine 5 — modelling, PBR texturing, lighting and optimisation — plus the production workflows and AI-assisted prototyping that keep a 3D team shipping.',
+
+  /** Longer About copy. Every sentence traces to the résumé or ArtStation. */
+  about: [
+    'I lead 3D environment production at Analyzer Tensor Technologies in Pune, where I moved with my department when it spun out of Analyzer CAE Solutions. Day to day that means owning scene lighting and optimisation, reviewing asset quality across the team, and keeping the workflow and output consistent as the project scales.',
+    'My hands-on work is stylised and low-poly environment art: modelling in Blender, PBR texturing in Substance 3D Painter, then assembly and lighting in Unreal Engine 5 with Lumen and baked workflows. The parts I enjoy most are the constraints — trim sheets, virtual textures, channel-packed masks and draw-call reduction — because that is where art direction and real-time budgets actually meet.',
+    'Alongside that I use AI tools to prototype interactive websites and digital experiences, work through UI/UX and visual directions, and build small reusable tools that take repetitive steps out of the art pipeline. I treat that as applied creative technology and execution planning rather than engineering: it is how I get a concept in front of people quickly.',
+    'Before Pune I made models and textures for gaming, VR and architectural visualisation at Aswaforce, worked freelance on product visualisation, and trained teachers on classroom technology at Tata ClassEdge. I trained in Game Art and Design Integration at MAAC Kolkata after a Bachelor of Computer Applications.',
+  ],
+
+  /** Approved public contact routes. Phone excluded by explicit instruction. */
+  email: 'tvishnuvardhan.503@gmail.com',
+
+  links: {
+    artstation: 'https://www.artstation.com/voyagervishnu',
+    linkedin: 'https://www.linkedin.com/in/vishnutekkem',
+    github: 'https://github.com/tekkem007',
+  },
+
+  /** Shown in the contact section as the current call to action. */
+  availability: 'Open to 3D environment art, technical art and real-time production roles.',
+
+  seo: {
+    title: 'Vishnu Vardhan Tekkem — 3D Team Lead & Environment Artist',
+    description:
+      'Portfolio of Vishnu Vardhan Tekkem, a 3D Team Lead and Environment Artist in Pune working in Unreal Engine 5, Blender and Substance 3D Painter — modular environments, Lumen lighting and real-time optimisation.',
+  },
+} as const;
+
+export const education = [
+  {
+    qualification: 'Diploma in Game Art and Design Integration',
+    institution: 'MAAC, Girish Park, Kolkata',
+    year: '2018',
+  },
+  {
+    qualification: 'Bachelor of Computer Applications',
+    institution: 'Midnapore College, Vidyasagar University',
+    year: '2015',
+  },
+] as const;
