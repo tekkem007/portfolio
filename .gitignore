@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.eslintcache
+node_modules/.tmp
+
+# Downloaded originals. Only the optimised derivatives in public/media are
+# committed; re-create these any time with `npm run media`.
+media-src
