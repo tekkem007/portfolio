@@ -20,6 +20,13 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = resolve(ROOT, 'dist');
 const PORT = Number(process.env.PORT ?? 4173);
 
+/**
+ * The site deploys to a project-site subpath, so dist/ is mounted under that
+ * same prefix here. Anything outside it 404s exactly as it would on Pages,
+ * which is what catches a stray root-absolute URL before it ships.
+ */
+const BASE = (process.env.BASE_PATH ?? '/portfolio').replace(/\/$/, '');
+
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -46,7 +53,22 @@ async function statOrNull(path) {
 
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? '/', `http://localhost:${PORT}`);
-  const pathname = decodeURIComponent(url.pathname);
+  const rawPath = decodeURIComponent(url.pathname);
+
+  // Nudge a bare root hit to the deployed prefix, mirroring how the site is
+  // only reachable under /<repo>/ on Pages.
+  if (BASE && (rawPath === '/' || rawPath === '')) {
+    res.writeHead(302, { location: `${BASE}/` }).end();
+    return;
+  }
+
+  // Everything outside the base prefix does not exist on a project site.
+  if (BASE && !rawPath.startsWith(`${BASE}/`) && rawPath !== BASE) {
+    res.writeHead(404, { 'content-type': TYPES['.html'] }).end('Not found (outside base path)');
+    return;
+  }
+
+  const pathname = BASE ? rawPath.slice(BASE.length) || '/' : rawPath;
 
   // Block traversal outside dist/.
   const target = resolve(DIST, `.${normalize(pathname)}`);
@@ -58,8 +80,9 @@ const server = createServer(async (req, res) => {
   const info = await statOrNull(target);
 
   if (info?.isDirectory()) {
-    if (!pathname.endsWith('/')) {
-      res.writeHead(301, { location: `${pathname}/` }).end();
+    if (!rawPath.endsWith('/')) {
+      // Redirect using the request path, so the base prefix survives.
+      res.writeHead(301, { location: `${rawPath}/` }).end();
       return;
     }
     const index = join(target, 'index.html');
@@ -82,5 +105,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Serving dist/ in GitHub Pages mode → http://localhost:${PORT}/`);
+  console.log(`Serving dist/ in GitHub Pages mode → http://localhost:${PORT}${BASE}/`);
 });

@@ -5,7 +5,12 @@
  * The phone number on the résumé is deliberately NOT published here.
  */
 
-export const SITE_URL = 'https://tekkem007.github.io';
+/**
+ * Absolute origin *including* the project-site subpath. Used for canonical
+ * URLs, Open Graph tags, JSON-LD and the sitemap. Must stay in sync with
+ * `base` in vite.config.ts.
+ */
+export const SITE_URL = 'https://tekkem007.github.io/portfolio';
 
 export const profile = {
   name: 'Vishnu Vardhan Tekkem',

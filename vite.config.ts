@@ -2,15 +2,17 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 /**
- * Deployed as a GitHub Pages *user site* (tekkem007.github.io), so the site is
- * served from the domain root and needs no base prefix.
+ * Deployed as a GitHub Pages *project site* at
+ * https://tekkem007.github.io/portfolio/, so everything is served from the
+ * /portfolio/ prefix rather than the domain root.
  *
- * If this is ever moved to a project site (tekkem007.github.io/<repo>/), change
- * `base` to '/<repo>/' — every asset URL and internal link is derived from
- * import.meta.env.BASE_URL, so that single change is sufficient.
+ * `base` is the single source of truth for that prefix: every asset URL and
+ * internal link is derived from import.meta.env.BASE_URL. If the repository is
+ * ever renamed, change this value, `SITE_URL` in src/content/profile.ts, the
+ * paths in public/site.webmanifest, and the Sitemap line in public/robots.txt.
  */
 export default defineConfig({
-  base: '/',
+  base: '/portfolio/',
   plugins: [react()],
   build: {
     target: 'es2020',

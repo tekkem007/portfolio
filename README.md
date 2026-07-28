@@ -2,10 +2,14 @@
 
 Portfolio of **Vishnu Vardhan Tekkem** — 3D Team Lead and Environment Artist, Pune, India.
 
-**Live site:** https://tekkem007.github.io/
+**Live site:** https://tekkem007.github.io/portfolio/
 
 A static site: no backend, no database, no server-side rendering at request time. Every route is
 prerendered to a real `index.html` at build time and served directly by GitHub Pages.
+
+Deployed as a GitHub Pages **project site**, so everything is served under the `/portfolio/`
+prefix. Four files carry that prefix and must stay in sync if the repository is ever renamed —
+see [Changing the deployment path](#changing-the-deployment-path).
 
 ---
 
@@ -47,9 +51,14 @@ npm run build
 npm run serve:dist
 ```
 
-`serve:dist` deliberately imitates GitHub Pages rather than a friendly dev server — directory
-URLs resolve to `index.html`, a missing trailing slash 301-redirects, and anything unmatched
-returns a real 404 with `404.html`. If a route works there, it works on Pages.
+Then open http://localhost:4173/portfolio/ (a bare `/` redirects there).
+
+`serve:dist` deliberately imitates GitHub Pages rather than a friendly dev server — it mounts
+`dist/` under the same `/portfolio/` prefix, directory URLs resolve to `index.html`, a missing
+trailing slash 301-redirects, and anything unmatched returns a real 404 with `404.html`.
+
+Serving under the prefix is the point: any URL that accidentally hard-codes a root-absolute path
+404s here, before it ships. If a route works here, it works on Pages.
 
 ### Scripts
 
@@ -139,24 +148,38 @@ type checks, builds, and uploads `dist/` as a Pages artifact.
 
 ### One-time repository setup
 
-1. Push this repository to `https://github.com/tekkem007/tekkem007.github.io`.
-2. In the repository: **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+1. The repository must be **public**. GitHub Pages does not publish from a private repository on
+   the free plan.
+2. Push this repository to `https://github.com/tekkem007/portfolio`.
+3. In the repository: **Settings → Pages → Build and deployment → Source → GitHub Actions**.
    (Not "Deploy from a branch" — the workflow publishes the artifact directly.)
-3. Push to `main`, or run the workflow manually from the **Actions** tab.
+4. Push to `main`, or run the workflow manually from the **Actions** tab.
 
 No secrets or tokens are required. The workflow uses the GitHub-provided token with the minimum
 permissions it needs.
 
-### Moving to a project site
+### Changing the deployment path
 
-If this is ever served from `https://tekkem007.github.io/<repo>/` instead of the domain root:
+The `/portfolio/` prefix comes from the repository name. If the repository is renamed, or moved to
+a user site, update these four places together:
 
-1. Set `base: '/<repo>/'` in `vite.config.ts`.
-2. Set `SITE_URL` in `src/content/profile.ts` to the full URL including the subpath.
-3. Update the `Sitemap:` line in `public/robots.txt`.
+| File                         | Change                                                       |
+| ---------------------------- | ------------------------------------------------------------ |
+| `vite.config.ts`             | `base: '/<repo>/'` (or `'/'` for a user site)                 |
+| `src/content/profile.ts`     | `SITE_URL`, including the subpath                             |
+| `public/site.webmanifest`    | `start_url`, `scope`, and the icon `src`                      |
+| `public/robots.txt`          | The `Sitemap:` line                                            |
 
-Every asset URL and internal link is derived from `import.meta.env.BASE_URL`, so nothing else
-needs touching.
+Optionally set `BASE_PATH` in `scripts/serve-dist.mjs` (or the env var) to match, so local
+verification keeps mirroring production.
+
+Everything else — every asset URL, every internal link, every canonical and Open Graph tag — is
+derived from `import.meta.env.BASE_URL` and `SITE_URL`, so nothing else needs touching.
+
+> **Project-site caveat:** crawlers only read `robots.txt` from the domain root
+> (`tekkem007.github.io/robots.txt`), which belongs to the user site, not this repository. The
+> `robots.txt` shipped here is therefore inert — it is kept for correctness if the site ever moves
+> to the root. Discovery relies on the canonical tags and `sitemap.xml`, which are correct.
 
 ---
 

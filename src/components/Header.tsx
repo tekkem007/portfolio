@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useRouter } from '../lib/router';
+import { Link, useRouter, href } from '../lib/router';
 import { profile } from '../content/profile';
 
 const NAV = [
@@ -35,12 +35,13 @@ export function Header() {
               <li key={item.hash}>
                 {/* On a case-study page these must jump back to the home page
                     first, otherwise the anchor resolves against a page that has
-                    no such section. */}
-                <a href={onHome ? item.hash : `/${item.hash}`}>{item.label}</a>
+                    no such section. The home path goes through href() so it
+                    keeps the deployment's base prefix. */}
+                <a href={onHome ? item.hash : `${href('/')}${item.hash}`}>{item.label}</a>
               </li>
             ))}
           </ul>
-          <a className="btn" href={onHome ? '#contact' : '/#contact'}>
+          <a className="btn" href={onHome ? '#contact' : `${href('/')}#contact`}>
             Get in touch
           </a>
         </nav>
