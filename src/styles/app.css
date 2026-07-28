@@ -378,6 +378,23 @@ ul {
   transform: translateX(3px);
 }
 
+/* A download cue moves down, not sideways. */
+.btn:hover .btn__arrow--down {
+  transform: translateY(2px);
+}
+
+/* Secondary detail inside a button — file type, size, page count. */
+.btn__meta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  padding-left: var(--sp-1);
+  border-left: 1px solid var(--line);
+  margin-left: var(--sp-1);
+  padding-inline-start: var(--sp-3);
+}
+
 /* ============================================================ hero ======= */
 
 .hero {

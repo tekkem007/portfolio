@@ -1,3 +1,4 @@
+import { href } from '../lib/router';
 import { HeroScene } from '../components/HeroScene';
 import { ProjectCard } from '../components/ProjectCard';
 import { profile, education } from '../content/profile';
@@ -283,7 +284,18 @@ export function Home() {
           </a>
 
           <div className="contact__links">
-            <a className="btn btn--primary" href={profile.links.artstation} target="_blank" rel="noopener noreferrer">
+            <a
+              className="btn btn--primary"
+              href={href(profile.resume.path)}
+              download={profile.resume.filename}
+            >
+              {profile.resume.label}
+              <span className="btn__meta">{profile.resume.meta}</span>
+              <span className="btn__arrow btn__arrow--down" aria-hidden="true">
+                ↓
+              </span>
+            </a>
+            <a className="btn" href={profile.links.artstation} target="_blank" rel="noopener noreferrer">
               ArtStation <span className="btn__arrow">↗</span>
             </a>
             <a className="btn" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">

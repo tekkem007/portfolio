@@ -132,11 +132,23 @@ about 5 MB for 25 images across three widths and three formats.
 
 ### Updating the résumé or links
 
-Edit `profile.ts`. The email, social links, JSON-LD structured data and footer all read from it.
+Edit `profile.ts`. The email, social links, résumé metadata, JSON-LD structured data and footer all
+read from it.
 
-> **Note:** no résumé PDF is published in this repository. The current résumé contains a personal
-> phone number, which was deliberately excluded from the public site. To offer a download, export a
-> version with the phone number removed, put it in `public/`, and add a link in the contact section.
+The published résumé at `public/Vishnu-Vardhan-Tekkem-Resume.pdf` is **generated, not copied**:
+
+```bash
+python scripts/build-resume.py
+```
+
+The source résumé carries a personal phone number, and this site is public, so the PDF is rebuilt
+from the text in `scripts/build-resume.py` with that line omitted. This matters: redacting a PDF by
+drawing a box over text leaves the original string sitting in the content stream, fully
+recoverable. Regenerating guarantees the number is simply not in the file.
+
+To change the résumé, edit the content in `scripts/build-resume.py` and re-run it. Requires
+`reportlab` (`pip install reportlab`). **Do not** drop the original résumé into `public/` — that
+republishes the phone number.
 
 ---
 
