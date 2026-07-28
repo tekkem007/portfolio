@@ -1,0 +1,99 @@
+/*
+ * Design tokens.
+ *
+ * One system, two modes. `[data-domain="worlds"]` is the cinematic,
+ * environment-led half; `[data-domain="systems"]` is the structured,
+ * product-led half. They share every neutral, spacing step and type ramp —
+ * only the accent, the surface treatment and the grain change.
+ *
+ * The two accents are not arbitrary: they are the two lights Vishnu describes
+ * in his own breakdowns — warm work lights against cool emissive.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- Neutrals --------------------------------------------------------- */
+  --bg: #0a0c0f;
+  --bg-sunk: #06070a;
+  --bg-raise: #11151b;
+  --bg-raise-2: #171c23;
+
+  --line: rgb(255 255 255 / 9%);
+  --line-strong: rgb(255 255 255 / 16%);
+
+  --ink: #eef1f4;
+  --ink-dim: #a7b1bd;
+  --ink-faint: #78838f;
+
+  /* --- Accents ---------------------------------------------------------- */
+  --worlds: #f2a24b;
+  --worlds-soft: rgb(242 162 75 / 14%);
+  --systems: #63cfdd;
+  --systems-soft: rgb(99 207 221 / 14%);
+
+  /* Resolved per section by [data-domain]; defaults to the worlds identity. */
+  --accent: var(--worlds);
+  --accent-soft: var(--worlds-soft);
+
+  --focus: #9fd0ff;
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+  --step--1: clamp(0.79rem, 0.77rem + 0.1vw, 0.85rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1.05rem);
+  --step-1: clamp(1.14rem, 1.08rem + 0.3vw, 1.35rem);
+  --step-2: clamp(1.4rem, 1.28rem + 0.6vw, 1.85rem);
+  --step-3: clamp(1.75rem, 1.5rem + 1.2vw, 2.7rem);
+  --step-4: clamp(2.2rem, 1.7rem + 2.4vw, 4rem);
+  --step-5: clamp(2.7rem, 1.8rem + 4.4vw, 6rem);
+
+  /* --- Space ------------------------------------------------------------ */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4.5rem;
+  --sp-9: 7rem;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --measure: 68ch;
+  --page-max: 78rem;
+  --gutter: clamp(1.15rem, 4vw, 3.5rem);
+
+  --radius: 3px;
+  --radius-lg: 6px;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur: 0.5s;
+}
+
+[data-domain='worlds'] {
+  --accent: var(--worlds);
+  --accent-soft: var(--worlds-soft);
+}
+
+[data-domain='systems'] {
+  --accent: var(--systems);
+  --accent-soft: var(--systems-soft);
+}
+
+/*
+ * Reduced motion is honoured globally: every transition and animation is
+ * collapsed rather than merely shortened, and the WebGL hero never starts.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

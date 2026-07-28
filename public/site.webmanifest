@@ -1,0 +1,17 @@
+{
+  "name": "Vishnu Vardhan Tekkem — 3D Team Lead & Environment Artist",
+  "short_name": "V. V. Tekkem",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0c0f",
+  "theme_color": "#0a0c0f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
