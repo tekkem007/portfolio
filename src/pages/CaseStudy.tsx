@@ -1,5 +1,6 @@
 import { Picture, MEDIA_SIZES } from '../components/Picture';
 import { CaseStudyRail, slugifyHeading } from '../components/CaseStudyRail';
+import { Diagram } from '../components/Diagrams';
 import { StudyScene } from '../components/StudyScene';
 import { Link } from '../lib/router';
 import { getProject, flagshipProjects } from '../content/projects';
@@ -62,15 +63,19 @@ export function CaseStudy({ slug }: { slug: string }) {
         <div className="shell">
           <CaseStudyRail project={project} headings={caseStudy.sections.map((s) => s.heading)} />
 
-          <div className="prose">
-            {caseStudy.sections.map((section) => (
-              <section key={section.heading} id={slugifyHeading(section.heading)} data-reveal="">
-                <h2>{section.heading}</h2>
-                {section.body.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </section>
-            ))}
+          <div className="cs-content">
+            <div className="prose">
+              {caseStudy.sections.map((section) => (
+                <section key={section.heading} id={slugifyHeading(section.heading)} data-reveal="">
+                  <h2>{section.heading}</h2>
+                  {section.body.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </section>
+              ))}
+            </div>
+
+            <Diagram slug={project.slug} />
           </div>
         </div>
       </section>

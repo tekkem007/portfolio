@@ -1025,6 +1025,82 @@ ul {
   }
 }
 
+.cs-content {
+  display: grid;
+  gap: var(--sp-8);
+  min-width: 0;
+}
+
+/* ============================================================ diagrams == */
+
+.diagram {
+  margin: 0;
+  display: grid;
+  gap: var(--sp-5);
+  padding-top: var(--sp-7);
+  border-top: 1px solid var(--line);
+}
+
+.diagram__caption {
+  display: grid;
+  gap: var(--sp-3);
+  max-width: var(--measure);
+}
+
+.diagram__caption h2 {
+  font-size: var(--step-2);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  font-weight: 560;
+}
+
+.diagram__caption p:last-child {
+  color: var(--ink-dim);
+}
+
+.diagram__stage {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(var(--sp-4), 2.5vw, var(--sp-6));
+  /* Diagrams carry small type; below this the SVG would be unreadable, so it
+     scrolls horizontally inside its own frame rather than shrinking further. */
+  overflow-x: auto;
+}
+
+.diagram__stage svg {
+  display: block;
+  width: 100%;
+  min-width: 34rem;
+  height: auto;
+}
+
+.diagram__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.diagram__body {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  fill: var(--ink-dim);
+}
+
+.diagram__strong {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+
+.diagram__box {
+  fill: none;
+  stroke: var(--line-strong);
+}
+
 /* Anchor targets must clear the sticky header when jumped to. */
 .prose > section {
   scroll-margin-top: 6rem;
