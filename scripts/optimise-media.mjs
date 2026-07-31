@@ -10,7 +10,7 @@ import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
-import { MEDIA, WIDTHS } from './media-manifest.mjs';
+import { MEDIA, VIDEOS, WIDTHS } from './media-manifest.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC_DIR = resolve(ROOT, 'media-src');
@@ -83,6 +83,11 @@ async function main() {
   // Drop derivatives that are no longer referenced. Without this, changing
   // WIDTHS leaves orphaned files behind that still get committed and deployed.
   const expected = new Set();
+
+  // Videos live in the same directory but have no derivatives. They must be
+  // whitelisted or the orphan sweep below would delete them on every run.
+  for (const video of VIDEOS) expected.add(`${video.id}.mp4`);
+
   for (const [id, entry] of Object.entries(manifest)) {
     expected.add(`${id}.jpg`);
     for (const set of [entry.avif, entry.webp]) {

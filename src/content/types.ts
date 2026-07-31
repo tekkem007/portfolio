@@ -31,6 +31,18 @@ export interface CaseStudySection {
   body: string[];
 }
 
+export interface VideoRef {
+  /** Basename in public/media, without the .mp4 extension. */
+  id: string;
+  /** Media-manifest id used as the poster frame. */
+  poster: string;
+  width: number;
+  height: number;
+  /** Rendered as the caption AND as the accessible description of the clip. */
+  description: string;
+  caption?: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -59,6 +71,8 @@ export interface Project {
     contribution: string;
     sections: CaseStudySection[];
     gallery: MediaRef[];
+    /** Optional self-hosted clip, shown above the gallery. */
+    video?: VideoRef;
   };
 }
 

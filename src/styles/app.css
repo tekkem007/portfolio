@@ -1150,6 +1150,45 @@ ul {
   gap: var(--sp-6);
 }
 
+/* --- Self-hosted video clip ----------------------------------------- */
+
+.clip {
+  display: grid;
+  gap: var(--sp-3);
+  margin: 0;
+}
+
+/* Reserves the clip's aspect ratio before any bytes load, so the poster
+   appearing cannot shift the page. */
+.clip__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-sunk);
+}
+
+.clip__video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  background: var(--bg-sunk);
+}
+
+.clip figcaption {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  max-width: var(--measure);
+}
+
+/* Fallback paragraph shown only when MP4 cannot be played at all. */
+.clip__video p {
+  padding: var(--sp-5);
+  color: var(--ink-dim);
+}
+
 /* ============================================================ study ====== */
 
 .study__inner {

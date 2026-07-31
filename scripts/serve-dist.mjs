@@ -39,6 +39,8 @@ const TYPES = {
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
   '.pdf': 'application/pdf',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
   '.xml': 'application/xml; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
   '.webmanifest': 'application/manifest+json',
@@ -95,7 +97,40 @@ const server = createServer(async (req, res) => {
   }
 
   if (info?.isFile()) {
-    res.writeHead(200, { 'content-type': TYPES[extname(target)] ?? 'application/octet-stream' });
+    const type = TYPES[extname(target)] ?? 'application/octet-stream';
+
+    // Range support. GitHub Pages serves byte ranges, and video seeking depends
+    // on it — without this, local playback can only stream from the start and
+    // the preview stops being an honest rehearsal of production.
+    const range = req.headers.range;
+    if (range) {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+      if (match) {
+        const size = info.size;
+        const start = match[1] ? Number(match[1]) : 0;
+        const end = match[2] ? Number(match[2]) : size - 1;
+
+        if (Number.isNaN(start) || Number.isNaN(end) || start > end || start >= size) {
+          res.writeHead(416, { 'content-range': `bytes */${size}` }).end();
+          return;
+        }
+
+        res.writeHead(206, {
+          'content-type': type,
+          'content-range': `bytes ${start}-${end}/${size}`,
+          'accept-ranges': 'bytes',
+          'content-length': end - start + 1,
+        });
+        createReadStream(target, { start, end }).pipe(res);
+        return;
+      }
+    }
+
+    res.writeHead(200, {
+      'content-type': type,
+      'accept-ranges': 'bytes',
+      'content-length': info.size,
+    });
     createReadStream(target).pipe(res);
     return;
   }

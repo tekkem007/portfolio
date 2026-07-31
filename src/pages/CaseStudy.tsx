@@ -2,6 +2,7 @@ import { Picture, MEDIA_SIZES } from '../components/Picture';
 import { CaseStudyRail, slugifyHeading } from '../components/CaseStudyRail';
 import { Diagram } from '../components/Diagrams';
 import { StudyScene } from '../components/StudyScene';
+import { VideoClip } from '../components/VideoClip';
 import { Link } from '../lib/router';
 import { getProject, flagshipProjects } from '../content/projects';
 import type { Project } from '../content/types';
@@ -90,6 +91,7 @@ export function CaseStudy({ slug }: { slug: string }) {
           </div>
 
           <div className="gallery">
+            {caseStudy.video && <VideoClip video={caseStudy.video} />}
             {caseStudy.gallery.map((item) => (
               <figure className="figure" key={item.id} data-reveal="">
                 <Picture id={item.id} sizes={MEDIA_SIZES} />

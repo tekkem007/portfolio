@@ -97,11 +97,12 @@ export const MEDIA = [
     alt: 'Stylised environment: a sunlit meadow with a central tree leading to a circular high-security vault door set into a mossy cliff face, lit by warm entryway torches.',
   },
   {
+    // Used as the poster frame for the self-hosted fly-through (see VIDEOS).
     id: 'silent-gate-02',
     src: 'https://cdna.artstation.com/p/assets/video_clips/images/097/815/388/large/vishnu-vardhan-tekkem-thumb.jpg',
     w: 1920,
     h: 1080,
-    alt: 'Still frame from the camera fly-through of The Silent Gate environment.',
+    alt: 'Opening frame of the camera fly-through of The Silent Gate environment.',
   },
 
   // --- Selected props and studies ---
@@ -195,6 +196,32 @@ export const MEDIA = [
     w: 1920,
     h: 1080,
     alt: 'Pair of stylised nichirin blades modelled in Blender.',
+  },
+];
+
+/**
+ * Video sources.
+ *
+ * ArtStation exposes two things for a video clip: a signed `embed.html` whose
+ * token expires, and an unsigned MP4 on its CDN. Only the second is safe to
+ * depend on, so the file is downloaded and self-hosted rather than embedded.
+ *
+ * These are copied verbatim — there is no transcode step, because ffmpeg is not
+ * a dependency of this project. The source is already web-ready H.264 with its
+ * `moov` atom at the front, so it streams progressively.
+ *
+ * @type {{ id: string, src: string, poster: string, width: number, height: number, description: string }[]}
+ */
+export const VIDEOS = [
+  {
+    id: 'silent-gate-flythrough',
+    src: 'https://cdn.artstation.com/p/video_sources/003/202/558/ls-01.mp4',
+    // Reuses the still already generated from the clip's own thumbnail.
+    poster: 'silent-gate-02',
+    width: 1920,
+    height: 1080,
+    description:
+      'Camera fly-through of The Silent Gate: the shot travels across the sunlit meadow, past the central tree, and settles on the torch-lit circular vault door set into the mossy cliff face.',
   },
 ];
 

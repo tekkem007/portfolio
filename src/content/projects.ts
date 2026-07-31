@@ -174,8 +174,7 @@ export const projects: Project[] = [
       standfirst:
         'An environment that has to feel inviting and exclusionary at the same time — and a lighting setup built to make the viewer feel both without being told.',
       role: 'Full environment: modelling, texturing, foliage, lighting and camera.',
-      contribution:
-        'Personal project, made independently end to end. The accompanying camera fly-through is hosted on ArtStation.',
+      contribution: 'Personal project, made independently end to end, including the camera fly-through below.',
       sections: [
         {
           heading: 'The idea',
@@ -213,10 +212,17 @@ export const projects: Project[] = [
           ],
         },
       ],
-      gallery: [
-        { id: 'silent-gate-01', caption: 'The meadow approach — warm torchlight against cool mountain shadow.' },
-        { id: 'silent-gate-02', caption: 'Frame from the camera fly-through, hosted on ArtStation.' },
-      ],
+      video: {
+        id: 'silent-gate-flythrough',
+        poster: 'silent-gate-02',
+        width: 1920,
+        height: 1080,
+        description:
+          'Camera fly-through of The Silent Gate: the shot travels across the sunlit meadow, past the central tree, and settles on the torch-lit circular vault door set into the mossy cliff face.',
+        caption:
+          'Camera fly-through — the composition reads as one continuous move from sunlit grass to the vault door.',
+      },
+      gallery: [{ id: 'silent-gate-01', caption: 'The meadow approach — warm torchlight against cool mountain shadow.' }],
     },
   },
 

@@ -8,7 +8,7 @@
 import { mkdir, writeFile, access } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { MEDIA } from './media-manifest.mjs';
+import { MEDIA, VIDEOS } from './media-manifest.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC_DIR = resolve(ROOT, 'media-src');
@@ -47,6 +47,26 @@ async function main() {
     await writeFile(dest, Buffer.from(await res.arrayBuffer()));
     downloaded += 1;
     process.stdout.write(`  downloaded ${item.id}\n`);
+  }
+
+  // Videos go straight into public/media: there is no derivative step for them,
+  // so the downloaded file IS the shipped file.
+  const VIDEO_DIR = resolve(ROOT, 'public', 'media');
+  await mkdir(VIDEO_DIR, { recursive: true });
+
+  for (const video of VIDEOS) {
+    const dest = resolve(VIDEO_DIR, `${video.id}.mp4`);
+    if (await exists(dest)) {
+      skipped += 1;
+      continue;
+    }
+    const res = await fetch(video.src, { headers: { 'user-agent': UA } });
+    if (!res.ok) {
+      throw new Error(`Failed to download video ${video.id}: HTTP ${res.status} ${video.src}`);
+    }
+    await writeFile(dest, Buffer.from(await res.arrayBuffer()));
+    downloaded += 1;
+    process.stdout.write(`  downloaded ${video.id}.mp4\n`);
   }
 
   console.log(`fetch-media: ${downloaded} downloaded, ${skipped} already present.`);
