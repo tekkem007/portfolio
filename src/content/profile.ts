@@ -14,7 +14,7 @@ export const SITE_URL = 'https://tekkem007.github.io/portfolio';
 
 export const profile = {
   name: 'Vishnu Vardhan Tekkem',
-  role: '3D Team Lead & Environment Artist',
+  role: 'Unreal Engine Artist & Technical Artist',
   location: 'Pune, Maharashtra, India',
 
   /** Hero statement. Derived from the résumé summary, rewritten for the web. */
@@ -58,9 +58,9 @@ export const profile = {
   availability: 'Open to 3D environment art, technical art and real-time production roles.',
 
   seo: {
-    title: 'Vishnu Vardhan Tekkem — 3D Team Lead & Environment Artist',
+    title: 'Vishnu Vardhan Tekkem — Unreal Engine Artist & Technical Artist',
     description:
-      'Portfolio of Vishnu Vardhan Tekkem, a 3D Team Lead and Environment Artist in Pune working in Unreal Engine 5, Blender and Substance 3D Painter — modular environments, Lumen lighting and real-time optimisation.',
+      'Portfolio of Vishnu Vardhan Tekkem, an Unreal Engine Artist and Technical Artist in Pune working in Unreal Engine 5, Blender and Substance 3D Painter — modular environments, layered material systems, Lumen lighting and real-time optimisation.',
   },
 } as const;
 

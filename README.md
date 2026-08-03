@@ -1,6 +1,6 @@
 # tekkem007.github.io
 
-Portfolio of **Vishnu Vardhan Tekkem** — 3D Team Lead and Environment Artist, Pune, India.
+Portfolio of **Vishnu Vardhan Tekkem** — Unreal Engine Artist and Technical Artist, Pune, India.
 
 **Live site:** https://tekkem007.github.io/portfolio/
 

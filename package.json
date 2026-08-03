@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Portfolio of Vishnu Vardhan Tekkem — 3D Team Lead and Environment Artist.",
+  "description": "Portfolio of Vishnu Vardhan Tekkem — Unreal Engine Artist and Technical Artist.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
