@@ -74,11 +74,19 @@ export const roles: Role[] = [
  * What the leadership role actually involves, stated without inflation.
  * Drawn from the résumé's 3D Team Lead bullets and Core Highlights.
  */
+/**
+ * Production and pipeline block.
+ *
+ * Reframed away from a leadership headline to match the Unreal Engine Artist /
+ * Technical Artist positioning, while keeping the leadership substance — it is
+ * true, it is evidence, and it differentiates. The facts below still name the
+ * held title, which remains '3D Team Lead'.
+ */
 export const leadership = {
-  heading: 'Leading a 3D team',
+  heading: 'Production and pipeline',
   body: [
-    'Leading 3D production is mostly about consistency. The work is setting the workflow, reviewing asset quality before it reaches the engine, and keeping output aligned as more hands touch the same scenes.',
-    'The technical half of the role is scene lighting, optimisation and draw-call reduction — the decisions that determine whether an environment holds its frame budget — plus basic Blueprint support where the art pipeline needs it.',
+    'Most of the technical-art work is consistency: setting the workflow, reviewing asset quality before it reaches the engine, and keeping output aligned as more hands touch the same scenes.',
+    'The rest is the engine itself — scene lighting, optimisation and draw-call reduction, the decisions that determine whether an environment holds its frame budget — plus Blueprint support where the art pipeline needs it.',
   ],
   facts: [
     { label: 'Current role', value: '3D Team Lead, Analyzer Tensor Technologies' },
