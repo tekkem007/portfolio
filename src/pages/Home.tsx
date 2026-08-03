@@ -1,5 +1,6 @@
 import { href } from '../lib/router';
 import { HeroScene } from '../components/HeroScene';
+import { SeaScene } from '../components/SeaScene';
 import { ProjectCard } from '../components/ProjectCard';
 import { profile, education } from '../content/profile';
 import { projects } from '../content/projects';
@@ -96,6 +97,9 @@ export function Home() {
           </div>
         </div>
       </section>
+
+      {/* --- Interactive: the buoy at sea --------------------------------- */}
+      <SeaScene />
 
       {/* --- Supporting work --------------------------------------------- */}
       <section className="section" id="more-work" aria-labelledby="more-work-title">

@@ -97,6 +97,25 @@ export interface ModelEntry {
 
 export const models: ModelEntry[] = [
   {
+    /**
+     * Vishnu's own navigation buoy, cleared for publication by him.
+     *
+     * Presented by the bespoke sea composition in `components/SeaScene.tsx`
+     * rather than the generic viewer, so it deliberately has no `projectSlug` —
+     * registering it here still gets it validated by `npm run models:check`
+     * (integrity, budget, accessible description) and documented in one place.
+     */
+    id: 'buoy',
+    status: 'final',
+    title: 'Navigation buoy',
+    description:
+      'A navigation buoy: a wide float hull, a mast, and a lantern housing on top. Modelled and textured by Vishnu Vardhan Tekkem — 1,704 triangles, one material, WebP base-colour and normal maps embedded in the glTF.',
+    src: '/models/buoy.glb',
+    lighting: 'worlds',
+    interaction: 'static',
+    budgetKb: 400,
+  },
+  {
     id: 'placeholder-panel',
     status: 'placeholder',
     title: 'Modular panel (placeholder geometry)',

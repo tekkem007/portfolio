@@ -1253,6 +1253,101 @@ ul {
   }
 }
 
+/* ============================================================ sea ======== */
+
+.sea__inner {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+}
+
+@media (min-width: 62rem) {
+  .sea__inner {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    gap: var(--sp-8);
+  }
+}
+
+.sea__text {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: center;
+  max-width: var(--measure);
+}
+
+.sea__text p {
+  color: var(--ink-dim);
+}
+
+.sea__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+.sea__controls .btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.sea__controls .btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sea__hint {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+.sea__stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-sunk);
+}
+
+.sea__stage[data-live='true'] {
+  cursor: pointer;
+}
+
+.sea__stage:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.sea__canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.sea__canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sea__state {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: var(--sp-5);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+/* Touch: pushing the buoy must never block vertical page scrolling. */
+.sea__stage {
+  touch-action: pan-y;
+}
+
 /* ============================================================ model ====== */
 
 .model {
