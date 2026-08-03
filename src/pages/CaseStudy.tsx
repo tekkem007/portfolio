@@ -3,6 +3,8 @@ import { CaseStudyRail, slugifyHeading } from '../components/CaseStudyRail';
 import { Diagram } from '../components/Diagrams';
 import { StudyScene } from '../components/StudyScene';
 import { VideoClip } from '../components/VideoClip';
+import { ModelViewer } from '../components/ModelViewer';
+import { getModelForProject } from '../content/models';
 import { Link } from '../lib/router';
 import { getProject, flagshipProjects } from '../content/projects';
 import type { Project } from '../content/types';
@@ -31,6 +33,9 @@ export function CaseStudy({ slug }: { slug: string }) {
 
   const { caseStudy } = project;
   const others = flagshipProjects.filter((p) => p.slug !== project.slug);
+  // Renders only when the manifest has an entry for this project, so the
+  // template is model-ready without any project being forced to have one.
+  const model = getModelForProject(project.slug);
 
   return (
     <>
@@ -80,6 +85,12 @@ export function CaseStudy({ slug }: { slug: string }) {
           </div>
         </div>
       </section>
+
+      {model && (
+        <div className="shell shell--media">
+          <ModelViewer entry={model} />
+        </div>
+      )}
 
       <StudyScene project={project} />
 

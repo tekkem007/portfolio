@@ -69,6 +69,8 @@ Serving under the prefix is the point: any URL that accidentally hard-codes a ro
 | `npm run serve:dist` | Serves `dist/` with GitHub Pages semantics on port 4173                |
 | `npm run lint`       | ESLint over `src/` and `scripts/`                                      |
 | `npm run media`      | Downloads source images and regenerates every optimised derivative     |
+| `npm run models:check` | Validates every model in the manifest — GLB integrity, budgets, a11y |
+| `npm run models:placeholder` | Regenerates the stand-in GLB used to test the pipeline         |
 
 ---
 
@@ -168,6 +170,22 @@ All copy lives in `src/content/`. Nothing is hard-coded in components.
 It now appears in the grid. Give it a `caseStudy` block as well and it automatically gets its own
 prerendered page at `/work/<slug>/`, its own metadata, and a sitemap entry — there is no second
 list to update.
+
+### Adding a 3D model
+
+Models are manifest-driven: export a `.glb` into `public/models/`, add an entry to
+`src/content/models.ts`, and it appears on the case study named by `projectSlug`. No component
+changes are needed.
+
+**See [MODEL_GUIDE.md](MODEL_GUIDE.md)** for the exact Blender export settings, optimisation
+budgets, the full manifest field reference, and how to find hotspot coordinates.
+
+Two rules worth knowing before you start:
+
+- Entries marked `status: 'placeholder'` are **excluded from production builds**. The repository
+  ships one generated placeholder so the pipeline is testable; it can never reach the live site.
+- `description` is required and is the model's accessible text equivalent. `npm run models:check`
+  fails without it.
 
 ### Replacing media safely
 

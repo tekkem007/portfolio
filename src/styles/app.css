@@ -1253,6 +1253,187 @@ ul {
   }
 }
 
+/* ============================================================ model ====== */
+
+.model {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+  padding-block: var(--sp-7);
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 62rem) {
+  .model {
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+    gap: var(--sp-8);
+  }
+}
+
+.model__text {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: center;
+  max-width: var(--measure);
+}
+
+.model__text h3 {
+  font-size: var(--step-2);
+}
+
+.model__text p {
+  color: var(--ink-dim);
+}
+
+.model__legend {
+  display: grid;
+  gap: var(--sp-3);
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+}
+
+.model__legend strong {
+  color: var(--ink);
+  font-weight: 560;
+}
+
+.model__hint,
+.model__credits {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+.model__hint kbd {
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+}
+
+.model__download a {
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+}
+
+.model__stage-wrap {
+  margin: 0;
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.model__stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    radial-gradient(70% 70% at 55% 30%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+    var(--bg-sunk);
+}
+
+.model__stage[data-interactive='true'] {
+  cursor: grab;
+}
+
+.model__stage[data-interactive='true']:active {
+  cursor: grabbing;
+}
+
+.model__stage:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.model__canvas,
+.model__fallback {
+  position: absolute;
+  inset: 0;
+}
+
+.model__canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.model__fallback img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+
+.model__state {
+  position: absolute;
+  inset-inline: 0;
+  bottom: var(--sp-4);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.model__hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  color: var(--accent);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.model__hotspot:hover {
+  background: var(--accent-soft);
+}
+
+.model__tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 18rem;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg-raise-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--ink-dim);
+  font-size: var(--step--1);
+  text-align: left;
+  z-index: 2;
+}
+
+/* Unmistakably marks non-artwork so it can never be read as portfolio work. */
+.model__warning {
+  font-size: var(--step--1);
+  color: var(--worlds);
+  border-left: 2px solid var(--worlds);
+  padding-left: var(--sp-4);
+}
+
+.model__warning code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Touch: the stage must never swallow vertical page scrolling. */
+@media (hover: none) {
+  .model__stage {
+    touch-action: pan-y;
+  }
+}
+
 /* ============================================================ experience = */
 
 .timeline {
