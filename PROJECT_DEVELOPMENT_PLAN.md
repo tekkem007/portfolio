@@ -302,6 +302,7 @@ No tight coupling between components, no duplicate components, no oversized comp
 | Study scene | Case studies | WebGL demonstration | `StudyScene.tsx`, `lib/studyScene.ts` | Mostly Complete | 85% | Loads ✅ / Renders ❌ | Visual output never seen | Verify in real browser |
 | Diagrams ×3 | Case studies | Technical breakdowns | `Diagrams.tsx` | Complete | 100% | Structure ✅ + claims ✅ | — | — |
 | Video clip ×1 | The Silent Gate gallery | Self-hosted camera fly-through | `VideoClip.tsx`, `media-manifest.mjs` (`VIDEOS`) | Complete | 95% | Loads ✅ (`readyState 4`, 10.01 s) / **Playback unwatched** | Audio track present but its content is **Unverified** — if it contains speech, a captions track is required | Watch it once; add `<track>` if there is narration |
+| 3D model pipeline | `src/content/models.ts`, `lib/modelViewer.ts`, `components/ModelViewer.tsx` | Manifest-driven glTF viewer | + `scripts/make-placeholder-glb.mjs`, `scripts/check-models.mjs`, `MODEL_GUIDE.md` | **Complete (pipeline) / Awaiting assets (content)** | Pipeline 100%, content 0% | Loader ✅ (GLB parsed 92 ms, WebGL2), teardown ✅ (3 cycles, contexts released), exclusion ✅ | **No real model exists.** Only a generated placeholder, excluded from production | Owner supplies a `.glb` — see §32 Q15 |
 | Header / Nav | All pages | Navigation | `Header.tsx` | Complete | 100% | Structure ✅ | Mobile nav is a scroll strip, not a menu | Confirm feel on phone |
 | Footer | All pages | Rights + socials | `Footer.tsx` | Complete | 100% | Structure ✅ | — | — |
 | 404 | `dist/404.html` | Error page | `pages/NotFound.tsx` | Complete | 100% | ✅ returns 404 live | — | — |
@@ -620,6 +621,9 @@ All issues below were **observed during development on 2026-07-28**, not hypothe
 | DEC-012 | 2026-07-28 | Motion must fail **open** | Architecture/A11y | **Documented:** caused by ERR-006 — a frozen frame loop must never leave content invisible | `src/lib/motion.ts` | Hide immediately; drop GSAP | Adds a 400 ms probe before reveals | Active | **Do not reverse** |
 | DEC-013 | 2026-07-28 | Local folder name left as `tekkem007.github.io` | Tooling | *Inferred:* renaming would break the local preview config for no functional gain | Filesystem vs `git remote` | Rename the folder | Cosmetic mismatch only | **Temporary** | Yes |
 | DEC-014 | 2026-07-28 | Diagrams may only restate the owner's published words | Content accuracy | **Documented, and enforced:** ERR-012 caught an invented mapping; all 31 claims later matched source text | `src/components/Diagrams.tsx` header | Free-form illustration | Diagrams are conservative but defensible | Active | **Do not reverse** |
+| DEC-016 | 2026-07-28 | Models are manifest-driven, never hard-coded | Architecture | **Documented:** a portfolio's models change often; component edits per asset would guarantee drift | `src/content/models.ts` | Per-model components | One schema to learn; all models share one renderer | Active | Yes |
+| DEC-017 | 2026-07-28 | Placeholder geometry is excluded from production builds | Content integrity | **Documented:** generated stand-in geometry must never sit beside real work where a recruiter could mistake it for the owner's art | `models.ts` (`publishedModels`) | Ship it labelled; ship nothing | Live site gains nothing until a real asset arrives — deliberate | Active | **Do not reverse** |
+| DEC-018 | 2026-07-28 | The mouse wheel is never bound in 3D viewers | UX/A11y | **Documented:** wheel-zoom traps page scroll. Zoom is keyboard-only; touch uses `touch-action: pan-y` | `lib/modelViewer.ts` | Wheel zoom with modifier key | Slightly less discoverable zoom; scroll never breaks | Active | Reviewable |
 | DEC-015 | 2026-07-28 | Commit optimised media (7.3 MB) to the repo | Dependency/Build | *Inferred:* Pages builds from the repo; no asset pipeline or CDN is available | `public/media/`, `.gitignore` | Git LFS; external CDN | Larger clones; simple and reliable deploys | Active | Yes |
 
 ---
@@ -1089,6 +1093,9 @@ History note: commit `43dffa9` was cherry-picked ahead of two others so a layout
 | 12 | May employer work ever be shown visually? | Currently words-only (DEC-006) | Assumed permanently restricted |
 | 13 | Should the site move to a user site at the domain root? | Would fix `robots.txt` (ERR-010) and shorten the URL | Assumed staying at `/portfolio/` |
 | 14 | Should the local folder be renamed to `portfolio`? | Cosmetic mismatch (DEC-013) | Left as-is |
+| 15 | **Which `.glb` models can be published, and which projects need viewers?** | The model pipeline is complete but has no real asset. This is now the single highest-value content gap | Assumed the Maintenance Hangar modular kit is the best first candidate |
+| 16 | Are the source `.blend` files available, and is any of that geometry client-owned or NDA-restricted? | Determines what may be exported at all | Assumed personal work is free to publish |
+| 17 | Is a hero model wanted, or should models stay inside case studies? | A hero model is the biggest visual upgrade but the largest performance cost | Assumed case studies only, for now |
 
 ---
 
