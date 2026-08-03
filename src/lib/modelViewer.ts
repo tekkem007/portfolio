@@ -102,8 +102,12 @@ export async function createModelViewer(
     key.castShadow = settings.shadows;
     scene.add(key);
 
+    // Front-left, not behind-left: the default camera sits front-right, so a
+    // fill placed behind the subject lights only faces nobody can see. The
+    // warm/cool split is the point of the preset, so it has to land on a
+    // visible surface.
     const fill = new three.DirectionalLight(rig.fill, rig.fillI);
-    fill.position.set(-5, 2.5, -4);
+    fill.position.set(-6, 2, 3.5);
     scene.add(fill);
 
     // A dim rim from behind separates the silhouette from a dark page.
@@ -166,6 +170,21 @@ export async function createModelViewer(
   }
   placeCamera();
 
+  /**
+   * Renders one frame immediately.
+   *
+   * Only `turntable` models actually animate. For `orbit` and `static` the
+   * image changes solely in response to input, so a continuous rAF loop would
+   * re-render an identical frame ~60 times a second for as long as the viewer
+   * is on screen. Everything that moves the camera calls this instead, which
+   * makes an idle viewer cost nothing and — importantly — keeps the keyboard
+   * and pointer controls correct even when the loop is not running.
+   */
+  function renderOnce() {
+    renderer.render(scene, camera);
+    updateHotspots();
+  }
+
   // --- Interaction --------------------------------------------------------
   let dragging = false;
   let lastX = 0;
@@ -188,6 +207,7 @@ export async function createModelViewer(
     lastX = event.clientX;
     lastY = event.clientY;
     placeCamera();
+    renderOnce();
   };
   const onPointerUp = (event: PointerEvent) => {
     dragging = false;
@@ -234,7 +254,7 @@ export async function createModelViewer(
     camera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
     placeCamera();
-    updateHotspots();
+    renderOnce();
   };
   const resizeObserver = new ResizeObserver(onResize);
   resizeObserver.observe(container);
@@ -250,7 +270,8 @@ export async function createModelViewer(
   }
 
   function sync() {
-    const shouldRun = onScreen && visible;
+    // Static and orbit models repaint on demand, so they never start a loop.
+    const shouldRun = onScreen && visible && entry.interaction === 'turntable';
     if (shouldRun === running) return;
     running = shouldRun;
     if (running) tick();
@@ -273,9 +294,8 @@ export async function createModelViewer(
   document.addEventListener('visibilitychange', onVisibility);
 
   onResize();
-  // Paint one frame immediately so the panel is never blank behind the fade-in.
-  renderer.render(scene, camera);
-  updateHotspots();
+  // Paint immediately so the panel is never blank behind the fade-in.
+  renderOnce();
   sync();
 
   return {
@@ -323,19 +343,19 @@ export async function createModelViewer(
       azimuth += dAz * DEG;
       elevation += dEl * DEG;
       placeCamera();
-      updateHotspots();
+      renderOnce();
     },
     zoomBy(factor) {
       distance = Math.max(baseDistance * 0.5, Math.min(baseDistance * 2.5, distance * factor));
       placeCamera();
-      updateHotspots();
+      renderOnce();
     },
     resetView() {
       azimuth = (camCfg.azimuth ?? 25) * DEG;
       elevation = (camCfg.elevation ?? 12) * DEG;
       distance = baseDistance;
       placeCamera();
-      updateHotspots();
+      renderOnce();
     },
   };
 }
