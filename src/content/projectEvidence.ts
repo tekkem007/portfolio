@@ -1,0 +1,208 @@
+import type { EvidenceItem, ProjectSpec } from './types';
+
+/**
+ * Project ranking, scannable specs, and the evidence ledger.
+ *
+ * Kept beside `projects.ts` rather than inside it so the *claims* a recruiter
+ * reads are separable from the *prose*, and so the outstanding-evidence list is
+ * a single reviewable file.
+ *
+ * ## The rule this file enforces
+ *
+ * An `EvidenceItem` reaches the public site only when `status: 'verified'` and
+ * `value` is set. Everything else is a request: rendered as an authoring
+ * checklist during `npm run dev`, stripped from production.
+ *
+ * A value may be marked `verified` in exactly two cases:
+ *   1. the owner supplied it, or
+ *   2. it was measured directly from a file in this repository.
+ * `source` must say which. Nothing is estimated, rounded from memory, or
+ * inferred from what "looks about right".
+ */
+
+/** Lower sorts first. Ordered by hiring value for the stated primary role. */
+export const projectRank: Record<string, number> = {
+  // Unreal environment work leads — it matches the primary title.
+  'maintenance-hangar': 1,
+  // Technical art is the stated support skill.
+  'layered-material-system': 2,
+  'the-silent-gate': 3,
+  // 2026 hard-surface work.
+  'reactor-access-hatch': 4,
+  'arc-04-fusion-cell': 5,
+  // 2024 craft studies.
+  'gilded-relic': 6,
+  'industrial-lpg-cylinder': 7,
+  'travellers-trio': 8,
+  bmo: 9,
+  // 2022 — see `archivedSlugs`.
+  'metal-toy-car': 10,
+  checkmate: 11,
+  'uzui-swords': 12,
+};
+
+/**
+ * Early work, moved into a collapsed "Earlier work" list.
+ *
+ * Not deleted: a 2022 study is honest history and costs nothing when it is
+ * clearly dated and out of the main grid. It is demoted because a reviewer
+ * judges you by the weakest thing at your current standard, and these sit four
+ * years behind it.
+ */
+export const archivedSlugs = new Set(['metal-toy-car', 'checkmate', 'uzui-swords']);
+
+export const projectSpecs: Record<string, ProjectSpec> = {
+  'maintenance-hangar': {
+    role: 'Sole environment artist — kit design, materials, lighting, set dressing, Blueprint tooling',
+    ownership: 'Personal project',
+    status: 'Work in progress',
+    responsibilities: [
+      'Designed the modular kit and its snapping grid',
+      'Authored the trim sheet in Substance 3D Painter',
+      'Built the Lumen lighting for readability and pathing',
+      'Wrote the spline mesh-instancing Blueprint',
+    ],
+    assetSources: 'All geometry, materials and lighting authored by me. No marketplace or library assets.',
+  },
+  'layered-material-system': {
+    role: 'Sole author — master material, layer set, ID-mask logic, exposed parameter interface',
+    ownership: 'Personal technical study',
+    status: 'Complete',
+    responsibilities: [
+      'Built a master material blending several material layers',
+      'Drove per-region assignment from an ID mask',
+      'Exposed tint, roughness, metallic and static-switch wear controls',
+      'Channel-packed masks against shared tiling textures',
+    ],
+    assetSources: 'Material graph and layer set authored by me.',
+  },
+  'the-silent-gate': {
+    role: 'Sole artist — modelling, texturing, foliage, lighting, camera',
+    ownership: 'Personal project',
+    status: 'Complete',
+    responsibilities: [
+      'Modelled and textured the cliff, vault and foliage',
+      'Built the dual-light setup carrying the composition',
+      'Framed and animated the camera fly-through',
+    ],
+    assetSources: 'Authored by me end to end, including the camera move.',
+  },
+  'reactor-access-hatch': {
+    role: 'Sole artist — hard-surface modelling, decals, materials',
+    ownership: 'Personal project',
+    status: 'Complete',
+    responsibilities: ['Modelled the pressure-door silhouette', 'Authored custom signage decals'],
+    assetSources: 'Authored by me.',
+  },
+  'arc-04-fusion-cell': {
+    role: 'Sole artist — hard-surface modelling, weighted normals, emissive workflow',
+    ownership: 'Personal project',
+    status: 'Complete',
+    responsibilities: ['Modelled to a real-time-friendly poly budget', 'Authored the layered emissive map'],
+    assetSources: 'Authored by me.',
+  },
+};
+
+/**
+ * The evidence ledger.
+ *
+ * Almost everything here is `awaiting-owner`, and that is the honest state: the
+ * portfolio currently makes no numeric claims because none have been measured.
+ * `howToCapture` exists so each gap is a ten-minute task rather than a vague ask.
+ */
+export const projectEvidence: Record<string, EvidenceItem[]> = {
+  'maintenance-hangar': [
+    {
+      label: 'Trim sheet',
+      value: 'Single 4K sheet',
+      status: 'verified',
+      source: "Owner's published ArtStation breakdown",
+    },
+    {
+      label: 'Material IDs',
+      value: 'One across the environment',
+      status: 'verified',
+      source: "Owner's published ArtStation breakdown",
+    },
+    {
+      label: 'Triangle count',
+      status: 'awaiting-owner',
+      howToCapture: 'UE5: Window → Statistics → Primitive Stats. Record total tris for the hangar level.',
+    },
+    {
+      label: 'Draw calls',
+      status: 'awaiting-owner',
+      howToCapture: 'Console: `stat RHI`. Record DrawPrimitive calls, and state the resolution and GPU.',
+    },
+    {
+      label: 'Frame time',
+      status: 'awaiting-owner',
+      howToCapture: 'Console: `stat unit`. Record Frame / Game / Draw / GPU in ms at a stated resolution and GPU.',
+    },
+    {
+      label: 'Optimisation before/after',
+      status: 'awaiting-owner',
+      howToCapture:
+        'Capture `stat unit` and `stat RHI` before and after the instancing/trim pass. Two screenshots is enough.',
+    },
+  ],
+
+  'layered-material-system': [
+    {
+      label: 'Shader instructions',
+      status: 'awaiting-owner',
+      howToCapture:
+        'Material Editor → Stats panel. Record base-pass instruction count, and again with the wear static switch on.',
+    },
+    {
+      label: 'Texture sets replaced',
+      status: 'awaiting-owner',
+      howToCapture: 'Count unique texture sets the environment needed before the layered system, and after.',
+    },
+    {
+      label: 'Texture memory',
+      status: 'awaiting-owner',
+      howToCapture: 'Window → Statistics → Texture Stats. Record total texture memory before and after.',
+    },
+    {
+      label: 'Shader complexity view',
+      status: 'awaiting-owner',
+      howToCapture: 'Viewport → View Mode → Shader Complexity. Screenshot with the legend visible.',
+    },
+  ],
+
+  'the-silent-gate': [
+    { label: 'Fly-through duration', value: '10.0 s', status: 'verified', source: 'Measured from the published clip' },
+    { label: 'Clip resolution', value: '1920 × 1080', status: 'verified', source: 'Measured from the published clip' },
+    {
+      label: 'Triangle count',
+      status: 'awaiting-owner',
+      howToCapture: 'UE5: Window → Statistics → Primitive Stats for the scene.',
+    },
+    {
+      label: 'Foliage instances',
+      status: 'awaiting-owner',
+      howToCapture: 'Foliage mode shows instance counts per type; record the total.',
+    },
+  ],
+};
+
+/** True when a fact is safe to publish. */
+export function isPublishable(item: EvidenceItem): boolean {
+  return item.status === 'verified' && Boolean(item.value);
+}
+
+export function publishableEvidence(slug: string): EvidenceItem[] {
+  return (projectEvidence[slug] ?? []).filter(isPublishable);
+}
+
+export function pendingEvidence(slug: string): EvidenceItem[] {
+  return (projectEvidence[slug] ?? []).filter((item) => !isPublishable(item));
+}
+
+/** Every outstanding request across all projects — used by `npm run evidence`. */
+export function allPendingEvidence(): { slug: string; item: EvidenceItem }[] {
+  return Object.entries(projectEvidence).flatMap(([slug, items]) =>
+    items.filter((item) => !isPublishable(item)).map((item) => ({ slug, item })),
+  );
+}

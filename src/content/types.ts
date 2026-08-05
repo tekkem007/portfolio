@@ -19,6 +19,46 @@ export type Domain = 'worlds' | 'systems';
 /** Was this personal practice, employed work, freelance, or study? */
 export type Ownership = 'personal' | 'professional' | 'freelance' | 'study';
 
+/**
+ * A single measurable, checkable fact about a project.
+ *
+ * This type exists to make "never invent a number" structural rather than a
+ * promise. A fact reaches the public build **only** when `status` is
+ * `'verified'` AND `value` is set. Anything else is an outstanding request:
+ * visible during `npm run dev` as an authoring checklist, invisible in
+ * production, and impossible to publish by accident.
+ *
+ * Triangle counts, frame times, draw calls, team sizes, shipped titles and
+ * percentages must all come through here.
+ */
+export interface EvidenceItem {
+  label: string;
+  /** Only ever set from data the owner supplied or a file that was measured. */
+  value?: string;
+  status: 'verified' | 'awaiting-owner';
+  /** Exactly how to capture it, so the request is actionable rather than vague. */
+  howToCapture?: string;
+  /** Where a verified value came from — a file, a capture, or the owner. */
+  source?: string;
+}
+
+/** Scannable header facts a recruiter reads before any prose. */
+export interface ProjectSpec {
+  /** What the candidate personally did. */
+  role: string;
+  /** Personal / professional / freelance / study, stated plainly. */
+  ownership: string;
+  /** Shipped, ongoing, work in progress, study. */
+  status: string;
+  /** Concrete responsibilities, not adjectives. */
+  responsibilities: string[];
+  /**
+   * Where the assets came from. Required on every project — ownership ambiguity
+   * is the fastest way to lose a reviewer's trust.
+   */
+  assetSources: string;
+}
+
 export interface MediaRef {
   /** Key into public/media/manifest.json. */
   id: string;
@@ -62,6 +102,25 @@ export interface Project {
   /** Canonical external link, if the work is published somewhere. */
   externalUrl?: string;
   externalLabel?: string;
+  /**
+   * Ranking for the work grid. Lower sorts first. Set by hiring value — the
+   * strongest Unreal environment and technical-art evidence leads.
+   * Supplied by `projectRank` in `projectEvidence.ts`.
+   */
+  rank?: number;
+  /**
+   * Older work kept for completeness but shown in a collapsed "Earlier work"
+   * list, so a 2022 study cannot sit beside 2026 work and set the standard.
+   */
+  archived?: boolean;
+  /** Scannable header facts. Required on published projects. */
+  spec?: ProjectSpec;
+  /**
+   * Measurable facts. Only verified entries render publicly.
+   * Named `facts` to avoid colliding with `evidence`, which classifies the
+   * project's *prose* as verified or inferred.
+   */
+  facts?: EvidenceItem[];
   /** Present only on flagship projects that get their own page. */
   caseStudy?: {
     /** Rendered as a short standfirst under the title. */
