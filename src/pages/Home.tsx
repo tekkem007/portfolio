@@ -3,12 +3,14 @@ import { HeroScene } from '../components/HeroScene';
 import { SeaScene } from '../components/SeaScene';
 import { ProjectCard } from '../components/ProjectCard';
 import { profile, education } from '../content/profile';
-import { projects } from '../content/projects';
+import { archivedProjects, flagshipProjects, supportingProjects } from '../content/projects';
 import { roles, leadership } from '../content/experience';
-import { capabilities, familiarity, tools } from '../content/capabilities';
+import { capabilities, familiarity, learning, tools } from '../content/capabilities';
 
-const flagships = projects.filter((p) => p.caseStudy);
-const supporting = projects.filter((p) => !p.caseStudy);
+// Ordering and archive state come from projectEvidence.ts, so hiring-value
+// decisions live in one reviewable file rather than in JSX.
+const flagships = flagshipProjects;
+const supporting = supportingProjects;
 
 export function Home() {
   return (
@@ -118,6 +120,32 @@ export function Home() {
               <ProjectCard key={project.slug} project={project} />
             ))}
           </div>
+
+          {archivedProjects.length > 0 && (
+            // Collapsed by default: a reviewer judges by the weakest visible
+            // piece, and these sit several years behind the current standard.
+            <details className="archive">
+              <summary>Earlier work ({archivedProjects.length}) — 2022 studies</summary>
+              <div className="archive__grid">
+                {archivedProjects.map((project) => (
+                  <article className="archive__item" key={project.slug}>
+                    <h3>
+                      {project.externalUrl ? (
+                        <a href={project.externalUrl} target="_blank" rel="noopener noreferrer">
+                          {project.title}
+                        </a>
+                      ) : (
+                        project.title
+                      )}
+                    </h3>
+                    <p>
+                      {project.year} · {project.software.join(', ')}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </details>
+          )}
         </div>
       </section>
 
@@ -157,6 +185,16 @@ export function Home() {
               </p>
             ))}
             <p className="familiarity__note">{familiarity.note}</p>
+          </div>
+
+          <div className="familiarity" data-domain="systems">
+            <h3>{learning.heading}</h3>
+            {learning.items.map((item) => (
+              <p key={item.label}>
+                <strong style={{ fontWeight: 500 }}>{item.label}</strong> — {item.detail}
+              </p>
+            ))}
+            <p className="familiarity__note">{learning.note}</p>
           </div>
         </div>
       </section>
