@@ -26,7 +26,7 @@ export function Header() {
       <div className="shell site-header__inner">
         <Link to="/" className="wordmark" aria-label={`${profile.name} — home`}>
           <b>Vishnu Vardhan Tekkem</b>
-          <span>{profile.role}</span>
+          <span>{profile.shortRole}</span>
         </Link>
 
         <nav className="site-nav" aria-label="Primary">

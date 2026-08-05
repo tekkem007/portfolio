@@ -30,7 +30,9 @@ const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: profile.name,
-  jobTitle: 'Unreal Engine Artist & Technical Artist',
+  // Structured data takes the plain role, not the composite display title:
+  // search engines match on a job title, not on a positioning line.
+  jobTitle: 'Unreal Engine Environment Artist',
   url: `${SITE_URL}/`,
   email: `mailto:${profile.email}`,
   address: {
