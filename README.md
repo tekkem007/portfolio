@@ -171,6 +171,55 @@ It now appears in the grid. Give it a `caseStudy` block as well and it automatic
 prerendered page at `/work/<slug>/`, its own metadata, and a sitemap entry — there is no second
 list to update.
 
+### Adding verified metrics
+
+Numbers live in **`src/content/projectEvidence.ts`**, never in prose. This is deliberate: it makes
+"do not invent a figure" a property of the code rather than a promise.
+
+An `EvidenceItem` reaches the public site **only** when `status: 'verified'` **and** `value` is set.
+Anything else renders as an authoring checklist during `npm run dev` and is stripped from the
+production build — so an unmeasured number cannot ship by accident.
+
+```ts
+{
+  label: 'Draw calls',
+  value: '412',                       // add this only when measured
+  status: 'verified',                 // flip this only when value is real
+  source: 'stat RHI, 1440p, RTX 3070' // say where it came from
+}
+```
+
+A value may be marked `verified` in exactly two cases: the owner supplied it, or it was measured
+from a file in this repository. `source` must record which. Never estimate, round from memory, or
+infer a plausible-looking figure.
+
+To see what is still outstanding, run the dev server and open any case study — pending items are
+listed under "Evidence still to capture", each with a `howToCapture` line naming the exact console
+command or editor panel.
+
+### Adding approved professional work
+
+Employer work is currently described **in words only** — no screenshots, video, level names,
+product names or assets (see `src/content/experience.ts`). That restriction is the owner's, and it
+must not be relaxed without explicit written clearance from him.
+
+When a piece is cleared:
+
+1. Add the images to `scripts/media-manifest.mjs`, run `npm run media`.
+2. Add the project to `src/content/projects.ts` with `ownership: 'professional'`.
+3. Add its `spec` to `projectEvidence.ts` with an **exact** `assetSources` line — state what was
+   yours, what was the team's, and what was licensed.
+4. Give it a `rank` that reflects its hiring value; professional work should generally outrank
+   personal work.
+5. If any part is under NDA, publish the role and the technique, not the client or the product.
+
+### Case-study templates
+
+`src/content/caseStudyTemplates.ts` holds scaffolds for **Automotive** and **Real-time VFX** case
+studies. They are intentionally not imported by any page, so they cannot reach the build and imply
+a capability the portfolio does not demonstrate. Each lists the sections to write and the exact
+captures to take. Do the work first; then write a real entry.
+
 ### Adding a 3D model
 
 Models are manifest-driven: export a `.glb` into `public/models/`, add an entry to
