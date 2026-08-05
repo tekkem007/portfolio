@@ -14,15 +14,28 @@ export const SITE_URL = 'https://tekkem007.github.io/portfolio';
 
 export const profile = {
   name: 'Vishnu Vardhan Tekkem',
-  role: 'Unreal Engine Artist & Technical Artist',
+  /** Full positioning line, used in the hero. */
+  role: 'Unreal Engine Environment Artist · Technical Art & Optimisation',
+  /**
+   * Short form for the sticky header. The full line is too wide for the
+   * wordmark and pushed the nav 2px past the viewport at 1280.
+   */
+  shortRole: 'Unreal Engine Environment Artist',
   location: 'Pune, Maharashtra, India',
 
-  /** Hero statement. Derived from the résumé summary, rewritten for the web. */
-  headline: 'I build worlds and the systems that hold them together.',
+  /**
+   * Hero statement.
+   *
+   * Deliberately a claim, not a slogan. The previous line ("I build worlds and
+   * the systems that hold them together") read as poetry and spent the five
+   * seconds a reviewer gives the top of the page without naming the role, the
+   * engine, or the specialism. This names all three.
+   */
+  headline: 'I build modular environments for Unreal Engine 5 — and the systems that keep them in budget.',
 
-  /** Two-sentence positioning under the hero. */
+  /** Supporting sentence: specialism, then the technical-art support skill. */
   standfirst:
-    'Real-time environment art for Unreal Engine 5 — modelling, PBR texturing, lighting and optimisation — plus the production workflows and AI-assisted prototyping that keep a 3D team shipping.',
+    'Environment art in Unreal Engine 5: modular kits, trim sheets, Lumen and baked lighting, and the layered material systems and draw-call work that hold a scene inside its frame budget. Blender and Substance 3D Painter for authoring.',
 
   /** Longer About copy. Every sentence traces to the résumé or ArtStation. */
   about: [
@@ -54,13 +67,18 @@ export const profile = {
     github: 'https://github.com/tekkem007',
   },
 
-  /** Shown in the contact section as the current call to action. */
-  availability: 'Open to 3D environment art, technical art and real-time production roles.',
+  /**
+   * Call to action. Narrowed to two role families — the previous three-way
+   * phrasing made the target ambiguous, which is what a recruiter screens on
+   * hardest. The held title is stated here as credibility, not as the headline.
+   */
+  availability:
+    'Open to Unreal Engine environment art and technical art roles — on-site, hybrid or remote. Currently 3D Team Lead at Analyzer Tensor Technologies, Pune.',
 
   seo: {
-    title: 'Vishnu Vardhan Tekkem — Unreal Engine Artist & Technical Artist',
+    title: 'Vishnu Vardhan Tekkem — Unreal Engine Environment Artist',
     description:
-      'Portfolio of Vishnu Vardhan Tekkem, an Unreal Engine Artist and Technical Artist in Pune working in Unreal Engine 5, Blender and Substance 3D Painter — modular environments, layered material systems, Lumen lighting and real-time optimisation.',
+      'Portfolio of Vishnu Vardhan Tekkem, an Unreal Engine environment artist in Pune. Modular kits, trim sheets, Lumen and baked lighting, layered material systems and draw-call reduction in Unreal Engine 5, Blender and Substance 3D Painter.',
   },
 } as const;
 

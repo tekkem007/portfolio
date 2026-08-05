@@ -11,6 +11,14 @@ import type { CapabilityGroup } from './types';
  *  2. Blueprint work is described as "basic" and pipeline-facing, matching the
  *     résumé wording. No gameplay-programming claim is made.
  */
+/**
+ * Skills are split three ways so a reviewer can tell instantly what is proven
+ * on this site, what is a working tool, and what is honestly still ahead.
+ *
+ * `capabilities` = demonstrated: every item is evidenced by a case study or a
+ * published piece linked from this portfolio. Nothing goes here on the strength
+ * of having read about it.
+ */
 export const capabilities: CapabilityGroup[] = [
   {
     heading: 'Environment art',
@@ -65,7 +73,7 @@ export const capabilities: CapabilityGroup[] = [
  * proficiency claim.
  */
 export const familiarity = {
-  heading: 'Also familiar with',
+  heading: 'Supporting tools',
   note: 'Working knowledge rather than production depth — listed for accuracy, not as a headline skill.',
   items: [
     {
@@ -73,6 +81,32 @@ export const familiarity = {
       detail:
         'Comfortable in the editor: scenes, nodes, the project structure and general engine concepts in both 2D and 3D. I do not write Godot scripting, and I make no claim to GDScript, C# or gameplay programming in Godot.',
     },
+    {
+      label: 'Python',
+      detail:
+        'Small pipeline tools rather than software engineering — see the Blender add-on below. Not a claim to Unreal editor scripting yet.',
+    },
+  ],
+} as const;
+
+/**
+ * Currently learning.
+ *
+ * Stated openly because the alternative — silence — reads as either ignorance
+ * or concealment, and a reviewer will spot the gap either way. Naming it is the
+ * stronger move, and nothing here is claimed as a skill.
+ *
+ * This list must stay honest: an item moves up into `capabilities` only once a
+ * case study on this site demonstrates it.
+ */
+export const learning = {
+  heading: 'Currently building',
+  note: 'Not yet demonstrated on this site, so not claimed as a skill. Listed so the gap is visible rather than hidden.',
+  items: [
+    { label: 'Nanite and Virtual Shadow Maps', detail: 'UE5 workflows I am moving my environments onto.' },
+    { label: 'Unreal Insights & GPU profiling', detail: 'Capturing before/after evidence for optimisation passes.' },
+    { label: 'Niagara', detail: 'Real-time VFX — no published work yet.' },
+    { label: 'Python editor utilities', detail: 'Extending pipeline tooling from Blender into Unreal.' },
   ],
 } as const;
 

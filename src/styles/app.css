@@ -1253,6 +1253,188 @@ ul {
   }
 }
 
+/* ============================================================ facts ====== */
+
+.facts {
+  display: grid;
+  gap: var(--sp-5);
+  padding: var(--sp-5) 0 var(--sp-6);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--sp-7);
+}
+
+.facts__grid {
+  display: grid;
+  gap: var(--sp-5);
+  margin: 0;
+}
+
+@media (min-width: 46rem) {
+  .facts__grid {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+}
+
+.facts__grid--compact {
+  gap: var(--sp-4);
+}
+
+.facts__grid dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: var(--sp-2);
+}
+
+.facts__grid dd {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.facts__block h2 {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 400;
+  margin-bottom: var(--sp-3);
+}
+
+.facts__list {
+  display: grid;
+  gap: var(--sp-2);
+  color: var(--ink-dim);
+  font-size: var(--step--1);
+  max-width: var(--measure);
+}
+
+.facts__list li {
+  padding-left: var(--sp-4);
+  position: relative;
+}
+
+.facts__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 5px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.facts__sources {
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+  max-width: var(--measure);
+}
+
+.facts__sources strong {
+  color: var(--ink);
+  font-weight: 560;
+}
+
+.facts__source {
+  color: var(--ink-faint);
+}
+
+/* Development-only authoring checklist; never present in a production build. */
+.facts__pending {
+  border: 1px dashed var(--worlds);
+  border-radius: var(--radius);
+  padding: var(--sp-4) var(--sp-5);
+}
+
+.facts__pending h2 {
+  color: var(--worlds);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-3);
+}
+
+.facts__pending ul {
+  display: grid;
+  gap: var(--sp-2);
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+}
+
+/* ============================================================ archive ==== */
+
+.archive {
+  margin-top: var(--sp-7);
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-5);
+}
+
+.archive > summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  padding: var(--sp-3) 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.archive > summary:hover {
+  color: var(--ink);
+}
+
+.archive > summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.archive__grid {
+  display: grid;
+  gap: var(--sp-5);
+  margin-top: var(--sp-5);
+}
+
+@media (min-width: 46rem) {
+  .archive__grid {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+}
+
+.archive__item {
+  display: grid;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.archive__item h3 {
+  font-size: var(--step-0);
+}
+
+/* Inline links here are the whole target, so they need real height. */
+.archive__item h3 a,
+.model__download a,
+.sea__text a[download] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.archive__item p {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
 /* ============================================================ sea ======== */
 
 .sea__inner {

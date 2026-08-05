@@ -1,4 +1,5 @@
 import type { Project } from './types';
+import { archivedSlugs, projectEvidence, projectRank, projectSpecs } from './projectEvidence';
 
 /**
  * Project content.
@@ -361,9 +362,34 @@ export const projects: Project[] = [
   },
 ];
 
+// --- Derived views ------------------------------------------------------
+//
+// Rank, archive state and the scannable spec live in projectEvidence.ts so the
+// ordering decisions and the evidence ledger sit together in one reviewable
+// file. They are merged in here so components keep consuming plain `Project`s.
+
+const decorated: Project[] = projects
+  .map((project) => ({
+    ...project,
+    rank: projectRank[project.slug] ?? 99,
+    archived: archivedSlugs.has(project.slug),
+    spec: projectSpecs[project.slug],
+    facts: projectEvidence[project.slug],
+  }))
+  .sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99));
+
+/** Current work, ordered by hiring value. */
+export const currentProjects = decorated.filter((p) => !p.archived);
+
+/** Earlier work, shown collapsed so it cannot set the perceived standard. */
+export const archivedProjects = decorated.filter((p) => p.archived);
+
 /** Projects with a dedicated prerendered page. */
-export const flagshipProjects = projects.filter((p) => p.caseStudy);
+export const flagshipProjects = decorated.filter((p) => p.caseStudy);
+
+/** Supporting work: current, but without its own page. */
+export const supportingProjects = currentProjects.filter((p) => !p.caseStudy);
 
 export function getProject(slug: string): Project | undefined {
-  return projects.find((p) => p.slug === slug);
+  return decorated.find((p) => p.slug === slug);
 }

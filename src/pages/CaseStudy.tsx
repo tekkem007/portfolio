@@ -1,5 +1,6 @@
 import { Picture, MEDIA_SIZES } from '../components/Picture';
 import { CaseStudyRail, slugifyHeading } from '../components/CaseStudyRail';
+import { ProjectFacts } from '../components/ProjectFacts';
 import { Diagram } from '../components/Diagrams';
 import { StudyScene } from '../components/StudyScene';
 import { VideoClip } from '../components/VideoClip';
@@ -70,6 +71,11 @@ export function CaseStudy({ slug }: { slug: string }) {
           <CaseStudyRail project={project} headings={caseStudy.sections.map((s) => s.heading)} />
 
           <div className="cs-content">
+            {/* Scannable facts before any prose — role, ownership, asset
+                sources and whatever has actually been measured. A reviewer
+                decides here, before reading a word of the write-up. */}
+            <ProjectFacts project={project} />
+
             <div className="prose">
               {caseStudy.sections.map((section) => (
                 <section key={section.heading} id={slugifyHeading(section.heading)} data-reveal="">
