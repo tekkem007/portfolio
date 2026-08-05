@@ -172,8 +172,11 @@ export const projectEvidence: Record<string, EvidenceItem[]> = {
   ],
 
   'the-silent-gate': [
-    { label: 'Fly-through duration', value: '10.0 s', status: 'verified', source: 'Measured from the published clip' },
-    { label: 'Clip resolution', value: '1920 × 1080', status: 'verified', source: 'Measured from the published clip' },
+    // Deliberately NOT listed as "Measured": the clip's duration and resolution
+    // are true but they are metadata, not craft. Publishing them under a
+    // heading a reviewer reads as evidence made the section look like
+    // box-ticking and devalued the facts that will matter. They belong in the
+    // caption, which already carries them.
     {
       label: 'Triangle count',
       status: 'awaiting-owner',

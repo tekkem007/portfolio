@@ -152,7 +152,7 @@ def build():
         bottomMargin=14 * mm,
         title=f"{NAME.title()} - Resume",
         author=NAME.title(),
-        subject="Unreal Engine Artist and Technical Artist",
+        subject="Unreal Engine Environment Artist",
         creator="reportlab",
     )
     frame = Frame(
@@ -173,7 +173,7 @@ def build():
     story.append(Paragraph(NAME, styles["name"]))
     # Positioning line under the name. This is how Vishnu presents himself; the
     # job titles in Professional Experience below remain exactly as held.
-    story.append(Paragraph("Unreal Engine Artist &amp; Technical Artist", styles["role"]))
+    story.append(Paragraph("Unreal Engine Environment Artist - Technical Art &amp; Optimisation", styles["role"]))
     story.append(
         Paragraph(
             f"{LOCATION} &nbsp;|&nbsp; "
@@ -190,7 +190,7 @@ def build():
     story += section("Professional Summary")
     story.append(
         Paragraph(
-            "Unreal Engine Artist and Technical Artist with experience in real-time environment "
+            "Unreal Engine environment artist with experience in real-time environment "
             "production, stylized asset creation, Unreal Engine workflows, and AI-assisted rapid "
             "prototyping. Skilled in Blender, Substance 3D Painter, Unreal Engine 5, lighting, "
             "optimization, draw-call reduction, and visual storytelling.",
