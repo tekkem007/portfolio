@@ -154,11 +154,12 @@ export function Home() {
       <section className="section" id="more-work" aria-labelledby="more-work-title">
         <div className="shell shell--media">
           <div className="section-head">
-            <p className="eyebrow">Props & studies</p>
-            <h2 id="more-work-title">Assets, materials and studies</h2>
+            <p className="eyebrow">Props, studies & prototypes</p>
+            <h2 id="more-work-title">Assets, studies and prototypes</h2>
             <p>
               Hard-surface props, weathering studies and product visualisation — the practice that feeds the
-              environments. Each links to its full breakdown on ArtStation.
+              environments — alongside a playable browser prototype. Each card links out to where the work is
+              published.
             </p>
           </div>
 

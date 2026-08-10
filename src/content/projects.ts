@@ -319,6 +319,37 @@ export const projects: Project[] = [
     externalLabel: 'View on ArtStation',
   },
   {
+    // Published game, not artwork: the source project stays private, and
+    // everything stated here is restated from its public itch.io page.
+    slug: 'lastline-echoes-below',
+    title: 'LASTLINE: ECHOES BELOW',
+    summary: "Every lap you drive walls off the track. How many laps before there's no line left?",
+    // 'systems', not 'worlds': the site files AI-assisted prototypes under
+    // Intelligent systems, and this is one — its store page discloses AI
+    // assistance across code, graphics, sound and text.
+    domain: 'systems',
+    ownership: 'personal',
+    evidence: 'verified',
+    year: '2026',
+    // Deliberately empty. The itch.io page names no engine or toolchain, and
+    // the only other source is the private project directory — so no claim is
+    // made. Both arrays render nothing on a supporting card.
+    software: [],
+    tags: [],
+    cover: 'lastline-01',
+    externalUrl: 'https://tekkem007.itch.io/lastline',
+    externalCta: 'Play on itch.io',
+    release: {
+      genre: 'Racing',
+      platform: 'HTML5/browser',
+      status: 'In development',
+      // itch.io states this in full as "AI Assisted, Code, Graphics, Sounds,
+      // Text". The headline term is what the card carries.
+      aiDisclosure: 'AI Assisted',
+    },
+  },
+
+  {
     slug: 'metal-toy-car',
     title: 'Metal Toy Car',
     summary: 'An early hard-surface study in worn painted metal and chrome, modelled in 3ds Max.',

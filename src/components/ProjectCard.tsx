@@ -55,13 +55,39 @@ export function ProjectCard({ project, flagship = false }: { project: Project; f
           </span>
         </div>
 
-        <div className="card__tags">
-          {project.software.map((item) => (
-            <span className="tag" key={item}>
-              {item}
-            </span>
-          ))}
-        </div>
+        {/* A definition list, not a row of chips: "Racing" and "In development"
+            are different kinds of fact, and the AI disclosure in particular has
+            to say what it is rather than sit unlabelled among tags. */}
+        {project.release && (
+          <dl className="card__facts">
+            <div>
+              <dt>Genre</dt>
+              <dd>{project.release.genre}</dd>
+            </div>
+            <div>
+              <dt>Platform</dt>
+              <dd>{project.release.platform}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>{project.release.status}</dd>
+            </div>
+            <div>
+              <dt>AI disclosure</dt>
+              <dd>{project.release.aiDisclosure}</dd>
+            </div>
+          </dl>
+        )}
+
+        {project.software.length > 0 && (
+          <div className="card__tags">
+            {project.software.map((item) => (
+              <span className="tag" key={item}>
+                {item}
+              </span>
+            ))}
+          </div>
+        )}
 
         {flagship && (
           <>
@@ -78,9 +104,11 @@ export function ProjectCard({ project, flagship = false }: { project: Project; f
           </>
         )}
 
+        {/* The label is data, not a constant: most of this work is published on
+            ArtStation, but not all of it. The link itself is the card title. */}
         {!flagship && project.externalUrl && (
           <span className="card__cta" aria-hidden="true">
-            ArtStation <span className="btn__arrow">↗</span>
+            {project.externalCta ?? 'ArtStation'} <span className="btn__arrow">↗</span>
           </span>
         )}
       </div>

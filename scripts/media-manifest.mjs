@@ -1,9 +1,11 @@
 /**
  * Source manifest for portfolio media.
  *
- * Every entry points at an image published by Vishnu Vardhan Tekkem on his own
- * ArtStation profile (https://www.artstation.com/voyagervishnu). Nothing here is
- * third-party stock, client-owned, or confidential.
+ * Every entry points at an image Vishnu Vardhan Tekkem published himself — his
+ * ArtStation profile (https://www.artstation.com/voyagervishnu) or his itch.io
+ * page (https://tekkem007.itch.io). Nothing here is third-party stock,
+ * client-owned, or confidential, and nothing is taken from a private project
+ * directory: the source of every image is a public URL in this file.
  *
  * `npm run media` downloads these once and writes optimised AVIF/WebP/JPEG
  * derivatives into public/media/. The optimised files are committed; the
@@ -196,6 +198,18 @@ export const MEDIA = [
     w: 1920,
     h: 1080,
     alt: 'Pair of stylised nichirin blades modelled in Blender.',
+  },
+
+  // --- LASTLINE: ECHOES BELOW (itch.io) ---
+  {
+    id: 'lastline-01',
+    // The store page's own cover art, taken from its `og:image` — the full-size
+    // upload rather than the 347x500 thumbnail itch.io renders in the page,
+    // which is too small to fill even the 480 tier at 2x.
+    src: 'https://img.itch.zone/aW1nLzI5MDcyMzk0LnBuZw==/original/c%2BuTVL.png',
+    w: 1672,
+    h: 941,
+    alt: 'Cover art for LASTLINE: ECHOES BELOW — an angular black race car trailing a glowing cyan light wall speeds down an elevated neon-lit roadway through a night-time city, with the game title set across the top.',
   },
 ];
 
