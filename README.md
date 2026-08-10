@@ -171,6 +171,24 @@ It now appears in the grid. Give it a `caseStudy` block as well and it automatic
 prerendered page at `/work/<slug>/`, its own metadata, and a sitemap entry — there is no second
 list to update.
 
+### Adding a playable release
+
+Work that ships as something you can run — a game or an interactive prototype — uses two extra
+fields on the same `Project` entry. No component is special-cased for it.
+
+| Field         | Purpose                                                                       |
+| ------------- | ----------------------------------------------------------------------------- |
+| `externalCta` | The card's call to action. Defaults to `ArtStation`; set it for anything else. |
+| `release`     | Genre, platform, status and the AI disclosure, shown as a small fact list.     |
+
+Every value in `release` is **restated from the project's own public store page**, and the
+`aiDisclosure` field is not optional when that page carries a disclosure — a portfolio that quietly
+drops it is making a claim by omission. Leave `software` and `tags` empty rather than guessing at an
+engine the store page does not name.
+
+Only the store page's cover art goes into `scripts/media-manifest.mjs`. The game's source, exports
+and builds stay out of this repository entirely — see [Rights](#rights).
+
 ### Adding verified metrics
 
 Numbers live in **`src/content/projectEvidence.ts`**, never in prose. This is deliberate: it makes

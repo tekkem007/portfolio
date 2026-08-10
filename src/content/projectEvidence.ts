@@ -35,10 +35,14 @@ export const projectRank: Record<string, number> = {
   'industrial-lpg-cylinder': 7,
   'travellers-trio': 8,
   bmo: 9,
+  // Playable release. Last in the supporting grid because a browser game is the
+  // least direct evidence for the stated environment-art role — not a judgement
+  // on the work. Move this number to move the card.
+  'lastline-echoes-below': 10,
   // 2022 — see `archivedSlugs`.
-  'metal-toy-car': 10,
-  checkmate: 11,
-  'uzui-swords': 12,
+  'metal-toy-car': 11,
+  checkmate: 12,
+  'uzui-swords': 13,
 };
 
 /**

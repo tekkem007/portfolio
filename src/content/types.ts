@@ -59,6 +59,29 @@ export interface ProjectSpec {
   assetSources: string;
 }
 
+/**
+ * Store-page facts for playable work.
+ *
+ * Present only on a project that is published as something you can run, where
+ * "which software built it" is not the fact a reviewer is looking for. Every
+ * value is restated from the project's own public store page — none of it is
+ * inferred here, and none of it comes from the private source project.
+ */
+export interface ReleaseFacts {
+  /** The store page's own genre classification. */
+  genre: string;
+  /** What it runs on, as the store page states it. */
+  platform: string;
+  /** Development status, as the store page states it. */
+  status: string;
+  /**
+   * The store page's AI-generation disclosure, restated rather than softened.
+   * Required whenever the store page carries one: dropping it on the way to the
+   * portfolio would be a material omission, not a stylistic choice.
+   */
+  aiDisclosure: string;
+}
+
 export interface MediaRef {
   /** Key into public/media/manifest.json. */
   id: string;
@@ -101,7 +124,14 @@ export interface Project {
   cover: string;
   /** Canonical external link, if the work is published somewhere. */
   externalUrl?: string;
+  /** Full button label on a case-study page. Defaults to 'View on ArtStation'. */
   externalLabel?: string;
+  /**
+   * Short call-to-action on a work-grid card — 'ArtStation', 'Play on itch.io'.
+   * Defaults to 'ArtStation', which is where every art piece is published; set
+   * it explicitly for anything that lives somewhere else.
+   */
+  externalCta?: string;
   /**
    * Ranking for the work grid. Lower sorts first. Set by hiring value — the
    * strongest Unreal environment and technical-art evidence leads.
@@ -115,6 +145,8 @@ export interface Project {
   archived?: boolean;
   /** Scannable header facts. Required on published projects. */
   spec?: ProjectSpec;
+  /** Store-page facts. Present only on work that is published as playable. */
+  release?: ReleaseFacts;
   /**
    * Measurable facts. Only verified entries render publicly.
    * Named `facts` to avoid colliding with `evidence`, which classifies the

@@ -223,5 +223,14 @@
     "fallback": "/media/uzui-01.jpg",
     "avif": "/media/uzui-01-480.avif 480w, /media/uzui-01-960.avif 960w, /media/uzui-01-1440.avif 1440w, /media/uzui-01-1920.avif 1920w",
     "webp": "/media/uzui-01-480.webp 480w, /media/uzui-01-960.webp 960w, /media/uzui-01-1440.webp 1440w, /media/uzui-01-1920.webp 1920w"
+  },
+  "lastline-01": {
+    "alt": "Cover art for LASTLINE: ECHOES BELOW — an angular black race car trailing a glowing cyan light wall speeds down an elevated neon-lit roadway through a night-time city, with the game title set across the top.",
+    "width": 1672,
+    "height": 941,
+    "aspect": 0.5628,
+    "fallback": "/media/lastline-01.jpg",
+    "avif": "/media/lastline-01-480.avif 480w, /media/lastline-01-960.avif 960w, /media/lastline-01-1440.avif 1440w, /media/lastline-01-1672.avif 1672w",
+    "webp": "/media/lastline-01-480.webp 480w, /media/lastline-01-960.webp 960w, /media/lastline-01-1440.webp 1440w, /media/lastline-01-1672.webp 1672w"
   }
 }
