@@ -39,6 +39,17 @@ export const capabilities: CapabilityGroup[] = [
       { label: 'Lighting', detail: 'Lumen real-time GI and baked workflows' },
       { label: 'Materials & shaders', detail: 'Layered materials, ID masking, material instances' },
       { label: 'Real-time optimisation', detail: 'Draw-call reduction, virtual textures, texel-density discipline' },
+      // Moved up from `learning` once the Performance Audit case study
+      // demonstrated it, per the rule stated on that list. Named as CsvProfiler
+      // rather than Unreal Insights because that is the tool actually used.
+      {
+        label: 'GPU profiling & frame-budget analysis',
+        detail: 'CsvProfiler pass breakdowns, controlled before/after benchmarking with drift control',
+      },
+      {
+        label: 'Virtual Shadow Map & Lumen tuning',
+        detail: 'Shadow resolution bias, page budgets and Lumen quality knobs — measured, not guessed',
+      },
       { label: 'Basic Blueprints', detail: 'Simple interactions and art-pipeline tooling — not gameplay programming' },
       { label: 'Scene assembly & set dressing' },
     ],
@@ -103,8 +114,12 @@ export const learning = {
   heading: 'Currently building',
   note: 'Not yet demonstrated on this site, so not claimed as a skill. Listed so the gap is visible rather than hidden.',
   items: [
-    { label: 'Nanite and Virtual Shadow Maps', detail: 'UE5 workflows I am moving my environments onto.' },
-    { label: 'Unreal Insights & GPU profiling', detail: 'Capturing before/after evidence for optimisation passes.' },
+    // Virtual Shadow Maps and GPU profiling moved up into `capabilities` once
+    // the Performance Audit case study demonstrated them. What remains here is
+    // the part that is still genuinely undemonstrated: authoring environments
+    // on Nanite, and Unreal Insights specifically — the audit used CsvProfiler.
+    { label: 'Nanite for environment authoring', detail: 'Moving my own kits onto it, beyond tuning its cost.' },
+    { label: 'Unreal Insights', detail: 'Timeline and trace analysis; my profiling so far has used CsvProfiler.' },
     { label: 'Niagara', detail: 'Real-time VFX — no published work yet.' },
     { label: 'Python editor utilities', detail: 'Extending pipeline tooling from Blender into Unreal.' },
   ],

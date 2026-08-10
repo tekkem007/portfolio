@@ -89,6 +89,95 @@ export const projects: Project[] = [
   },
 
   {
+    slug: 'performance-audit',
+    title: 'Performance Audit',
+    summary:
+      'A measured optimisation pass on a scene I did not author: 30.45 → 22.60 ms GPU frame time at native 1440p, with the method and the missed target reported in full.',
+    domain: 'systems',
+    ownership: 'personal',
+    evidence: 'verified',
+    year: '2026',
+    software: ['Unreal Engine 5.8', 'PowerShell', 'Python'],
+    tags: ['GPU profiling', 'Virtual Shadow Maps', 'Lumen', 'TSR', 'Benchmark harness'],
+    cover: 'perf-audit-passes',
+    caseStudy: {
+      standfirst:
+        'Deliberately run on Epic’s free Windmill Valley sample rather than my own environment — because if I do not own the art, every millisecond saved has to come from engineering.',
+      role: 'Performance analysis, benchmark tooling, optimisation and QA.',
+      contribution:
+        'Personal project, worked on alone. The scene is Epic’s free Windmill Valley sample content — none of the art, models, materials or lighting in it are mine, and it is not presented as my environment work. What is mine is the benchmark harness, the profiling method, the optimisation decisions and the analysis below.',
+      sections: [
+        {
+          heading: 'Why optimise someone else’s scene',
+          body: [
+            'Optimising your own environment is easy to fake. If the frame gets faster and the artist also happens to control the art, a reviewer cannot tell whether the win came from engineering or from quietly deleting half the foliage.',
+            'So I used a scene I had no authorship over: Epic’s free Windmill Valley sample, running in Unreal Engine 5.8. The art is a fixed control variable. Nothing was removed from it, no mesh was simplified, no texture was reduced — the primitive count is the same before and after, and the draw-call count only moved because of a Nanite setting. Every millisecond had to come from how the renderer was configured.',
+            'That constraint is the point of the project. It is also why the result is worth reading: the numbers cannot be explained by the scene getting smaller.',
+          ],
+        },
+        {
+          heading: 'Building the measurement before the optimisation',
+          body: [
+            'The first version of the harness produced numbers I could not trust, and finding out why took longer than the optimisation itself.',
+            'The engine’s `-ForceRes` flag does not reliably give you the resolution you asked for. Depending on the desktop state at launch, the same command line produced a 2560×1440 client area, or 2560×1080, or 1920×1032, or 1706×960. Runs that happened to be correct were correct by luck. Because a smaller render target is faster, that silently inflates any result you record.',
+            'The fix was to stop trusting the engine flag: the harness now resizes the window itself and asserts the client area is exactly 2560×1440 before it records anything, aborting the run otherwise. Measurement noise fell from roughly ±3% to 0.02 FPS across repeat runs. Every figure quoted here comes from runs that passed that assertion, and the engine’s own on-screen `RenderRes: 100.0% (2560x1440)` readout is the second check.',
+            'The rest of the protocol is fixed and stated: standalone game process, Epic scalability, 100% screen percentage, no frame cap, a 20-second warm-up, then a 2 400-frame CsvProfiler capture at each of five fixed camera positions reached by `BugItGo`.',
+          ],
+        },
+        {
+          heading: 'What the profile actually said',
+          body: [
+            'The baseline ran at 32.99 FPS — a 30.45 ms frame — and it was GPU-bound at every camera. The game thread sat at 2.89 ms, about 9% of the frame, so gameplay, Blueprints and ticking were irrelevant. So was streaming: the texture pool wanted 116 MB of a 1 000 MB budget and never came under pressure. So was light count — the Light Complexity view was uniformly blue, because the level has three lights.',
+            'Ruling those out mattered as much as finding the real cost. Each one is a place an optimisation pass can burn a day for nothing.',
+            'The frame divided into shadows at 6.94 ms, TSR at 5.83 ms, Lumen and deferred lighting at 4.46 ms, geometry at 4.58 ms and velocity at 2.78 ms.',
+          ],
+        },
+        {
+          heading: 'The finding: the preset, not the scene',
+          body: [
+            'Reading Unreal’s own `BaseScalability.ini` explained most of the frame. At Epic, `ShadowQuality@3` sets `r.Shadow.Virtual.ResolutionLodBiasDirectional` to **−1.5** — a negative bias, meaning virtual-shadow-map pages render roughly 2.8× denser than neutral. The scene’s directional light also carried a `ShadowResolutionScale` of 8.0. Those two multiply.',
+            'The engine was reporting the consequence out loud: `[VSM] Non-Nanite Marking Job Queue overflow. Performance may be affected.` About 102 000 shadow-casting foliage instances were being marked into a shadow map far denser than a 1440p output can show.',
+            'Epic also keeps a TSR history buffer at 200% screen percentage — 5120×2880 to produce a 2560×1440 image — and quadruples the volumetric fog grid, and enables Lumen hit lighting and full-resolution short-range AO.',
+            'Picking those individual settings, rather than dropping whole quality groups, gave a better result per unit of visual change than any blanket scalability drop I tested. The VSM overflow warning stopped appearing.',
+          ],
+        },
+        {
+          heading: 'Two hypotheses the data killed',
+          body: [
+            'I expected hardware ray tracing to be the expensive path on a mid-range card, so I switched Lumen to software tracing. It was **5.9% slower**. The ray-tracing scene cost did drop to zero as predicted, but shadow projection rose 1.64 ms and the base pass 0.81 ms. Hardware ray tracing is genuinely the faster path for this scene on this GPU, and I reverted it.',
+            'I also believed the wind animation on the foliage was invalidating cached shadow-map pages every frame, which would explain why shadow-depth cost stayed high in a static scene. The setting I reached for to test it, `MaxMaterialPositionInvalidationRange 0`, turns out to mean "no clamp" rather than "no invalidation" — so it never tested the idea, and it made things slightly worse. It is recorded as disproven rather than quietly dropped.',
+            'Both are in the write-up because a performance pass that only reports its wins is not evidence of judgement.',
+          ],
+        },
+        {
+          heading: 'Not fooling yourself',
+          body: [
+            'Two things nearly produced a false conclusion, and both were caught by testing the measurement rather than trusting it.',
+            'The first was drift. A "volumetric fog off" probe came back 2.8% slower, with every unrelated GPU pass up by an identical ~3%. No rendering change does that: the machine was slowing under sustained load. From then on a control run with no changes was interleaved between candidates and each result compared against the control interpolated to its position in the run order.',
+            'The second was visual. The before/after images appeared to show foliage disappearing — which would have been a serious regression. It was not one. The level animates: its Blueprint drives a Timeline that changes the crop fields over time, and a screenshot taken after a fixed frame count lands at a different moment when the build is faster. Running the *unoptimised* configuration twice reproduced the same difference, which settled it. Had I not checked, I would have reported a regression that did not exist, or reverted a real win chasing it.',
+          ],
+        },
+        {
+          heading: 'The result, and the target I did not reach',
+          body: [
+            'Average FPS went from 32.99 to 44.37, a 34.7% improvement. Frame time fell 30.45 → 22.60 ms and GPU time 29.60 → 21.76 ms. VRAM dropped 537 MB, from 4 327 to 3 790. The 1% lows rose in proportion to the average, so frame pacing did not degrade. Every camera improved, and the worst-performing camera in the baseline improved the most.',
+            'The goal was 90 FPS — an 11.1 ms frame. **I did not reach it, and it is not reachable on this hardware at native 1440p without visibly degrading the image.** After the pass the frame is still GPU-bound, and what remains is TSR at 3.70 ms, shadow projection at 3.09 ms, the base pass at 2.81 ms and shadow depths at 2.63 ms. Getting to 11.1 ms means removing half of what is left from a frame that no longer contains obvious waste.',
+            'The only realistic route to 90 FPS here is rendering below 1440p and letting TSR upsample. That is a legitimate shipping decision, and it was explicitly outside the brief I set myself, so it is written up as a costed option rather than applied to make the headline number look better.',
+            'I would rather show the ceiling and the reason for it than a figure that does not survive questioning.',
+          ],
+        },
+      ],
+      gallery: [
+        {
+          id: 'perf-audit-passes',
+          caption:
+            'Per-pass GPU cost before and after, averaged over five fixed cameras. The two orange bars are increases: suppressing vertex-deformation velocity moves work into the depth prepass rather than deleting it, so that change’s real contribution is about 0.8 ms rather than the 2.6 ms the velocity row alone suggests.',
+        },
+      ],
+    },
+  },
+
+  {
     slug: 'layered-material-system',
     title: 'Modular Layered Material System',
     summary:

@@ -211,6 +211,20 @@ export const MEDIA = [
     h: 941,
     alt: 'Cover art for LASTLINE: ECHOES BELOW — an angular black race car trailing a glowing cyan light wall speeds down an elevated neon-lit roadway through a night-time city, with the game title set across the top.',
   },
+
+  // --- Performance audit (generated, not downloaded) ---
+  // The only entry with no public `src`. It is not a photograph or a render: it
+  // is a plot of measured frame-time data, produced by scripts/make-perf-chart.mjs
+  // from numbers committed inside that script. The rule this file opens with
+  // still holds — nothing here is third-party art, and this image depicts no
+  // artwork at all.
+  {
+    id: 'perf-audit-passes',
+    generated: 'node scripts/make-perf-chart.mjs',
+    w: 1760,
+    h: 900,
+    alt: 'Horizontal bar chart comparing GPU milliseconds per render pass before and after optimisation, measured at 2560 by 1440 on an RTX 3060. TemporalSuperResolution falls from 5.83 to 3.70 milliseconds, RenderDeferredLighting from 3.57 to 0.96, RenderVelocities from 2.65 to 0.05 and ShadowDepths from 3.70 to 2.63, while ShadowProjection rises from 2.61 to 3.09 and Prepass from 0.19 to 2.01.',
+  },
 ];
 
 /**

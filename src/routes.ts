@@ -32,7 +32,7 @@ const personJsonLd = {
   name: profile.name,
   // Structured data takes the plain role, not the composite display title:
   // search engines match on a job title, not on a positioning line.
-  jobTitle: 'Unreal Engine Environment Artist',
+  jobTitle: 'Unreal Engine Artist',
   url: `${SITE_URL}/`,
   email: `mailto:${profile.email}`,
   address: {
@@ -57,6 +57,8 @@ const personJsonLd = {
     'Blender',
     'Substance 3D Painter',
     'Real-time optimisation',
+    'GPU profiling',
+    'Virtual Shadow Maps',
   ],
   sameAs: [profile.links.artstation, profile.links.linkedin, profile.links.github],
 };

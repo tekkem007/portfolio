@@ -12,6 +12,17 @@ import { capabilities, familiarity, learning, tools } from '../content/capabilit
 const flagships = flagshipProjects;
 const supporting = supportingProjects;
 
+/**
+ * Spells the flagship count for the section heading.
+ *
+ * The heading was hardcoded to "Three projects" and silently became wrong the
+ * moment a fourth case study was added. Deriving it means the copy cannot drift
+ * from what is actually on the page.
+ */
+function countWord(n: number): string {
+  return ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? String(n);
+}
+
 export function Home() {
   return (
     <>
@@ -85,10 +96,11 @@ export function Home() {
         <div className="shell shell--media">
           <div className="section-head">
             <p className="eyebrow">Selected work</p>
-            <h2 id="work-title">Three projects, in depth</h2>
+            <h2 id="work-title">{countWord(flagships.length)} projects, in depth</h2>
             <p>
-              Each of these has a full breakdown: what the problem was, the decision I made, and what it cost. Everything
-              below is personal work — my own from concept to final frame.
+              Each of these has a full breakdown: what the problem was, the decision I made, and what it cost. All of it
+              is personal work. Where a project is built on assets I did not author, the case study says so in its first
+              line.
             </p>
           </div>
 
