@@ -22,15 +22,19 @@ import type { EvidenceItem, ProjectSpec } from './types';
 
 /** Lower sorts first. Ordered by hiring value for the stated primary role. */
 export const projectRank: Record<string, number> = {
-  // Unreal environment work leads — it matches the primary title.
-  'maintenance-hangar': 1,
-  // Performance sits second now the title reads "Environments & Performance".
-  // It is the only project carrying measured numbers, and the strongest
-  // evidence for the technical half of that positioning.
+  // --- Flagship grid ("Selected work"), order set by Vishnu ---------------
+  // The Silent Gate leads: it is the only flagship that is finished and shown
+  // as a composed, lit shot rather than work in progress.
+  'the-silent-gate': 1,
+  // Performance follows now the title reads "Environments & Performance". It is
+  // the only project carrying measured numbers, and the strongest evidence for
+  // the technical half of that positioning.
   'performance-audit': 2,
   // Technical art is the stated support skill.
   'layered-material-system': 3,
-  'the-silent-gate': 4,
+  // Maintenance Hangar last of the flagships — still work in progress, so it
+  // sets the standard a reviewer judges the others by if it leads.
+  'maintenance-hangar': 4,
   // 2026 hard-surface work.
   'reactor-access-hatch': 5,
   'arc-04-fusion-cell': 6,
