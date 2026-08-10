@@ -22,27 +22,35 @@ import type { EvidenceItem, ProjectSpec } from './types';
 
 /** Lower sorts first. Ordered by hiring value for the stated primary role. */
 export const projectRank: Record<string, number> = {
-  // Unreal environment work leads — it matches the primary title.
-  'maintenance-hangar': 1,
+  // --- Flagship grid ("Selected work"), order set by Vishnu ---------------
+  // The Silent Gate leads: it is the only flagship that is finished and shown
+  // as a composed, lit shot rather than work in progress.
+  'the-silent-gate': 1,
+  // Performance follows now the title reads "Environments & Performance". It is
+  // the only project carrying measured numbers, and the strongest evidence for
+  // the technical half of that positioning.
+  'performance-audit': 2,
   // Technical art is the stated support skill.
-  'layered-material-system': 2,
-  'the-silent-gate': 3,
+  'layered-material-system': 3,
+  // Maintenance Hangar last of the flagships — still work in progress, so it
+  // sets the standard a reviewer judges the others by if it leads.
+  'maintenance-hangar': 4,
   // 2026 hard-surface work.
-  'reactor-access-hatch': 4,
-  'arc-04-fusion-cell': 5,
+  'reactor-access-hatch': 5,
+  'arc-04-fusion-cell': 6,
   // 2024 craft studies.
-  'gilded-relic': 6,
-  'industrial-lpg-cylinder': 7,
-  'travellers-trio': 8,
-  bmo: 9,
+  'gilded-relic': 7,
+  'industrial-lpg-cylinder': 8,
+  'travellers-trio': 9,
+  bmo: 10,
   // Playable release. Last in the supporting grid because a browser game is the
   // least direct evidence for the stated environment-art role — not a judgement
   // on the work. Move this number to move the card.
-  'lastline-echoes-below': 10,
+  'lastline-echoes-below': 11,
   // 2022 — see `archivedSlugs`.
-  'metal-toy-car': 11,
-  checkmate: 12,
-  'uzui-swords': 13,
+  'metal-toy-car': 12,
+  checkmate: 13,
+  'uzui-swords': 14,
 };
 
 /**
@@ -67,6 +75,20 @@ export const projectSpecs: Record<string, ProjectSpec> = {
       'Wrote the spline mesh-instancing Blueprint',
     ],
     assetSources: 'All geometry, materials and lighting authored by me. No marketplace or library assets.',
+  },
+  'performance-audit': {
+    role: 'Sole author — benchmark harness, profiling method, optimisation decisions, QA pass',
+    ownership: 'Personal project',
+    status: 'Complete',
+    responsibilities: [
+      'Built a reproducible 1440p benchmark harness with a hard resolution assertion',
+      'Profiled the frame with CsvProfiler and identified the real bottleneck',
+      'Ran controlled A/B iterations with interleaved control runs to cancel machine drift',
+      'Reverted two changes the measurements showed were regressions',
+      'Ran a QA regression pass over the engine logs and reported the missed target',
+    ],
+    assetSources:
+      "Scene is Epic's free Windmill Valley sample content — none of the art is mine and none of it was modified. The harness, method and analysis are mine.",
   },
   'layered-material-system': {
     role: 'Sole author — master material, layer set, ID-mask logic, exposed parameter interface',
@@ -115,6 +137,54 @@ export const projectSpecs: Record<string, ProjectSpec> = {
  * `howToCapture` exists so each gap is a ten-minute task rather than a vague ask.
  */
 export const projectEvidence: Record<string, EvidenceItem[]> = {
+  // The first project on this site to carry measured numbers. Every value below
+  // was produced by the audit's own tooling and read out of a committed file —
+  // none is quoted from memory. `source` names the file in each case.
+  'performance-audit': [
+    {
+      label: 'Average FPS',
+      value: '32.99 → 44.37 (+34.7%)',
+      status: 'verified',
+      source: 'Mean of 5 cameras, definitive interleaved A/B — Iteration_16_definitive/definitive_summary.csv',
+    },
+    {
+      label: 'Frame time',
+      value: '30.45 → 22.60 ms',
+      status: 'verified',
+      source: 'CsvProfiler, 2400-frame captures at 2560×1440 native',
+    },
+    {
+      label: 'GPU time',
+      value: '29.60 → 21.76 ms',
+      status: 'verified',
+      source: 'CsvProfiler GPU stats, same runs',
+    },
+    {
+      label: '1% low FPS',
+      value: '31.87 → 41.91',
+      status: 'verified',
+      source: '99th-percentile frame time from the same captures',
+    },
+    {
+      label: 'VRAM',
+      value: '4 327 → 3 790 MB',
+      status: 'verified',
+      source: 'Windows GPU Process Memory counter, cross-checked against the engine’s own stat unit readout',
+    },
+    {
+      label: 'Test conditions',
+      value: '2560×1440 native, Epic scalability, RTX 3060',
+      status: 'verified',
+      source: 'Asserted per run: client area checked before any measurement was recorded',
+    },
+    {
+      label: 'Target',
+      value: '90 FPS — not reached',
+      status: 'verified',
+      source: 'Stated goal was an 11.1 ms frame; the pass ended at 22.60 ms',
+    },
+  ],
+
   'maintenance-hangar': [
     {
       label: 'Trim sheet',

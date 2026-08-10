@@ -32,6 +32,13 @@ async function main() {
   let skipped = 0;
 
   for (const item of MEDIA) {
+    // Generated entries have no URL to fetch: a script in this repo produces
+    // them, and `npm run media` runs those generators before this step.
+    if (item.generated) {
+      skipped += 1;
+      continue;
+    }
+
     const ext = new URL(item.src).pathname.split('.').pop() ?? 'jpg';
     const dest = resolve(SRC_DIR, `${item.id}.${ext}`);
 

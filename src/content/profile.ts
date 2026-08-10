@@ -15,12 +15,12 @@ export const SITE_URL = 'https://tekkem007.github.io/portfolio';
 export const profile = {
   name: 'Vishnu Vardhan Tekkem',
   /** Full positioning line, used in the hero. */
-  role: 'Unreal Engine Environment Artist · Technical Art & Optimisation',
+  role: 'Unreal Engine Artist · Environments & Performance',
   /**
    * Short form for the sticky header. The full line is too wide for the
    * wordmark and pushed the nav 2px past the viewport at 1280.
    */
-  shortRole: 'Unreal Engine Environment Artist',
+  shortRole: 'Unreal Engine Artist',
   location: 'Pune, Maharashtra, India',
 
   /**
@@ -31,11 +31,11 @@ export const profile = {
    * seconds a reviewer gives the top of the page without naming the role, the
    * engine, or the specialism. This names all three.
    */
-  headline: 'I build modular environments for Unreal Engine 5 — and the systems that keep them in budget.',
+  headline: 'I build modular environments for Unreal Engine 5 — and I measure what they cost.',
 
   /** Supporting sentence: specialism, then the technical-art support skill. */
   standfirst:
-    'Environment art in Unreal Engine 5: modular kits, trim sheets, Lumen and baked lighting, and the layered material systems and draw-call work that hold a scene inside its frame budget. Blender and Substance 3D Painter for authoring.',
+    'Environment art in Unreal Engine 5 — modular kits, trim sheets, Lumen and baked lighting — plus the profiling and optimisation work that keeps a scene inside its frame budget. Most recently a measured 34.7% GPU frame-time reduction at native 1440p. Blender and Substance 3D Painter for authoring.',
 
   /** Longer About copy. Every sentence traces to the résumé or ArtStation. */
   about: [
@@ -73,12 +73,12 @@ export const profile = {
    * hardest. The held title is stated here as credibility, not as the headline.
    */
   availability:
-    'Open to Unreal Engine environment art and technical art roles — on-site, hybrid or remote. Currently 3D Team Lead at Analyzer Tensor Technologies, Pune.',
+    'Open to Unreal Engine environment art, technical art and real-time optimisation roles — on-site, hybrid or remote. Currently 3D Team Lead at Analyzer Tensor Technologies, Pune.',
 
   seo: {
-    title: 'Vishnu Vardhan Tekkem — Unreal Engine Environment Artist',
+    title: 'Vishnu Vardhan Tekkem — Unreal Engine Artist, Environments & Performance',
     description:
-      'Portfolio of Vishnu Vardhan Tekkem, an Unreal Engine environment artist in Pune. Modular kits, trim sheets, Lumen and baked lighting, layered material systems and draw-call reduction in Unreal Engine 5, Blender and Substance 3D Painter.',
+      'Portfolio of Vishnu Vardhan Tekkem, an Unreal Engine artist in Pune working across environments and real-time performance. Modular kits, trim sheets, Lumen and baked lighting, layered material systems, and measured GPU profiling and optimisation in Unreal Engine 5, Blender and Substance 3D Painter.',
   },
 } as const;
 
