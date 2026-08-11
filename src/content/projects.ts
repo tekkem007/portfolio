@@ -102,16 +102,16 @@ export const projects: Project[] = [
     cover: 'perf-audit-passes',
     caseStudy: {
       standfirst:
-        'Deliberately run on Epic’s free Windmill Valley sample rather than my own environment — because if I do not own the art, every millisecond saved has to come from engineering.',
+        'Deliberately run on a third-party environment pack rather than my own scene — because if I do not own the art, every millisecond saved has to come from engineering.',
       role: 'Performance analysis, benchmark tooling, optimisation and QA.',
       contribution:
-        'Personal project, worked on alone. The scene is Epic’s free Windmill Valley sample content — none of the art, models, materials or lighting in it are mine, and it is not presented as my environment work. What is mine is the benchmark harness, the profiling method, the optimisation decisions and the analysis below.',
+        'Personal project, worked on alone. The scene is a third-party environment pack obtained through Fab’s free-for-the-month giveaway — none of the art, models, materials or lighting in it are mine, and it is not presented as my environment work. What is mine is the benchmark harness, the profiling method, the optimisation decisions and the analysis below.',
       sections: [
         {
           heading: 'Why optimise someone else’s scene',
           body: [
             'Optimising your own environment is easy to fake. If the frame gets faster and the artist also happens to control the art, a reviewer cannot tell whether the win came from engineering or from quietly deleting half the foliage.',
-            'So I used a scene I had no authorship over: Epic’s free Windmill Valley sample, running in Unreal Engine 5.8. The art is a fixed control variable. Nothing was removed from it, no mesh was simplified, no texture was reduced — the primitive count is the same before and after, and the draw-call count only moved because of a Nanite setting. Every millisecond had to come from how the renderer was configured.',
+            'So I used a scene I had no authorship over: a third-party environment pack from Fab, running in Unreal Engine 5.8. The art is a fixed control variable. Nothing was removed from it, no mesh was simplified, no texture was reduced — the primitive count is the same before and after, and the draw-call count only moved because of a Nanite setting. Every millisecond had to come from how the renderer was configured.',
             'That constraint is the point of the project. It is also why the result is worth reading: the numbers cannot be explained by the scene getting smaller.',
           ],
         },
