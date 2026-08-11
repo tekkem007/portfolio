@@ -88,7 +88,7 @@ export const projectSpecs: Record<string, ProjectSpec> = {
       'Ran a QA regression pass over the engine logs and reported the missed target',
     ],
     assetSources:
-      "Scene is a third-party environment pack from Fab, acquired through its free-for-the-month giveaway — none of the art is mine and none of it was modified. The harness, method and analysis are mine.",
+      "Scene is “Stylized Windmill Valley Environment” by StylArts (Fab, Standard License), acquired through Fab’s free-for-the-month giveaway — none of the art is mine and none of it was modified. The harness, method and analysis are mine.",
   },
   'layered-material-system': {
     role: 'Sole author — master material, layer set, ID-mask logic, exposed parameter interface',

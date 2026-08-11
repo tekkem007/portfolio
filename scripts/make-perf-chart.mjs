@@ -11,8 +11,8 @@
  * never drift from the numbers quoted in the case-study prose: both come from
  * this file, and changing a number here changes the picture.
  *
- * The scene being measured is a third-party environment pack from Fab, not
- * artwork by the site owner. Nothing in this chart depicts third-party art.
+ * The scene being measured is "Stylized Windmill Valley Environment" by StylArts
+ * (Fab, Standard License), not artwork by the site owner. Nothing in this chart depicts third-party art.
  *
  * Run via `npm run media` (or `node scripts/make-perf-chart.mjs`).
  */
