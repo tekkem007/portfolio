@@ -183,6 +183,19 @@ its card reads. All three are optional and the card degrades gracefully without 
 | `projectDetailShots`  | A second, genuine image revealed on hover or focus, plus a label naming what it is. Use a real alternate angle, wireframe, unlit pass or breakdown sheet — never a decorative variant. |
 | `projectSpecs`        | Supplies the `Role` line on the card. Without it the card shows tools and year only. |
 
+If the project is going on the **technical track**, two more files decide how it
+reads. Both are optional; a project with neither falls back to its summary and
+cover image.
+
+| File                        | What it does                                                       |
+| --------------------------- | ------------------------------------------------------------------ |
+| `src/content/systemBriefs.ts` | The Problem / Constraints / System / Result block on the card, plus the category chip, the engine line and an optional lesson. Every line must be a restatement of that project's own case study on this site. |
+| `src/content/diagnostics.ts`  | The states the Diagnostic View can switch between. Real captures only: a wireframe entry means there is a wireframe capture. `aligned: true` marks a state shot from the same camera as the first, which the control then labels. |
+
+Measurements come from `projectEvidence.ts` as usual. A value written as
+`before — after` also draws a pair of bars; add `better: 'lower' | 'higher'` so the
+renderer knows which end is an improvement instead of guessing from the unit.
+
 ### Adding a detail reveal
 
 Check the image before you point at it. The label is a factual claim about what the reviewer is
@@ -362,6 +375,12 @@ derived from `import.meta.env.BASE_URL` and `SITE_URL`, so nothing else needs to
   produced by `:focus-within`, which the card's title link carries.
 - Filtering the environment gallery keeps the filter control fixed in the viewport and never moves
   focus, so the control you pressed is still under your cursor and still focused afterwards.
+- The Diagnostic View is a real WAI-ARIA tab set: arrow keys move between views, Home and End jump
+  to the ends, and only the selected tab is in the tab order. Its caption is a polite live region,
+  so switching views tells a screen-reader user what changed rather than silently swapping a picture.
+- Inactive diagnostic panels use `aria-hidden`, not the `hidden` attribute. `hidden` is
+  `display: none`, Chrome will not load lazy images inside a display-none subtree, and that made
+  pre-decoding impossible.
 - Route changes move focus to `<main>` and reset scroll.
 
 ## Performance and resilience
@@ -379,6 +398,14 @@ derived from `import.meta.env.BASE_URL` and `SITE_URL`, so nothing else needs to
 - The environment track does not load Three.js at all: its hero is a real render with CSS depth
   plates rather than a WebGL scene, which takes 183 kB gzipped off that route and its blocking time
   to zero. The cinematic layer that replaces it is 0.8 kB gzipped and is imported after first paint.
+- Switchable controls decode their alternates once the browser is idle and the control is within
+  600px of the viewport. Nothing is pulled into the critical path and nothing loads for a control
+  nobody scrolls to, but a control you can press has already loaded what it needs. The first hero
+  press measured 744ms before this and 16ms after, and it was never a CPU cost — throttling the
+  CPU sixfold barely moved it, because the wait was image decode.
+- The hero panel switches in 1.2s when it advances on its own and 260ms when someone presses it.
+  A control that takes over a second to acknowledge a click reads as broken, and that second shows
+  up directly in interaction latency.
 - The hero parallax has no animation loop. Scroll events schedule at most one frame each and none
   are scheduled while the page is still; the drift is a CSS animation that is paused, not
   restarted, when the hero leaves the viewport or the visitor interacts with it.

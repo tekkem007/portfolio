@@ -283,6 +283,7 @@ export const projectEvidence: Record<string, EvidenceItem[]> = {
       status: 'verified',
       source:
         'Counted in-editor across all light components before and after the candle-Blueprint shadow fix; recorded in the project handover doc.',
+      better: 'lower',
     },
     {
       label: 'Baked lighting data removed',
@@ -312,30 +313,35 @@ export const projectEvidence: Record<string, EvidenceItem[]> = {
       value: '32.99 → 44.37 (+34.7%)',
       status: 'verified',
       source: 'Mean of 5 cameras, definitive interleaved A/B — Iteration_16_definitive/definitive_summary.csv',
+      better: 'higher',
     },
     {
       label: 'Frame time',
       value: '30.45 → 22.60 ms',
       status: 'verified',
       source: 'CsvProfiler, 2400-frame captures at 2560×1440 native',
+      better: 'lower',
     },
     {
       label: 'GPU time',
       value: '29.60 → 21.76 ms',
       status: 'verified',
       source: 'CsvProfiler GPU stats, same runs',
+      better: 'lower',
     },
     {
       label: '1% low FPS',
       value: '31.87 → 41.91',
       status: 'verified',
       source: '99th-percentile frame time from the same captures',
+      better: 'higher',
     },
     {
       label: 'VRAM',
       value: '4 327 → 3 790 MB',
       status: 'verified',
       source: 'Windows GPU Process Memory counter, cross-checked against the engine’s own stat unit readout',
+      better: 'lower',
     },
     {
       label: 'Test conditions',
@@ -390,9 +396,9 @@ export const projectEvidence: Record<string, EvidenceItem[]> = {
   'layered-material-system': [
     {
       label: 'Shader instructions',
-      status: 'awaiting-owner',
-      howToCapture:
-        'Material Editor → Stats panel. Record base-pass instruction count, and again with the wear static switch on.',
+      value: '152 base pass, 119 vertex',
+      status: 'verified',
+      source: 'MM_BaseLayer Material Editor Stats panel, read off the material-04 capture',
     },
     {
       label: 'Texture sets replaced',

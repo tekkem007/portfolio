@@ -45,7 +45,7 @@
     "webp": "/media/material-02-480.webp 480w, /media/material-02-960.webp 960w, /media/material-02-1440.webp 1440w"
   },
   "material-03": {
-    "alt": "ID mask texture parameter used to assign different material layers to specific regions of a single mesh.",
+    "alt": "The same viewport angle as the ID mask, now lit: the layered material resolved on the mesh, with the Details panel showing its single material slot.",
     "width": 1913,
     "height": 900,
     "aspect": 0.4705,
@@ -54,7 +54,7 @@
     "webp": "/media/material-03-480.webp 480w, /media/material-03-960.webp 960w, /media/material-03-1440.webp 1440w, /media/material-03-1913.webp 1913w"
   },
   "material-04": {
-    "alt": "Viewport preview of an asset with the layered material applied, showing painted metal and emissive trim variation.",
+    "alt": "The MM_BaseLayer master material graph in Unreal, with the Stats panel reading 152 base-pass instructions, 119 vertex-shader instructions and 2 of 16 texture samplers.",
     "width": 1919,
     "height": 1032,
     "aspect": 0.5378,
@@ -63,7 +63,7 @@
     "webp": "/media/material-04-480.webp 480w, /media/material-04-960.webp 960w, /media/material-04-1440.webp 1440w, /media/material-04-1919.webp 1919w"
   },
   "material-05": {
-    "alt": "The same mesh with a different layer assignment, demonstrating in-engine material swapping without re-baking textures.",
+    "alt": "The MLB_ID material layer blend graph: an ID mask texture feeding a Blend Material Attributes node so its colour channels select between a top and bottom layer.",
     "width": 1918,
     "height": 1031,
     "aspect": 0.5375,
@@ -72,7 +72,7 @@
     "webp": "/media/material-05-480.webp 480w, /media/material-05-960.webp 960w, /media/material-05-1440.webp 1440w, /media/material-05-1918.webp 1918w"
   },
   "material-06": {
-    "alt": "Exposed material instance parameters including colour tint, roughness and metallic scalars and static switches for optional surface wear.",
+    "alt": "The ML_LayerBase material layer graph — the node network every material layer in the system is built from.",
     "width": 1919,
     "height": 1030,
     "aspect": 0.5367,
@@ -81,7 +81,7 @@
     "webp": "/media/material-06-480.webp 480w, /media/material-06-960.webp 960w, /media/material-06-1440.webp 1440w, /media/material-06-1919.webp 1919w"
   },
   "material-07": {
-    "alt": "Final shaded result of the layered material system applied across a set of props.",
+    "alt": "The MF_uvr material function graph, handling UV rotation, tiling and offset as reusable inputs.",
     "width": 1919,
     "height": 1030,
     "aspect": 0.5367,

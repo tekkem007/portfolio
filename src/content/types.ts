@@ -66,6 +66,16 @@ export interface EvidenceItem {
   howToCapture?: string;
   /** Where a verified value came from — a file, a capture, or the owner. */
   source?: string;
+  /**
+   * For a value written as "before -> after", which direction is an
+   * improvement.
+   *
+   * Stated rather than inferred. A strip of bars where shorter is better for
+   * milliseconds and longer is better for frames per second is unreadable
+   * unless something says which is which, and guessing it from the unit would
+   * put a judgement in the renderer that belongs with the measurement.
+   */
+  better?: 'lower' | 'higher';
 }
 
 /** Scannable header facts a recruiter reads before any prose. */

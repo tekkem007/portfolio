@@ -1,0 +1,835 @@
+/* ====================================================================== */
+/* Systems lab — technical track only                                     */
+/* ====================================================================== */
+
+/*
+ * A workspace, not a HUD.
+ *
+ * The rule this file is built on: every decorative element has to carry
+ * information. The grid behind the hero is a measurement grid. The rules
+ * between rows are annotation lines. The bars next to a metric are the metric.
+ * The one thing here that is purely ornamental — the line that draws across the
+ * top of the work section — draws once and stops.
+ *
+ * What is deliberately absent: terminals, scanlines, glitch, monospace body
+ * copy, node graphs that do not describe anything, and anything that would read
+ * as an imitation of the Unreal interface. The engine screenshots on this page
+ * are the real interface; the page around them should not compete with it.
+ *
+ * Scope: every rule below is under `.hero[data-lab]`, `.section--lab`, or a
+ * `.sys*` / `.syshero*` / `.syscard*` / `.psr*` / `.diag*` / `.metric*` class.
+ * None of those exist on the environment track.
+ *
+ * Reduced motion: tokens.css collapses durations globally; the block at the
+ * bottom removes the mechanisms so nothing is left mid-transform.
+ */
+
+:root {
+  /* Card and control responses. The brief's 150-300ms band. */
+  --lab-quick: 160ms;
+  --lab-base: 260ms;
+  /* Things that resolve and then hold: bars drawing, a rule extending. */
+  --lab-draw: 900ms;
+
+  --lab-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Data colours. Only ever used to encode a value, never as decoration. */
+  --data-good: #59d98e;
+  --data-warn: #f2b84b;
+}
+
+/* ---------------------------------------------------------------- hero -- */
+
+.hero[data-lab] {
+  min-height: min(94svh, 58rem);
+  padding-block: clamp(var(--sp-7), 8svh, var(--sp-8)) var(--sp-7);
+  isolation: isolate;
+}
+
+.hero[data-lab] .hero__inner {
+  gap: var(--sp-4);
+}
+
+/*
+ * The headline comes down from the site's full display scale for two reasons
+ * here: it shares the hero with the panel, so it has about half the width it
+ * would otherwise have, and the primary action on this page is the case
+ * studies, which has to stay on the first screen.
+ *
+ * No `max-width` — the grid column is the constraint, and adding a second one
+ * only produces the ragged four-word lines it is meant to prevent.
+ */
+.hero[data-lab] h1 {
+  font-size: clamp(1.9rem, 3vw, 2.9rem);
+  line-height: 1.1;
+  margin-bottom: 0;
+}
+
+.hero[data-lab] .eyebrow {
+  margin-bottom: var(--sp-2);
+}
+
+.hero__role {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hero[data-lab] .hero__standfirst {
+  max-width: 54ch;
+  font-size: 1rem;
+}
+
+/* --- Split layout ------------------------------------------------------ */
+
+/*
+ * Two columns: the claim, and the scene that backs it.
+ *
+ * Below 68rem the panel drops under the copy rather than shrinking beside it,
+ * because a viewport panel narrower than about 24rem stops being readable as a
+ * viewport.
+ */
+@media (min-width: 68rem) {
+  .hero[data-lab] .hero__inner--split {
+    display: grid;
+    /* The shared hero caps itself at 54rem, which is right for one column of
+       copy and far too narrow for two. */
+    max-width: min(100%, 84rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+    align-items: start;
+    gap: clamp(var(--sp-6), 4vw, var(--sp-8));
+  }
+}
+
+.hero__copy {
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+}
+
+/* A single measured rule across the top of the hero, not a full grid field. */
+.hero__rule {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 18%, var(--accent-2) 52%, transparent 88%);
+  opacity: 0.32;
+}
+
+/* --- The inspection panel ---------------------------------------------- */
+
+.syspanel {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raise);
+  overflow: hidden;
+  box-shadow: 0 1.5rem 3rem -2rem rgb(0 0 0 / 80%);
+}
+
+@media (max-width: 68rem) {
+  .syspanel {
+    margin-top: var(--sp-6);
+  }
+}
+
+.syspanel__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-sunk);
+}
+
+.syspanel__title {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.syspanel__states {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.syspanel__state {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 0.35rem 0.75rem;
+  min-height: 34px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color var(--lab-quick) var(--lab-ease),
+    background-color var(--lab-quick) var(--lab-ease);
+}
+
+.syspanel__state:hover {
+  color: var(--ink);
+}
+
+.syspanel__state[aria-pressed='true'] {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.syspanel__state:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .syspanel__state {
+    min-height: 44px;
+    padding-inline: 0.9rem;
+  }
+}
+
+.syspanel__stage {
+  position: relative;
+  background: var(--bg-sunk);
+  /* The source frames are 1200x481. Reserving their real ratio means the panel
+     shows the whole composition and nothing shifts as it loads. */
+  aspect-ratio: 1200 / 481;
+  overflow: hidden;
+}
+
+/*
+ * Two speeds, on purpose.
+ *
+ * Left alone, the panel drifts between presets over 1.2s, which reads as
+ * lighting changing rather than a slideshow advancing. Pressed, it answers in
+ * 260ms, because a control that takes over a second to acknowledge a click
+ * feels broken however pretty the fade is — and that second is exactly what
+ * shows up in an interaction-latency measurement.
+ */
+.syspanel__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s var(--lab-ease);
+}
+
+.syspanel[data-pressed] .syspanel__frame {
+  transition-duration: var(--lab-base);
+}
+
+.syspanel__frame[data-active] {
+  opacity: 1;
+}
+
+.syspanel__frame picture,
+.syspanel__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Measurement grid over the frame: it reads as an inspected viewport, which is
+   what this is, rather than as texture. */
+.syspanel__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  mask-image: radial-gradient(75% 75% at 50% 50%, transparent 40%, #000 100%);
+}
+
+.syspanel__flag {
+  position: absolute;
+  left: var(--sp-3);
+  bottom: var(--sp-3);
+  margin: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(11 15 20 / 78%);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--data-good);
+}
+
+.syspanel__credit {
+  padding: var(--sp-3);
+  border-top: 1px solid var(--line);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+/* ------------------------------------------------------------ work grid -- */
+
+.section--lab {
+  position: relative;
+}
+
+/* Annotation rule: draws once as the section arrives, then holds. */
+.sys-rule {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sys-rule::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2) 55%, transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  opacity: 0.6;
+}
+
+.sys-rule.is-open::before {
+  animation: sys-rule-draw var(--lab-draw) var(--lab-ease) forwards;
+}
+
+@keyframes sys-rule-draw {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.sys-grid {
+  display: grid;
+  gap: clamp(var(--sp-5), 3vw, var(--sp-7));
+}
+
+/* ---------------------------------------------------------------- card -- */
+
+/*
+ * No `overflow: hidden` on the card, deliberately.
+ *
+ * It is the obvious way to keep the media inside the rounded corner, and it
+ * silently kills `position: sticky` on anything inside — which left the image
+ * column blank the moment a long card scrolled past its own image. The media
+ * clips itself instead.
+ */
+.syscard {
+  display: grid;
+  gap: 0;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--lab-base) var(--lab-ease),
+    box-shadow var(--lab-base) var(--lab-ease);
+}
+
+.syscard:hover,
+.syscard:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: 0 1.25rem 2.5rem -1.5rem rgb(0 0 0 / 60%);
+}
+
+.syscard:focus-within {
+  border-color: var(--accent);
+}
+
+@media (min-width: 68rem) {
+  .syscard {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.syscard__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-sunk);
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/*
+ * Beside a long problem-system-result column the image stays put, so the
+ * diagnostic control is still reachable at the point in the text where it
+ * becomes relevant. Single column, it scrolls away like anything else.
+ */
+@media (min-width: 68rem) {
+  .syscard__media {
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    position: sticky;
+    top: 5rem;
+  }
+}
+
+.syscard__media > picture,
+.syscard__media > picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.syscard__body {
+  padding: clamp(var(--sp-5), 2.4vw, var(--sp-7));
+  display: grid;
+  align-content: start;
+  gap: var(--sp-4);
+}
+
+.syscard__head {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.syscard__category {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.syscard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.syscard__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.syscard__title a:hover {
+  color: var(--accent);
+}
+
+.syscard__title a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.syscard__engine {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+}
+
+.syscard__summary {
+  margin: 0;
+  color: var(--ink-dim);
+  line-height: 1.6;
+}
+
+/* --- Problem → System → Result ---------------------------------------- */
+
+/*
+ * The four rows are the argument, so they are a description list rather than
+ * paragraphs with bold lead-ins: the label and its answer are genuinely a pair,
+ * and a screen reader should read them as one.
+ *
+ * The rule down the left is the annotation line. It is not decoration — it is
+ * what makes the four rows read as one continuous chain rather than four
+ * unrelated facts, and the marker on each row is where that row joins it.
+ */
+.psr {
+  margin: 0;
+  display: grid;
+  gap: var(--sp-4);
+  position: relative;
+  padding-left: var(--sp-5);
+}
+
+.psr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  bottom: 0.45rem;
+  width: 1px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2) 60%, transparent);
+  opacity: 0.4;
+}
+
+.psr__row {
+  position: relative;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.psr__row::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--sp-5) * -1);
+  top: 0.5rem;
+  width: 7px;
+  height: 7px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--bg-raise);
+  border: 1px solid var(--accent);
+}
+
+.psr__row[data-stage='result']::before {
+  background: var(--accent);
+}
+
+.psr dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.psr__row[data-stage='result'] dt {
+  color: var(--accent);
+}
+
+.psr dd {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  line-height: 1.62;
+}
+
+/* --- Release facts, metrics, role, lesson ------------------------------ */
+
+.syscard__release {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+
+.syscard__release dt {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.syscard__release dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.88rem;
+  color: var(--ink-dim);
+}
+
+.syscard__metrics {
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+
+.syscard__metrics-head {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.syscard__role {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+
+.syscard__lesson {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-dim);
+  padding-left: var(--sp-4);
+  border-left: 2px solid var(--accent-2);
+}
+
+.syscard__lesson span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.25rem;
+}
+
+.syscard__actions {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- metrics -- */
+
+.metrics {
+  margin: 0;
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.metrics[data-compact] {
+  gap: var(--sp-3);
+}
+
+.metric dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+
+.metric dd {
+  margin: 0.2rem 0 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.metric__pair {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric__before {
+  color: var(--ink-faint);
+  font-size: 0.9rem;
+}
+
+.metric__arrow {
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+}
+
+.metric__after {
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.metric[data-improved] .metric__after {
+  color: var(--data-good);
+}
+
+.metric__unit {
+  color: var(--ink-dim);
+  font-size: 0.8rem;
+}
+
+/*
+ * The bars.
+ *
+ * Two lengths on one scale, so the change is legible without reading the
+ * numbers — which is the entire job of a profiling graph. They draw once when
+ * the metric scrolls into view and then hold; nothing here loops.
+ */
+.metric__bars {
+  display: grid;
+  gap: 3px;
+}
+
+.metric__bar {
+  display: block;
+  height: 4px;
+  width: var(--w);
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+
+.metric__bar--after {
+  background: var(--accent);
+}
+
+.metric[data-improved] .metric__bar--after {
+  background: var(--data-good);
+}
+
+.metrics[data-run] .metric__bar {
+  animation: bar-draw var(--lab-draw) var(--lab-ease) both;
+}
+
+.metrics[data-run] .metric__bar--after {
+  animation-delay: 120ms;
+}
+
+@keyframes bar-draw {
+  from {
+    width: 0;
+  }
+}
+
+/* ------------------------------------------------------- diagnostic view -- */
+
+.diag {
+  display: grid;
+}
+
+.diag__stage {
+  position: relative;
+  background: var(--bg-sunk);
+  /* Reserved before any image arrives, so switching views never shifts. */
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+/*
+ * Every panel stays rendered and only opacity changes.
+ *
+ * Not a style preference: `display: none` stops Chrome loading the lazy images
+ * inside it, which made pre-decoding impossible and left the first press of
+ * each tab waiting on a download. Panels are hidden from assistive technology
+ * with aria-hidden instead, and made non-interactive here.
+ */
+.diag__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--lab-base) var(--lab-ease);
+}
+
+.diag__frame[data-active] {
+  pointer-events: auto;
+}
+
+.diag__frame[data-active] {
+  opacity: 1;
+}
+
+.diag__frame picture,
+.diag__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.diag__aligned {
+  position: absolute;
+  right: var(--sp-3);
+  top: var(--sp-3);
+  margin: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(11 15 20 / 78%);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--data-good);
+}
+
+.diag__controls {
+  padding: var(--sp-3) var(--sp-4) var(--sp-4);
+  display: grid;
+  gap: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+
+.diag__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-sunk);
+}
+
+.diag__tab {
+  appearance: none;
+  border: 0;
+  border-radius: 2px;
+  padding: 0.45rem 0.8rem;
+  min-height: 34px;
+  flex: 1 1 auto;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color var(--lab-quick) var(--lab-ease),
+    background-color var(--lab-quick) var(--lab-ease);
+}
+
+.diag__tab:hover {
+  color: var(--ink);
+}
+
+.diag__tab[aria-selected='true'] {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.diag__tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .diag__tab {
+    min-height: 44px;
+  }
+}
+
+.diag__note {
+  margin: 0;
+  min-height: 2.6em;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+
+/* ------------------------------------------------------- reduced motion -- */
+
+@media (prefers-reduced-motion: reduce) {
+  .syspanel__frame,
+  .diag__frame {
+    transition: none !important;
+  }
+
+  .metrics[data-run] .metric__bar {
+    animation: none !important;
+    width: var(--w);
+  }
+
+  .sys-rule::before {
+    transform: none;
+    animation: none !important;
+  }
+
+  .syscard:hover,
+  .syscard:focus-within {
+    box-shadow: none;
+  }
+}

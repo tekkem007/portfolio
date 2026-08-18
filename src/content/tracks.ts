@@ -66,6 +66,23 @@ export interface TrackDef {
     /** Short caption naming what the establishing shot actually is. */
     heroCaption: string;
   };
+  /**
+   * Present on a track presented as a systems workspace rather than a gallery.
+   *
+   * The technical track uses it: its work is shown as one section of
+   * problem-system-result cards, its hero runs a real project scene through the
+   * states the engine can show it in, and its primary call to action is the
+   * case studies rather than the contact form, because that is what a technical
+   * reviewer opens first.
+   */
+  lab?: {
+    heading: string;
+    intro: string;
+    /** Label on the primary hero action. */
+    cta: string;
+    /** Ownership line for the hero scene. Non-negotiable: the art is not his. */
+    heroCredit: string;
+  };
   /** Which capability groups lead on this track, by heading. */
   leadCapabilities: string[];
   seo: { title: string; description: string };
@@ -94,6 +111,14 @@ export const tracks: Record<Track, TrackDef> = {
       'Lumen, baked lighting & Virtual Shadow Maps',
       'Modular systems & efficient scene construction',
     ],
+    lab: {
+      heading: 'Selected Technical Art & Real-Time Work',
+      intro:
+        'Four systems and one playable prototype, each stated as the problem it addresses, the thing built to address it, and what that measurably changed. Where a number has not been captured yet, the card says so rather than rounding it off.',
+      cta: 'View technical case studies',
+      heroCredit:
+        'Time of Day system — environment by Polyart Studio; the lighting conversion, presets and C++ controller are mine.',
+    },
     workHeading: 'Systems, measured',
     workIntro:
       'Each of these has a full breakdown: the constraint, the decision I made, what it cost, and how I know. Where a project runs on assets I did not author, the case study says so in its first line — the art is a fixed variable and the technical work is the contribution.',
