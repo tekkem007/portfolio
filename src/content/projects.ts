@@ -247,6 +247,82 @@ export const projects: Project[] = [
   },
 
   {
+    slug: 'time-of-day-system',
+    title: 'Time of Day: Runtime Day/Night Lighting System',
+    summary:
+      'A baked, night-only Unreal scene rebuilt as a fully dynamic Lumen environment, with a C++ controller that switches or blends between two complete lighting looks at runtime.',
+    domain: 'systems',
+    ownership: 'personal',
+    evidence: 'verified',
+    year: '2026',
+    software: ['Unreal Engine 5.4', 'C++', 'Movie Render Queue'],
+    tags: ['Lumen', 'Lighting pipeline', 'Tools programming', 'Runtime systems', 'Optimisation'],
+    cover: 'tod-01',
+    caseStudy: {
+      standfirst:
+        'The scene shipped lit exactly one way: baked, static, night. Making it a second time of day was not a slider — it was a second bake. So I removed the bake entirely and replaced it with a system.',
+      role: 'Lighting pipeline conversion, C++ tooling, optimisation and look development.',
+      contribution:
+        'Personal project, worked on alone. The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab), used as-is — the models, materials and level layout are theirs, not mine, and this is not presented as my environment work. What is mine is the conversion from baked to dynamic lighting, the C++ Time of Day system, both lighting presets, and the optimisation described below.',
+      sections: [
+        {
+          heading: 'What was actually in the box',
+          body: [
+            'The level arrived fully baked: 1.1 GB of lightmap data, a Static directional light at 1 lux, and a Post Process Volume that explicitly forced Lumen global illumination and reflections to None. The project was also running DX11 with Shader Model 5, so Lumen and Virtual Shadow Maps were not merely disabled — they were unavailable.',
+            'That rules out the obvious approach. You cannot brighten a baked night into a day, because every bounce you can see is stored in a lightmap that was solved for one sun position. A day version means a second bake, and a second bake means every subsequent tweak costs hours.',
+          ],
+        },
+        {
+          heading: 'Removing the bake',
+          body: [
+            'I moved the project to DX12 / SM6 and enabled Virtual Shadow Maps, then set the sun, the sky light and all 49 local lights to Movable, with the sky light on Real-Time Capture. The 1.1 GB of built lighting data had to leave the content directory entirely: with the sun Movable it no longer contributes, but Unreal will still apply the stale baked night on top of Lumen if the file is present.',
+            'I chose software Lumen over hardware ray tracing. Switching to DX12 would have silently activated the project’s dormant ray-tracing flags across every level, and the target here was a playable frame budget on a mid-range GPU, not a maximum-quality still.',
+            'The important constraint was blast radius. This project contains around thirty other levels that are still baked, so Lumen is enabled only on this one, through its own Post Process Volume overrides, rather than by flipping the project-wide default. Nothing else in the project changed appearance.',
+          ],
+        },
+        {
+          heading: 'The system',
+          body: [
+            'The controller is a C++ actor holding two instances of one struct. A preset describes an entire look: sun angle, colour, intensity and volumetric scattering; sky intensity and colour; height fog and volumetric fog; the post-process grade; multipliers for the level’s local lamps; and which particle systems are visible.',
+            'Apply Day and Apply Night are exposed as editor buttons, so the viewport updates live while you tune, and the same code path runs at runtime. Because a look is data rather than a saved level state, blending between the two is a lerp across the struct.',
+            'One design detail mattered more than it looks. The local lamp multipliers scale relative to a saved record of what is already applied, not to a sampled baseline. The first version sampled live intensities on load — which meant every reload treated the already-scaled values as the new baseline, and the multiplier compounded silently. The lamps had reached 2.7× their authored brightness before I caught it.',
+          ],
+        },
+        {
+          heading: 'Making it cheap enough to run',
+          body: [
+            'The pack’s candle Blueprint carries a point light with dynamic shadows enabled. That is invisible in a baked scene and ruinous in a dynamic one: 132 candle instances meant 132 shadow-casting lights, each of them a 10-lumen source with a 200 cm radius — the kind of light whose shadows nobody will ever see.',
+            'Turning shadows off on that one component took the level from 143 dynamic shadow casters to 11. I applied it as a per-instance override rather than editing the shared Blueprint, because other levels in the project use the same asset and none of them asked for a lighting change.',
+          ],
+        },
+        {
+          heading: 'Three bugs worth writing down',
+          body: [
+            'Renders came out white while the viewport looked correct. The editor viewport applies physical camera exposure — f/4, 1/60 s, ISO 100, about 9.9 EV of it — and Movie Render Queue does not. Every value I had tuned by eye in the viewport was roughly ten stops too bright when rendered. Pinning that setting off in both paths and re-baselining the exposure bias closed the gap. I was wrong twice before I found it.',
+            'Volumetric fog effectively only exists at Cinematic scalability. Movie Render Queue forces Cinematic through its Game Override settings, so fog I had tuned in a default viewport — where volumetric fog is quietly off — rendered as an opaque white-out. It was around seventy-five times too dense. Fog tuning now happens with the viewport pinned to Cinematic, which is the only way what you see matches what renders.',
+            'The blend flashed magenta at its midpoint. Interpolating light colour with Unreal’s HSV lerp takes the long way round the hue wheel between a warm sun and a cool moon, and passes straight through magenta on the way. Linear RGB fixed it, and the midpoint now reads as a believable dusk.',
+          ],
+        },
+      ],
+      video: {
+        id: 'tod-blend',
+        poster: 'tod-01',
+        width: 1920,
+        height: 804,
+        description:
+          'The cave entrance cross-fading from the Day preset to the Night preset and back: sunlight drains from the rock face, the sky cools to deep blue, and the two door lamps rise from barely visible to the brightest thing in frame.',
+        caption: 'Day to night and back. One level, one controller, no baked lighting.',
+      },
+      gallery: [
+        { id: 'tod-01', caption: 'Day preset — sun at −52°, exposure bias −4.0, lamps at 0.8× their authored intensity.' },
+        { id: 'tod-02', caption: 'Night preset — the same camera and geometry, with only the preset changed.' },
+        { id: 'tod-03', caption: 'Every field of the preset struct, Day against Night. The highlighted rows are what actually differs.' },
+        { id: 'tod-04', caption: 'Five points along the night-to-day interpolation.' },
+      ],
+    },
+  },
+
+  {
     slug: 'the-silent-gate',
     title: 'The Silent Gate',
     summary:
@@ -255,16 +331,17 @@ export const projects: Project[] = [
     ownership: 'personal',
     evidence: 'verified',
     year: '2026',
-    software: ['Unreal Engine 5', 'Blender', 'Substance 3D Painter'],
-    tags: ['Stylised', 'Environment storytelling', 'Foliage', 'Lighting design', 'Composition'],
+    software: ['Unreal Engine 5'],
+    tags: ['Stylised', 'Lighting design', 'Composition', 'Cinematography'],
     cover: 'silent-gate-01',
     externalUrl: 'https://www.artstation.com/artwork/EzBAXq',
     externalLabel: 'View on ArtStation (includes camera fly-through)',
     caseStudy: {
       standfirst:
         'An environment that has to feel inviting and exclusionary at the same time — and a lighting setup built to make the viewer feel both without being told.',
-      role: 'Full environment: modelling, texturing, foliage, lighting and camera.',
-      contribution: 'Personal project, made independently end to end, including the camera fly-through below.',
+      role: 'Lighting, composition and camera on a third-party environment.',
+      contribution:
+        'Personal project, worked on alone. The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab, free-for-the-month giveaway) — the models, materials, foliage and level layout are theirs, not mine, and this is not presented as my environment work. What is mine is the lighting design, the composition and the camera fly-through below.',
       sections: [
         {
           heading: 'The idea',
@@ -277,7 +354,7 @@ export const projects: Project[] = [
           heading: 'Stylised, but with weight',
           body: [
             'The target was a painterly, stylised aesthetic that still carries physical weight and scale. Stylisation makes it very easy to lose mass; shapes get charming and stop feeling heavy.',
-            'The rock faces do most of that work. I leaned into a lived-in treatment — moss and hanging vines breaking up the harsh geometry of the cavern entrance — so the cliffs read as old and solid rather than as smooth stylised forms.',
+            'The rock faces do most of that work. The pack’s moss and hanging vines already break up the harsh geometry of the cavern entrance; what I controlled was framing and light, chosen so the cliffs read as old and solid rather than as smooth stylised forms.',
           ],
         },
         {
@@ -290,7 +367,7 @@ export const projects: Project[] = [
         {
           heading: 'Depth through palette',
           body: [
-            'The grass and flowers are designed to look soft and wind-swept, deliberately contrasting with the sharp, craggy cliff textures.',
+            'The grass and flowers read soft and wind-swept against the sharp, craggy cliff textures, and I built the shot around that contrast.',
             'I kept the foreground palette vibrant and let it desaturate into the distance. That atmospheric perspective is what gives the shot depth, and it also means the muted vault reads as further away and colder than it strictly is.',
           ],
         },

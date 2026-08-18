@@ -107,6 +107,42 @@
     "avif": "/media/silent-gate-02-480.avif 480w, /media/silent-gate-02-960.avif 960w, /media/silent-gate-02-1440.avif 1440w, /media/silent-gate-02-1920.avif 1920w",
     "webp": "/media/silent-gate-02-480.webp 480w, /media/silent-gate-02-960.webp 960w, /media/silent-gate-02-1440.webp 1440w, /media/silent-gate-02-1920.webp 1920w"
   },
+  "tod-01": {
+    "alt": "The cave entrance lit by the Day preset: warm sunlight raking across pale rock, green grass in the foreground and the circular door in cool shadow.",
+    "width": 1920,
+    "height": 803,
+    "aspect": 0.4182,
+    "fallback": "/media/tod-01.jpg",
+    "avif": "/media/tod-01-480.avif 480w, /media/tod-01-960.avif 960w, /media/tod-01-1440.avif 1440w, /media/tod-01-1920.avif 1920w",
+    "webp": "/media/tod-01-480.webp 480w, /media/tod-01-960.webp 960w, /media/tod-01-1440.webp 1440w, /media/tod-01-1920.webp 1920w"
+  },
+  "tod-02": {
+    "alt": "The same cave entrance lit by the Night preset: deep blue moonlight on the rock face with the two door lamps casting warm pools onto the doorway.",
+    "width": 1920,
+    "height": 803,
+    "aspect": 0.4182,
+    "fallback": "/media/tod-02.jpg",
+    "avif": "/media/tod-02-480.avif 480w, /media/tod-02-960.avif 960w, /media/tod-02-1440.avif 1440w, /media/tod-02-1920.avif 1920w",
+    "webp": "/media/tod-02-480.webp 480w, /media/tod-02-960.webp 960w, /media/tod-02-1440.webp 1440w, /media/tod-02-1920.webp 1920w"
+  },
+  "tod-03": {
+    "alt": "A table comparing every field of the FTimeOfDayPreset struct between the Day and Night presets, with the differing rows highlighted.",
+    "width": 1204,
+    "height": 1820,
+    "aspect": 1.5116,
+    "fallback": "/media/tod-03.jpg",
+    "avif": "/media/tod-03-480.avif 480w, /media/tod-03-960.avif 960w, /media/tod-03-1204.avif 1204w",
+    "webp": "/media/tod-03-480.webp 480w, /media/tod-03-960.webp 960w, /media/tod-03-1204.webp 1204w"
+  },
+  "tod-04": {
+    "alt": "Five frames stacked vertically showing the same shot at five points along the night-to-day interpolation.",
+    "width": 1600,
+    "height": 3369,
+    "aspect": 2.1056,
+    "fallback": "/media/tod-04.jpg",
+    "avif": "/media/tod-04-480.avif 480w, /media/tod-04-960.avif 960w, /media/tod-04-1440.avif 1440w, /media/tod-04-1600.avif 1600w",
+    "webp": "/media/tod-04-480.webp 480w, /media/tod-04-960.webp 960w, /media/tod-04-1440.webp 1440w, /media/tod-04-1600.webp 1600w"
+  },
   "hatch-01": {
     "alt": "Sub-Level 04 reactor access hatch: a stylised pill-shaped pressure door in cream and cerulean blue with oversized external hinges and a manual handle.",
     "width": 1919,
