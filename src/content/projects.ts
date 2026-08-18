@@ -1,5 +1,5 @@
-import type { Project } from './types';
-import { archivedSlugs, projectEvidence, projectRank, projectSpecs } from './projectEvidence';
+import type { Project, Track } from './types';
+import { archivedSlugs, projectEvidence, projectRank, projectSpecs, trackRank } from './projectEvidence';
 
 /**
  * Project content.
@@ -522,6 +522,36 @@ export const flagshipProjects = decorated.filter((p) => p.caseStudy);
 
 /** Supporting work: current, but without its own page. */
 export const supportingProjects = currentProjects.filter((p) => !p.caseStudy);
+
+/**
+ * Everything shown on one recruiter track, in that track's order.
+ *
+ * Membership comes from `trackRank`: a project missing from a track's map is not
+ * shown on it at all. Archive state is still honoured, so an older study stays
+ * collapsed on whichever track it appears on.
+ */
+export function projectsForTrack(track: Track): Project[] {
+  const ranks = trackRank[track];
+  return decorated
+    .filter((p) => ranks[p.slug] !== undefined)
+    .slice()
+    .sort((a, b) => ranks[a.slug] - ranks[b.slug]);
+}
+
+/** Flagships for a track: the three-to-five pieces a reviewer should open. */
+export function flagshipsForTrack(track: Track): Project[] {
+  return projectsForTrack(track).filter((p) => p.caseStudy && !p.archived);
+}
+
+/** Supporting cards for a track: current work without its own page. */
+export function supportingForTrack(track: Track): Project[] {
+  return projectsForTrack(track).filter((p) => !p.caseStudy && !p.archived);
+}
+
+/** Earlier work for a track, shown collapsed. */
+export function archivedForTrack(track: Track): Project[] {
+  return projectsForTrack(track).filter((p) => p.archived);
+}
 
 export function getProject(slug: string): Project | undefined {
   return decorated.find((p) => p.slug === slug);

@@ -1,4 +1,4 @@
-import type { EvidenceItem, ProjectSpec } from './types';
+import type { EvidenceItem, ProjectSpec, Track } from './types';
 
 /**
  * Project ranking, scannable specs, and the evidence ledger.
@@ -19,6 +19,47 @@ import type { EvidenceItem, ProjectSpec } from './types';
  * `source` must say which. Nothing is estimated, rounded from memory, or
  * inferred from what "looks about right".
  */
+
+/**
+ * Which projects appear on each recruiter track, and in what order.
+ *
+ * Absence means the project is not shown on that track at all — a reviewer
+ * screening for one role should not have to scroll past evidence for the other.
+ * A project appears twice only when it carries independently strong evidence for
+ * both audiences, and its position changes to match what that reviewer cares
+ * about first.
+ *
+ * Two deliberate exclusions worth stating, because they look like omissions:
+ *   • `performance-audit` and `time-of-day-system` are technical-art only. Both
+ *     run on third-party environment packs. Their technical contribution is
+ *     entirely Vishnu's, but listing them as environment work would invite
+ *     exactly the misreading the case studies go out of their way to prevent.
+ *   • `maintenance-hangar` is the one project on both tracks: it is his own
+ *     environment AND it contains the spline-based mesh-instancing Blueprint,
+ *     so each audience has something of its own to look at.
+ */
+export const trackRank: Record<Track, Record<string, number>> = {
+  'technical-art': {
+    'time-of-day-system': 1,
+    'performance-audit': 2,
+    'layered-material-system': 3,
+    'maintenance-hangar': 4,
+    'lastline-echoes-below': 5,
+  },
+  'environment-art': {
+    'maintenance-hangar': 1,
+    'reactor-access-hatch': 2,
+    'arc-04-fusion-cell': 3,
+    'gilded-relic': 4,
+    'industrial-lpg-cylinder': 5,
+    'travellers-trio': 6,
+    bmo: 7,
+    'layered-material-system': 8,
+    'metal-toy-car': 9,
+    checkmate: 10,
+    'uzui-swords': 11,
+  },
+};
 
 /** Lower sorts first. Ordered by hiring value for the stated primary role. */
 export const projectRank: Record<string, number> = {

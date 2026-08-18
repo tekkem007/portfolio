@@ -1,42 +1,57 @@
-import { href } from '../lib/router';
+import { href, Link } from '../lib/router';
 import { HeroScene } from '../components/HeroScene';
 import { SeaScene } from '../components/SeaScene';
 import { ProjectCard } from '../components/ProjectCard';
 import { profile, education } from '../content/profile';
-import { archivedProjects, flagshipProjects, supportingProjects } from '../content/projects';
+import { archivedForTrack, flagshipsForTrack, supportingForTrack } from '../content/projects';
 import { roles, leadership } from '../content/experience';
 import { capabilities, familiarity, learning, tools } from '../content/capabilities';
-
-// Ordering and archive state come from projectEvidence.ts, so hiring-value
-// decisions live in one reviewable file rather than in JSX.
-const flagships = flagshipProjects;
-const supporting = supportingProjects;
+import { tracks, otherTrack } from '../content/tracks';
+import type { Track as TrackId } from '../content/types';
 
 /**
- * Spells the flagship count for the section heading.
+ * One recruiter track.
  *
- * The heading was hardcoded to "Three projects" and silently became wrong the
- * moment a fourth case study was added. Deriving it means the copy cannot drift
- * from what is actually on the page.
+ * Both tracks render from this component, so the two paths cannot drift apart
+ * structurally — only their content does. What changes per track: the hero copy,
+ * which projects appear and in what order, the order of the capability groups,
+ * and whether the tooling sections are shown at all. What stays shared:
+ * experience, education, availability and contact, because those are the same
+ * person either way.
  */
-function countWord(n: number): string {
-  return ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? String(n);
-}
+export function Track({ track }: { track: TrackId }) {
+  const def = tracks[track];
+  const other = otherTrack(track);
+  const flagships = flagshipsForTrack(track);
+  const supporting = supportingForTrack(track);
+  const archived = archivedForTrack(track);
 
-export function Home() {
+  // Capability groups reordered so the ones this reviewer screens on come
+  // first. Nothing is hidden — a technical reviewer still sees the art skills,
+  // just below the engine ones.
+  const caps = [...capabilities].sort(
+    (a, b) =>
+      (def.leadCapabilities.indexOf(a.heading) + 1 || 99) - (def.leadCapabilities.indexOf(b.heading) + 1 || 99),
+  );
+
+  // The tooling and interactive sections are implementation evidence, which is
+  // what the technical track is screened on. On the environment track they would
+  // push the art further down the page for no gain.
+  const showToolSections = track === 'technical-art';
+
   return (
     <>
-      <section className="hero" data-domain="worlds" aria-labelledby="hero-title">
+      <section className="hero" data-domain={track === 'technical-art' ? 'systems' : 'worlds'} aria-labelledby="hero-title">
         <HeroScene />
         <div className="shell hero__inner">
-          <p className="eyebrow">{profile.role}</p>
-          <h1 id="hero-title">{profile.headline}</h1>
-          <p className="hero__standfirst">{profile.standfirst}</p>
+          <p className="eyebrow">{def.eyebrow}</p>
+          <h1 id="hero-title">{def.headline}</h1>
+          <p className="hero__standfirst">{def.standfirst}</p>
           <div className="hero__meta">
             <span>{profile.location}</span>
-            <span>Unreal Engine 5</span>
-            <span>Blender</span>
-            <span>Substance 3D Painter</span>
+            {def.tools.map((tool) => (
+              <span key={tool}>{tool}</span>
+            ))}
           </div>
           <div className="hero__actions">
             <a className="btn btn--primary" href="#work">
@@ -49,45 +64,24 @@ export function Home() {
         </div>
       </section>
 
-      {/* --- The two disciplines, stated plainly ------------------------- */}
-      <section className="section section--tight" aria-labelledby="disciplines-title">
+      {/* --- What this track covers -------------------------------------- */}
+      <section className="section section--tight" aria-labelledby="focus-title">
         <div className="shell shell--media">
-          <h2 id="disciplines-title" className="visually-hidden">
-            What I do
-          </h2>
-          <div className="duality">
-            <div className="duality__pane" data-domain="worlds" data-reveal="">
-              <p className="eyebrow">Real-time worlds</p>
-              <h3>Environments that hold their budget</h3>
-              <p>
-                Modular kits, PBR texturing and Unreal Engine 5 lighting — built with trim sheets, virtual textures and
-                draw-call reduction so the art survives contact with a frame budget.
-              </p>
-              <div className="duality__list">
-                {['Modular kits', 'Lumen & baked lighting', 'Trim sheets', 'Draw-call reduction'].map((t) => (
-                  <span className="tag" key={t}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="duality__pane" data-domain="systems" data-reveal="">
-              <p className="eyebrow">Intelligent systems</p>
-              <h3>Systems that keep a team moving</h3>
-              <p>
-                Material systems other artists can drive, small pipeline tools that delete repetitive steps, and
-                AI-assisted prototypes that put a concept in front of people quickly.
-              </p>
-              <div className="duality__list">
-                {['Layered materials', 'ID masking', 'Pipeline tooling', 'AI-assisted prototyping'].map((t) => (
-                  <span className="tag" key={t}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <div className="section-head">
+            <p className="eyebrow">{def.label}</p>
+            <h2 id="focus-title">What this covers</h2>
           </div>
+          <ul className="focus-list">
+            {def.bullets.map((bullet) => (
+              <li key={bullet} data-reveal="">
+                {bullet}
+              </li>
+            ))}
+          </ul>
+          <p className="focus-switch">
+            Screening for {other.label.toLowerCase()} work instead?{' '}
+            <Link to={other.path}>See the {other.label.toLowerCase()} portfolio →</Link>
+          </p>
         </div>
       </section>
 
@@ -96,12 +90,8 @@ export function Home() {
         <div className="shell shell--media">
           <div className="section-head">
             <p className="eyebrow">Selected work</p>
-            <h2 id="work-title">{countWord(flagships.length)} projects, in depth</h2>
-            <p>
-              Each of these has a full breakdown: what the problem was, the decision I made, and what it cost. All of it
-              is personal work. Where a project is built on assets I did not author, the case study says so in its first
-              line.
-            </p>
+            <h2 id="work-title">{def.workHeading}</h2>
+            <p>{def.workIntro}</p>
           </div>
 
           <div className="work-grid">
@@ -115,8 +105,6 @@ export function Home() {
       {/* --- Experience -------------------------------------------------- */}
       <section className="section section--railed" id="experience" aria-labelledby="experience-title">
         <div className="shell">
-          {/* On wide screens this holds the left edge while the roles scroll
-              past it, so the reclaimed margin carries the section label. */}
           <div className="section-head">
             <p className="eyebrow">Experience</p>
             <h2 id="experience-title">{leadership.heading}</h2>
@@ -163,59 +151,51 @@ export function Home() {
       </section>
 
       {/* --- Supporting work --------------------------------------------- */}
-      <section className="section" id="more-work" aria-labelledby="more-work-title">
-        <div className="shell shell--media">
-          <div className="section-head">
-            <p className="eyebrow">Props, studies & prototypes</p>
-            <h2 id="more-work-title">Assets, studies and prototypes</h2>
-            <p>
-              Hard-surface props, weathering studies and product visualisation — the practice that feeds the
-              environments — alongside a playable browser prototype. Each card links out to where the work is
-              published.
-            </p>
+      {(supporting.length > 0 || archived.length > 0) && (
+        <section className="section" id="more-work" aria-labelledby="more-work-title">
+          <div className="shell shell--media">
+            <div className="section-head">
+              <p className="eyebrow">{def.supportingHeading}</p>
+              <h2 id="more-work-title">{def.supportingHeading}</h2>
+              <p>{def.supportingIntro}</p>
+            </div>
+
+            <div className="work-grid">
+              {supporting.map((project) => (
+                <ProjectCard key={project.slug} project={project} />
+              ))}
+            </div>
+
+            {archived.length > 0 && (
+              <details className="archive">
+                <summary>Earlier work ({archived.length}) — 2022 studies</summary>
+                <div className="archive__grid">
+                  {archived.map((project) => (
+                    <article className="archive__item" key={project.slug}>
+                      <h3>
+                        {project.externalUrl ? (
+                          <a href={project.externalUrl} target="_blank" rel="noopener noreferrer">
+                            {project.title}
+                          </a>
+                        ) : (
+                          project.title
+                        )}
+                      </h3>
+                      <p>
+                        {project.year} · {project.software.join(', ')}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </details>
+            )}
           </div>
+        </section>
+      )}
 
-          <div className="work-grid">
-            {supporting.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
-            ))}
-          </div>
-
-          {archivedProjects.length > 0 && (
-            // Collapsed by default: a reviewer judges by the weakest visible
-            // piece, and these sit several years behind the current standard.
-            <details className="archive">
-              <summary>Earlier work ({archivedProjects.length}) — 2022 studies</summary>
-              <div className="archive__grid">
-                {archivedProjects.map((project) => (
-                  <article className="archive__item" key={project.slug}>
-                    <h3>
-                      {project.externalUrl ? (
-                        <a href={project.externalUrl} target="_blank" rel="noopener noreferrer">
-                          {project.title}
-                        </a>
-                      ) : (
-                        project.title
-                      )}
-                    </h3>
-                    <p>
-                      {project.year} · {project.software.join(', ')}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </details>
-          )}
-        </div>
-      </section>
-
-      {/* --- Interactive: the buoy at sea --------------------------------- */}
-      <SeaScene />
+      {showToolSections && <SeaScene />}
 
       {/* --- Capabilities ------------------------------------------------ */}
-      {/* A grid of short items rather than prose, so it takes the wider cap.
-          Tools, About and Contact deliberately stay at --page-max: they are
-          text-led, and widening them would cost readability for no gain. */}
       <section className="section" id="capabilities" aria-labelledby="capabilities-title">
         <div className="shell shell--media">
           <div className="section-head">
@@ -225,7 +205,7 @@ export function Home() {
           </div>
 
           <div className="cap-grid">
-            {capabilities.map((group) => (
+            {caps.map((group) => (
               <div className="cap" key={group.heading} data-domain={group.domain} data-reveal="">
                 <h3>{group.heading}</h3>
                 <ul>
@@ -263,38 +243,40 @@ export function Home() {
       </section>
 
       {/* --- Tools ------------------------------------------------------- */}
-      <section className="section" id="tools" aria-labelledby="tools-title" data-domain="systems">
-        <div className="shell">
-          <div className="section-head">
-            <p className="eyebrow">Tools & software</p>
-            <h2 id="tools-title">Small things I build to speed up the work</h2>
-            <p>
-              Public, inspectable, and modest by design. These are here as evidence of implementation capability, not as
-              a claim to software engineering.
-            </p>
-          </div>
+      {showToolSections && (
+        <section className="section" id="tools" aria-labelledby="tools-title" data-domain="systems">
+          <div className="shell">
+            <div className="section-head">
+              <p className="eyebrow">Tools & software</p>
+              <h2 id="tools-title">Small things I build to speed up the work</h2>
+              <p>
+                Public, inspectable, and modest by design. These are here as evidence of implementation capability, not
+                as a claim to software engineering.
+              </p>
+            </div>
 
-          <div className="tool-grid">
-            {tools.map((tool) => (
-              <article className="tool" key={tool.name} data-reveal="">
-                <h3>{tool.name}</h3>
-                <p>{tool.summary}</p>
-                <p className="tool__contribution">{tool.contribution}</p>
-                <div className="card__tags">
-                  {tool.stack.map((s) => (
-                    <span className="tag" key={s}>
-                      {s}
-                    </span>
-                  ))}
-                </div>
-                <a className="btn" href={tool.repo} target="_blank" rel="noopener noreferrer">
-                  View repository <span className="btn__arrow">↗</span>
-                </a>
-              </article>
-            ))}
+            <div className="tool-grid">
+              {tools.map((tool) => (
+                <article className="tool" key={tool.name} data-reveal="">
+                  <h3>{tool.name}</h3>
+                  <p>{tool.summary}</p>
+                  <p className="tool__contribution">{tool.contribution}</p>
+                  <div className="card__tags">
+                    {tool.stack.map((s) => (
+                      <span className="tag" key={s}>
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                  <a className="btn" href={tool.repo} target="_blank" rel="noopener noreferrer">
+                    View repository <span className="btn__arrow">↗</span>
+                  </a>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* --- About ------------------------------------------------------- */}
       <section className="section" id="about" aria-labelledby="about-title">

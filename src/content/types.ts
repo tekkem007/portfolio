@@ -13,6 +13,17 @@ export type Evidence =
   /** Reasonable reading of verified material; phrased tentatively in the UI. */
   | 'inferred';
 
+/**
+ * Which recruiter track a piece of work is shown on.
+ *
+ * Separate from `Domain`, which is a visual-system concept. This one is about
+ * who the work is being shown to: a technical-art reviewer and an environment-art
+ * reviewer screen for different evidence, and most projects are strong evidence
+ * for exactly one of them. Membership and per-track ordering live in
+ * `projectEvidence.ts` so hiring-value decisions stay in one reviewable file.
+ */
+export type Track = 'technical-art' | 'environment-art';
+
 /** Which half of the design system a piece of work belongs to. */
 export type Domain = 'worlds' | 'systems';
 

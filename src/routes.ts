@@ -1,5 +1,6 @@
 import { profile, SITE_URL } from './content/profile';
-import { projects, flagshipProjects } from './content/projects';
+import { projects, flagshipProjects, flagshipsForTrack } from './content/projects';
+import { trackList } from './content/tracks';
 
 /**
  * The set of routes that get prerendered, together with the head metadata each
@@ -73,6 +74,29 @@ const homeRoute: RouteMeta = {
   jsonLd: personJsonLd,
 };
 
+/**
+ * One route per recruiter track. Each gets its own title, description and social
+ * image so a shared link previews as the track it points at rather than as the
+ * generic portfolio, and so search engines index two distinct role pages.
+ */
+const trackRoutes: RouteMeta[] = trackList.map((track) => {
+  const lead = flagshipsForTrack(track.id)[0];
+  return {
+    path: track.path,
+    file: `${track.path.replace(/^\/|\/$/g, '')}/index.html`,
+    title: track.seo.title,
+    description: track.seo.description,
+    canonical: `${SITE_URL}${track.path}`,
+    image: socialImage(lead ? lead.cover : projects[0].cover),
+    jsonLd: {
+      ...personJsonLd,
+      jobTitle: track.label,
+      description: track.seo.description,
+      url: `${SITE_URL}${track.path}`,
+    },
+  };
+});
+
 const projectRoutes: RouteMeta[] = flagshipProjects.map((project) => ({
   path: `/work/${project.slug}/`,
   file: `work/${project.slug}/index.html`,
@@ -105,4 +129,4 @@ const notFoundRoute: RouteMeta = {
   noIndex: true,
 };
 
-export const routeManifest: RouteMeta[] = [homeRoute, ...projectRoutes, notFoundRoute];
+export const routeManifest: RouteMeta[] = [homeRoute, ...trackRoutes, ...projectRoutes, notFoundRoute];

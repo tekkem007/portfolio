@@ -440,7 +440,9 @@ ul {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.06em;
-  color: var(--ink-faint);
+  /* --ink-faint measured 3.99:1 against the primary button fill, under the 4.5
+     minimum for text this size. --ink-dim clears it at 7.1:1. */
+  color: var(--ink-dim);
   padding-left: var(--sp-1);
   border-left: 1px solid var(--line);
   margin-left: var(--sp-1);
@@ -2112,5 +2114,248 @@ ul {
   .will-reveal {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+/* ==================================================================== */
+/* Landing chooser                                                      */
+/* ==================================================================== */
+
+/* The entry page asks one question and offers two equal answers. It is
+   deliberately short: a reviewer should reach a track in one decision, not
+   scroll a homepage first. */
+.landing {
+  display: flex;
+  align-items: center;
+  min-height: calc(100svh - 5rem);
+  padding-block: var(--sp-8);
+}
+
+.landing__inner {
+  width: 100%;
+}
+
+.landing__name {
+  font-size: var(--step-4);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: var(--sp-2) 0 var(--sp-4);
+}
+
+.landing__intro {
+  max-width: var(--measure);
+  color: var(--ink-dim);
+  font-size: var(--step-1);
+}
+
+.landing__question {
+  font-size: var(--step-2);
+  margin: var(--sp-8) 0 var(--sp-5);
+}
+
+.chooser {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--sp-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Both cards get identical weight. Neither is the default, and nothing is
+   preselected — the visitor's role, not ours, decides which matters. */
+.chooser__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  height: 100%;
+  padding: var(--sp-6);
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.chooser__card[data-track='technical-art'] {
+  --card-accent: var(--systems);
+  --card-accent-soft: var(--systems-soft);
+}
+
+.chooser__card[data-track='environment-art'] {
+  --card-accent: var(--worlds);
+  --card-accent-soft: var(--worlds-soft);
+}
+
+.chooser__card:hover,
+.chooser__card:focus-visible {
+  border-color: var(--card-accent);
+  background: var(--bg-raise-2);
+  transform: translateY(-2px);
+}
+
+.chooser__label {
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--card-accent);
+}
+
+.chooser__sublabel {
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.chooser__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  color: var(--ink-dim);
+  font-size: var(--step-0);
+}
+
+.chooser__bullets > span {
+  padding-left: var(--sp-4);
+  position: relative;
+}
+
+.chooser__bullets > span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 6px;
+  height: 1px;
+  background: var(--card-accent);
+}
+
+.chooser__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: auto;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+}
+
+.chooser__arrow {
+  color: var(--card-accent);
+  transition: transform 0.2s ease;
+}
+
+.chooser__card:hover .chooser__arrow {
+  transform: translateX(4px);
+}
+
+.landing__note {
+  max-width: var(--measure);
+  margin-top: var(--sp-6);
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+}
+
+.landing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-5);
+}
+
+/* ==================================================================== */
+/* Track page: focus list and the switch control                        */
+/* ==================================================================== */
+
+.focus-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--sp-3) var(--sp-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-dim);
+}
+
+.focus-list > li {
+  padding-left: var(--sp-4);
+  position: relative;
+}
+
+.focus-list > li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 7px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.focus-switch {
+  margin-top: var(--sp-6);
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+}
+
+/* Visible on every track and case-study page, but weighted below the primary
+   nav: it is a correction path, not a call to action. */
+.track-switch {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  line-height: 1.15;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.track-switch:hover,
+.track-switch:focus-visible {
+  border-color: var(--line-strong);
+  background: var(--bg-raise);
+}
+
+.track-switch__label {
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.track-switch__to {
+  font-size: var(--step--1);
+  color: var(--ink);
+}
+
+@media (max-width: 60rem) {
+  /* The switcher keeps its place on small screens; the section links are the
+     ones that fold away, since the page itself is a scrollable list of them. */
+  .track-switch__label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chooser__card,
+  .chooser__arrow,
+  .track-switch {
+    transition: none;
+  }
+
+  .chooser__card:hover,
+  .chooser__card:focus-visible {
+    transform: none;
+  }
+
+  .chooser__card:hover .chooser__arrow {
+    transform: none;
   }
 }

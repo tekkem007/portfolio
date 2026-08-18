@@ -1,0 +1,123 @@
+import type { Track } from './types';
+
+/**
+ * The two recruiter tracks.
+ *
+ * A hiring reviewer screens for one role, not for a person's whole range. A
+ * single blended feed forces them to do the sorting; these two paths do it for
+ * them, and each one leads with the evidence that role actually screens on.
+ *
+ * Only the emphasis changes between tracks — the headline, the standfirst, the
+ * featured skills and the project order. The underlying facts, the experience
+ * and the contact routes are shared, because they are the same person and the
+ * same résumé. Nothing here restates a claim that is not already evidenced in
+ * `profile.ts`, `capabilities.ts` or a case study on this site.
+ */
+
+export interface TrackDef {
+  id: Track;
+  /** App path, always with a trailing slash. */
+  path: string;
+  /** Card title on the landing page and the label in the switcher. */
+  label: string;
+  /** Second line on the card — the role family in plain words. */
+  sublabel: string;
+  /** Eyebrow above the hero headline. */
+  eyebrow: string;
+  /** Hero headline for this track. Names the role, the engine and the specialism. */
+  headline: string;
+  /** Supporting paragraph under the headline. */
+  standfirst: string;
+  /** Chips under the hero: the tools a reviewer scans for. */
+  tools: string[];
+  /** Bullets on the landing-page selection card. */
+  bullets: string[];
+  /** Heading for this track's flagship grid. */
+  workHeading: string;
+  /** Intro paragraph for the flagship grid. */
+  workIntro: string;
+  /** Heading for the supporting grid. */
+  supportingHeading: string;
+  supportingIntro: string;
+  /** Which capability groups lead on this track, by heading. */
+  leadCapabilities: string[];
+  seo: { title: string; description: string };
+}
+
+export const tracks: Record<Track, TrackDef> = {
+  'technical-art': {
+    id: 'technical-art',
+    path: '/technical-art/',
+    label: 'Technical Artist',
+    sublabel: 'Game Engine Artist',
+    eyebrow: 'Technical Art · Unreal Engine 5',
+    headline: 'I keep Unreal Engine scenes inside their frame budget — and I measure what they cost.',
+    standfirst:
+      'Profiling and optimisation, lighting-pipeline conversions, layered material systems other artists can drive, and small C++ and Blueprint tools that take repetitive steps out of the art pipeline. Most recently a measured 34.7% GPU frame-time reduction at native 1440p, and a baked-to-Lumen conversion that cut a level from 143 dynamic shadow casters to 11.',
+    tools: ['Unreal Engine 5', 'C++ & Blueprints', 'CsvProfiler', 'Substance 3D Painter'],
+    bullets: [
+      'Unreal Engine 5 production',
+      'Materials, shaders & layered material systems',
+      'Blueprints, C++ tooling & pipeline automation',
+      'GPU profiling & frame-budget analysis',
+      'Lumen, baked lighting & Virtual Shadow Maps',
+      'Modular systems & efficient scene construction',
+    ],
+    workHeading: 'Systems, measured',
+    workIntro:
+      'Each of these has a full breakdown: the constraint, the decision I made, what it cost, and how I know. Where a project runs on assets I did not author, the case study says so in its first line — the art is a fixed variable and the technical work is the contribution.',
+    supportingHeading: 'Tools and playable work',
+    supportingIntro:
+      'Smaller pieces that show implementation rather than art direction — a published Blender add-on, a playable browser prototype, and this site.',
+    leadCapabilities: ['Unreal Engine 5', 'AI-assisted prototyping', 'Production & leadership', 'Environment art'],
+    seo: {
+      title: 'Vishnu Vardhan Tekkem — Technical Artist, Unreal Engine 5',
+      description:
+        'Technical art portfolio: GPU profiling and optimisation, baked-to-Lumen lighting conversions, layered material systems, and C++ and Blueprint tooling in Unreal Engine 5. Measured results, with the method shown.',
+    },
+  },
+
+  'environment-art': {
+    id: 'environment-art',
+    path: '/environment-art/',
+    label: '3D Environment Artist',
+    sublabel: '3D Artist',
+    eyebrow: 'Environment Art · Unreal Engine 5',
+    headline: 'I build stylised environments and props, from blockout to final lighting.',
+    standfirst:
+      'Modular kits and hard-surface props modelled in Blender, textured in Substance 3D Painter, then assembled and lit in Unreal Engine 5. Trim sheets, channel-packed masks and texel-density discipline, because the constraints are where art direction and real-time budgets actually meet.',
+    tools: ['Blender', 'Substance 3D Painter', 'Unreal Engine 5', 'ZBrush', 'Marmoset Toolbag'],
+    bullets: [
+      'Environment design & visual storytelling',
+      'Modelling, sculpting & clean topology',
+      'UVs, baking & PBR texturing',
+      'Modular kits, trim sheets & reusable props',
+      'Lighting, composition & mood',
+      'Scene assembly, set dressing & scale',
+    ],
+    workHeading: 'Environments and assets',
+    workIntro:
+      'Modular environment work and the prop practice that feeds it. Every piece here is personal work, modelled and textured by me unless a breakdown states otherwise.',
+    supportingHeading: 'Props and craft studies',
+    supportingIntro:
+      'Hard-surface props, sculpting and weathering studies, and product visualisation — the practice that keeps the environment work sharp. Each card links out to where the piece is published.',
+    leadCapabilities: ['Environment art', 'Unreal Engine 5', 'Production & leadership', 'AI-assisted prototyping'],
+    seo: {
+      title: 'Vishnu Vardhan Tekkem — 3D Environment Artist, Unreal Engine 5',
+      description:
+        'Environment art portfolio: stylised and low-poly environments, modular kits, hard-surface props, PBR texturing and real-time lighting in Unreal Engine 5, Blender and Substance 3D Painter.',
+    },
+  },
+};
+
+export const trackList: TrackDef[] = [tracks['technical-art'], tracks['environment-art']];
+
+/** Resolves an app path to a track, or null when the path is not a track page. */
+export function trackForPath(path: string): TrackDef | null {
+  return trackList.find((t) => t.path === path) ?? null;
+}
+
+/** The other track — used by the switcher. */
+export function otherTrack(id: Track): TrackDef {
+  return id === 'technical-art' ? tracks['environment-art'] : tracks['technical-art'];
+}
