@@ -107,11 +107,12 @@ export const MEDIA = [
 
 
   // --- Time of Day: Runtime Day/Night Lighting System (flagship) ---
-  // NOTE: unlike every other entry above, these five files are renders exported
-  // from the local Unreal project and are NOT yet published anywhere public, so
-  // they carry `local: true` and are skipped by fetch-media. `src` records the
-  // artwork page they will be published to. Once the post is live, replace each
-  // `src` with its ArtStation CDN URL and delete the `local` flag.
+  // The preset table and the blend strip are published, so they point at
+  // ArtStation like every other entry. The two full-frame renders and the blend
+  // clip were not uploaded to the post — the panel screenshots went up in their
+  // place — so those keep `local: true`, are skipped by fetch-media, and are
+  // supplied from media-src/. Their `src` records where a published copy would
+  // live; clear the flag if they are ever posted.
   {
     id: 'tod-01',
     src: 'https://www.artstation.com/artwork/EzBAXq',
@@ -130,18 +131,16 @@ export const MEDIA = [
   },
   {
     id: 'tod-03',
-    src: 'https://www.artstation.com/artwork/EzBAXq',
-    local: true,
+    src: 'https://cdnb.artstation.com/p/assets/images/images/101/678/869/large/vishnu-vardhan-tekkem-05-preset-comparison.jpg',
     w: 1204,
     h: 1820,
     alt: 'A table comparing every field of the FTimeOfDayPreset struct between the Day and Night presets, with the differing rows highlighted.',
   },
   {
     id: 'tod-04',
-    src: 'https://www.artstation.com/artwork/EzBAXq',
-    local: true,
+    src: 'https://cdnb.artstation.com/p/assets/images/images/101/678/873/large/vishnu-vardhan-tekkem-04-blend-steps.jpg',
     w: 1600,
-    h: 3369,
+    h: 2699,
     alt: 'Five frames stacked vertically showing the same shot at five points along the night-to-day interpolation.',
   },
 

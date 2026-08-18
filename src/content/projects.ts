@@ -258,6 +258,8 @@ export const projects: Project[] = [
     software: ['Unreal Engine 5.4', 'C++', 'Movie Render Queue'],
     tags: ['Lumen', 'Lighting pipeline', 'Tools programming', 'Runtime systems', 'Optimisation'],
     cover: 'tod-01',
+    externalUrl: 'https://www.artstation.com/artwork/EzBAXq',
+    externalLabel: 'View on ArtStation',
     caseStudy: {
       standfirst:
         'The scene shipped lit exactly one way: baked, static, night. Making it a second time of day was not a slider — it was a second bake. So I removed the bake entirely and replaced it with a system.',
