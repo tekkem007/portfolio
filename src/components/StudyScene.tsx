@@ -23,11 +23,11 @@ const STUDIES: Record<string, { variant: StudyVariant; title: string; caption: s
     caption:
       'The same geometry cycling through wood, painted metal and emissive trim. Nothing about the mesh changes between states — only which material layer the mask assigns to it.',
   },
-  'the-silent-gate': {
+  'time-of-day-system': {
     variant: 'lighting',
     title: 'Warm key, cool fill',
     caption:
-      'Two opposed lights orbiting a single form. The warm key reads as the entryway torches, the cool fill as ambient mountain shadow — the split that carries the composition.',
+      'Two opposed lights orbiting a single form. The warm key reads as the door lamps, the cool fill as moonlight — the split the night preset is built around, and the one the day preset inverts.',
   },
 };
 

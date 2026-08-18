@@ -98,15 +98,6 @@
     "avif": "/media/silent-gate-01-480.avif 480w, /media/silent-gate-01-960.avif 960w, /media/silent-gate-01-1440.avif 1440w, /media/silent-gate-01-1920.avif 1920w",
     "webp": "/media/silent-gate-01-480.webp 480w, /media/silent-gate-01-960.webp 960w, /media/silent-gate-01-1440.webp 1440w, /media/silent-gate-01-1920.webp 1920w"
   },
-  "silent-gate-02": {
-    "alt": "Opening frame of the camera fly-through of The Silent Gate environment.",
-    "width": 1920,
-    "height": 1080,
-    "aspect": 0.5625,
-    "fallback": "/media/silent-gate-02.jpg",
-    "avif": "/media/silent-gate-02-480.avif 480w, /media/silent-gate-02-960.avif 960w, /media/silent-gate-02-1440.avif 1440w, /media/silent-gate-02-1920.avif 1920w",
-    "webp": "/media/silent-gate-02-480.webp 480w, /media/silent-gate-02-960.webp 960w, /media/silent-gate-02-1440.webp 1440w, /media/silent-gate-02-1920.webp 1920w"
-  },
   "tod-01": {
     "alt": "The cave entrance lit by the Day preset: warm sunlight raking across pale rock, green grass in the foreground and the circular door in cool shadow.",
     "width": 1920,

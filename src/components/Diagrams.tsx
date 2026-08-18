@@ -258,10 +258,10 @@ export const DIAGRAMS: Record<string, DiagramEntry> = {
       'The mask and the layer set both feed the master material; the instance exposes only the parameters worth adjusting. The mesh never changes — the assignment does.',
     render: LayeredMaterialDiagram,
   },
-  'the-silent-gate': {
+  'time-of-day-system': {
     title: 'Where the eye goes',
     caption:
-      'The lighting design and the composition solve the same problem. The brightest, highest-contrast point in the frame is also the narrative focal point, which is why no signposting is needed.',
+      'What the night preset is built around. The brightest, highest-contrast point in the frame is also the narrative focal point, which is why the door needs no signposting \u2014 and why the lamp multipliers rise at night rather than the sun.',
     render: DualLightingDiagram,
   },
 };

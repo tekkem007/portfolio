@@ -1,11 +1,17 @@
 /**
  * Source manifest for portfolio media.
  *
- * Every entry points at an image Vishnu Vardhan Tekkem published himself — his
- * ArtStation profile (https://www.artstation.com/voyagervishnu) or his itch.io
- * page (https://tekkem007.itch.io). Nothing here is third-party stock,
- * client-owned, or confidential, and nothing is taken from a private project
- * directory: the source of every image is a public URL in this file.
+ * Every entry is Vishnu Vardhan Tekkem's own work. Almost all of it points at
+ * something he published himself — his ArtStation profile
+ * (https://www.artstation.com/voyagervishnu) or his itch.io page
+ * (https://tekkem007.itch.io) — so the source is a public URL in this file.
+ * Nothing here is third-party stock, client-owned, or confidential.
+ *
+ * The one exception is an entry marked `local: true`: his own render of his own
+ * work that is not published yet, supplied from media-src/ instead of fetched.
+ * Its `src` records where the published copy will live. Clear the flag and set a
+ * real URL once it is public, so this file trends back toward "every source is
+ * a public URL".
  *
  * `npm run media` downloads these once and writes optimised AVIF/WebP/JPEG
  * derivatives into public/media/. The optimised files are committed; the
@@ -98,25 +104,18 @@ export const MEDIA = [
     h: 1440,
     alt: 'Stylised environment: a sunlit meadow with a central tree leading to a circular high-security vault door set into a mossy cliff face, lit by warm entryway torches.',
   },
-  {
-    // Used as the poster frame for the self-hosted fly-through (see VIDEOS).
-    id: 'silent-gate-02',
-    src: 'https://cdna.artstation.com/p/assets/video_clips/images/097/815/388/large/vishnu-vardhan-tekkem-thumb.jpg',
-    w: 1920,
-    h: 1080,
-    alt: 'Opening frame of the camera fly-through of The Silent Gate environment.',
-  },
 
 
   // --- Time of Day: Runtime Day/Night Lighting System (flagship) ---
   // NOTE: unlike every other entry above, these five files are renders exported
-  // from the local Unreal project and are NOT yet published anywhere public.
-  // `src` therefore points at the artwork page rather than a CDN image, and
-  // `npm run media` relies on the copies already sitting in media-src/.
-  // Replace each `src` with its ArtStation CDN URL once the post is published.
+  // from the local Unreal project and are NOT yet published anywhere public, so
+  // they carry `local: true` and are skipped by fetch-media. `src` records the
+  // artwork page they will be published to. Once the post is live, replace each
+  // `src` with its ArtStation CDN URL and delete the `local` flag.
   {
     id: 'tod-01',
     src: 'https://www.artstation.com/artwork/EzBAXq',
+    local: true,
     w: 1920,
     h: 803,
     alt: 'The cave entrance lit by the Day preset: warm sunlight raking across pale rock, green grass in the foreground and the circular door in cool shadow.',
@@ -124,6 +123,7 @@ export const MEDIA = [
   {
     id: 'tod-02',
     src: 'https://www.artstation.com/artwork/EzBAXq',
+    local: true,
     w: 1920,
     h: 803,
     alt: 'The same cave entrance lit by the Night preset: deep blue moonlight on the rock face with the two door lamps casting warm pools onto the doorway.',
@@ -131,6 +131,7 @@ export const MEDIA = [
   {
     id: 'tod-03',
     src: 'https://www.artstation.com/artwork/EzBAXq',
+    local: true,
     w: 1204,
     h: 1820,
     alt: 'A table comparing every field of the FTimeOfDayPreset struct between the Day and Night presets, with the differing rows highlighted.',
@@ -138,6 +139,7 @@ export const MEDIA = [
   {
     id: 'tod-04',
     src: 'https://www.artstation.com/artwork/EzBAXq',
+    local: true,
     w: 1600,
     h: 3369,
     alt: 'Five frames stacked vertically showing the same shot at five points along the night-to-day interpolation.',
@@ -281,22 +283,13 @@ export const VIDEOS = [
     id: 'tod-blend',
     // Local render, not yet published; the file is committed directly under
     // public/media/ rather than fetched.
+    local: true,
     src: 'https://www.artstation.com/artwork/EzBAXq',
     poster: 'tod-01',
     width: 1920,
     height: 804,
     description:
       'The cave entrance cross-fading from the Day preset to the Night preset and back: sunlight drains from the rock face, the sky cools to deep blue, and the two door lamps rise from barely visible to the brightest thing in frame.',
-  },
-  {
-    id: 'silent-gate-flythrough',
-    src: 'https://cdn.artstation.com/p/video_sources/003/202/558/ls-01.mp4',
-    // Reuses the still already generated from the clip's own thumbnail.
-    poster: 'silent-gate-02',
-    width: 1920,
-    height: 1080,
-    description:
-      'Camera fly-through of The Silent Gate: the shot travels across the sunlit meadow, past the central tree, and settles on the torch-lit circular vault door set into the mossy cliff face.',
   },
 ];
 

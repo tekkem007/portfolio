@@ -39,6 +39,15 @@ async function main() {
       continue;
     }
 
+    // `local` entries are files placed into media-src/ by hand rather than
+    // downloaded — work that has not been published anywhere public yet, so
+    // there is no URL to fetch. Their `src` records where the published copy
+    // will live; drop the flag once it does.
+    if (item.local) {
+      skipped += 1;
+      continue;
+    }
+
     const ext = new URL(item.src).pathname.split('.').pop() ?? 'jpg';
     const dest = resolve(SRC_DIR, `${item.id}.${ext}`);
 
@@ -62,6 +71,10 @@ async function main() {
   await mkdir(VIDEO_DIR, { recursive: true });
 
   for (const video of VIDEOS) {
+    if (video.local) {
+      skipped += 1;
+      continue;
+    }
     const dest = resolve(VIDEO_DIR, `${video.id}.mp4`);
     if (await exists(dest)) {
       skipped += 1;

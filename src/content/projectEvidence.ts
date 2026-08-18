@@ -24,37 +24,35 @@ import type { EvidenceItem, ProjectSpec } from './types';
 export const projectRank: Record<string, number> = {
   // --- Flagship grid ("Selected work"), order set by Vishnu ---------------
   // The Silent Gate leads: it is the only flagship that is finished and shown
-  // as a composed, lit shot rather than work in progress.
-  'the-silent-gate': 1,
   // Time of Day sits second: it is the strongest technical-art evidence in
   // the grid — a shipped system with measured before/after numbers — and it
   // reframes the same scene as pipeline work rather than environment art.
-  'time-of-day-system': 2,
+  'time-of-day-system': 1,
   // Performance follows now the title reads "Environments & Performance". It is
   // the only project carrying measured numbers, and the strongest evidence for
   // the technical half of that positioning.
-  'performance-audit': 3,
+  'performance-audit': 2,
   // Technical art is the stated support skill.
-  'layered-material-system': 4,
+  'layered-material-system': 3,
   // Maintenance Hangar last of the flagships — still work in progress, so it
   // sets the standard a reviewer judges the others by if it leads.
-  'maintenance-hangar': 5,
+  'maintenance-hangar': 4,
   // 2026 hard-surface work.
-  'reactor-access-hatch': 6,
-  'arc-04-fusion-cell': 7,
+  'reactor-access-hatch': 5,
+  'arc-04-fusion-cell': 6,
   // 2024 craft studies.
-  'gilded-relic': 8,
-  'industrial-lpg-cylinder': 9,
-  'travellers-trio': 10,
-  bmo: 11,
+  'gilded-relic': 7,
+  'industrial-lpg-cylinder': 8,
+  'travellers-trio': 9,
+  bmo: 10,
   // Playable release. Last in the supporting grid because a browser game is the
   // least direct evidence for the stated environment-art role — not a judgement
   // on the work. Move this number to move the card.
-  'lastline-echoes-below': 12,
+  'lastline-echoes-below': 11,
   // 2022 — see `archivedSlugs`.
-  'metal-toy-car': 13,
-  checkmate: 14,
-  'uzui-swords': 15,
+  'metal-toy-car': 12,
+  checkmate: 13,
+  'uzui-swords': 14,
 };
 
 /**
@@ -118,18 +116,6 @@ export const projectSpecs: Record<string, ProjectSpec> = {
     ],
     assetSources:
       'The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab), used as-is — models, materials and level layout are theirs. The lighting conversion, the C++ system, both presets and the optimisation are mine.',
-  },
-  'the-silent-gate': {
-    role: 'Lighting, composition and camera on a third-party environment',
-    ownership: 'Personal project',
-    status: 'Complete',
-    responsibilities: [
-      'Built the dual-light setup carrying the composition',
-      'Framed the shot and animated the camera fly-through',
-      'Graded the scene for depth and atmospheric perspective',
-    ],
-    assetSources:
-      'The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab, free-for-the-month giveaway) — models, materials, foliage and level layout are theirs. The lighting, composition and camera move are mine.',
   },
   'reactor-access-hatch': {
     role: 'Sole artist — hard-surface modelling, decals, materials',
@@ -290,24 +276,7 @@ export const projectEvidence: Record<string, EvidenceItem[]> = {
     },
   ],
 
-  'the-silent-gate': [
-    // Deliberately NOT listed as "Measured": the clip's duration and resolution
-    // are true but they are metadata, not craft. Publishing them under a
-    // heading a reviewer reads as evidence made the section look like
-    // box-ticking and devalued the facts that will matter. They belong in the
-    // caption, which already carries them.
-    {
-      label: 'Triangle count',
-      status: 'awaiting-owner',
-      howToCapture: 'UE5: Window → Statistics → Primitive Stats for the scene.',
-    },
-    {
-      label: 'Foliage instances',
-      status: 'awaiting-owner',
-      howToCapture: 'Foliage mode shows instance counts per type; record the total.',
-    },
-  ],
-};
+ };
 
 /** True when a fact is safe to publish. */
 export function isPublishable(item: EvidenceItem): boolean {

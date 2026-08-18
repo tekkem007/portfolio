@@ -314,82 +314,16 @@ export const projects: Project[] = [
         caption: 'Day to night and back. One level, one controller, no baked lighting.',
       },
       gallery: [
+        {
+          id: 'silent-gate-01',
+          caption:
+            'Before: the scene as it shipped and as I first presented it — baked lighting, night only, one fixed look.',
+        },
         { id: 'tod-01', caption: 'Day preset — sun at −52°, exposure bias −4.0, lamps at 0.8× their authored intensity.' },
         { id: 'tod-02', caption: 'Night preset — the same camera and geometry, with only the preset changed.' },
         { id: 'tod-03', caption: 'Every field of the preset struct, Day against Night. The highlighted rows are what actually differs.' },
         { id: 'tod-04', caption: 'Five points along the night-to-day interpolation.' },
       ],
-    },
-  },
-
-  {
-    slug: 'the-silent-gate',
-    title: 'The Silent Gate',
-    summary:
-      'A stylised environment study about contrast — a soft, sunlit meadow leading straight into a cold industrial vault door.',
-    domain: 'worlds',
-    ownership: 'personal',
-    evidence: 'verified',
-    year: '2026',
-    software: ['Unreal Engine 5'],
-    tags: ['Stylised', 'Lighting design', 'Composition', 'Cinematography'],
-    cover: 'silent-gate-01',
-    externalUrl: 'https://www.artstation.com/artwork/EzBAXq',
-    externalLabel: 'View on ArtStation (includes camera fly-through)',
-    caseStudy: {
-      standfirst:
-        'An environment that has to feel inviting and exclusionary at the same time — and a lighting setup built to make the viewer feel both without being told.',
-      role: 'Lighting, composition and camera on a third-party environment.',
-      contribution:
-        'Personal project, worked on alone. The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab, free-for-the-month giveaway) — the models, materials, foliage and level layout are theirs, not mine, and this is not presented as my environment work. What is mine is the lighting design, the composition and the camera fly-through below.',
-      sections: [
-        {
-          heading: 'The idea',
-          body: [
-            'I wanted a single frame to hold two opposite feelings: a lush, peaceful meadow that leads directly to the cold, immovable presence of a high-security vault.',
-            'That contrast is the whole piece. The natural world is soft, warm and moving; the fortification is hard, cool and absolutely static. Everything else — palette, lighting, foliage behaviour — is in service of making that opposition land.',
-          ],
-        },
-        {
-          heading: 'Stylised, but with weight',
-          body: [
-            'The target was a painterly, stylised aesthetic that still carries physical weight and scale. Stylisation makes it very easy to lose mass; shapes get charming and stop feeling heavy.',
-            'The rock faces do most of that work. The pack’s moss and hanging vines already break up the harsh geometry of the cavern entrance; what I controlled was framing and light, chosen so the cliffs read as old and solid rather than as smooth stylised forms.',
-          ],
-        },
-        {
-          heading: 'Two lights, one story',
-          body: [
-            'The lighting is a deliberate dual setup. The mountain shadows sit in cool ambient light, and that cool field is punctured by the warm, high-contrast glow of the entryway torches.',
-            'The eye goes to the warmest, highest-contrast point in a frame, so that torchlight is what pulls the viewer straight to the circular vault door. The narrative focal point and the lighting focal point are the same place, which is the only reason the composition works without a marker or a prompt.',
-          ],
-        },
-        {
-          heading: 'Depth through palette',
-          body: [
-            'The grass and flowers read soft and wind-swept against the sharp, craggy cliff textures, and I built the shot around that contrast.',
-            'I kept the foreground palette vibrant and let it desaturate into the distance. That atmospheric perspective is what gives the shot depth, and it also means the muted vault reads as further away and colder than it strictly is.',
-          ],
-        },
-        {
-          heading: 'Framing the discovery',
-          body: [
-            'I chose wide-angle cinematic framing to emphasise discovery — the sense of coming upon this rather than arriving at it.',
-            'The natural pathing of the rocks and the central tree guide the eye from the sunlit grass toward the mystery in the mountain. The composition does the narration.',
-          ],
-        },
-      ],
-      video: {
-        id: 'silent-gate-flythrough',
-        poster: 'silent-gate-02',
-        width: 1920,
-        height: 1080,
-        description:
-          'Camera fly-through of The Silent Gate: the shot travels across the sunlit meadow, past the central tree, and settles on the torch-lit circular vault door set into the mossy cliff face.',
-        caption:
-          'Camera fly-through — the composition reads as one continuous move from sunlit grass to the vault door.',
-      },
-      gallery: [{ id: 'silent-gate-01', caption: 'The meadow approach — warm torchlight against cool mountain shadow.' }],
     },
   },
 
