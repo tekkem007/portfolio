@@ -6,7 +6,7 @@ import { Track } from './pages/Track';
 import { CaseStudy } from './pages/CaseStudy';
 import { NotFound } from './pages/NotFound';
 import { useRouter } from './lib/router';
-import { trackForPath } from './content/tracks';
+import { trackForPath, themeForSlug } from './content/tracks';
 import { routeManifest } from './routes';
 import { initMotion, resetMotion } from './lib/motion';
 import './styles/app.css';
@@ -31,6 +31,25 @@ export function App() {
   // has to be updated by hand. Without this the title and description stay on
   // whichever route was server-rendered first, which misreports the page to
   // screen readers announcing the route change and to anything reading the tab.
+  // The palette follows the route. Set on <html> so the header, footer and every
+  // section inherit one identity without any component knowing which track it is
+  // on. The landing carries no theme: it is the one page that shows both.
+  useEffect(() => {
+    const track = trackForPath(path);
+    const work = path.match(/^\/work\/([a-z0-9-]+)\/$/);
+    const theme = track
+      ? track.id === 'technical-art'
+        ? 'system'
+        : 'world'
+      : work
+        ? themeForSlug(work[1])
+        : null;
+
+    const root = document.documentElement;
+    if (theme) root.dataset.theme = theme;
+    else delete root.dataset.theme;
+  }, [path]);
+
   useEffect(() => {
     const route = routeManifest.find((r) => r.path === path);
     if (!route) return;

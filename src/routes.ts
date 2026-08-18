@@ -1,6 +1,6 @@
 import { profile, SITE_URL } from './content/profile';
 import { projects, flagshipProjects, flagshipsForTrack } from './content/projects';
-import { trackList } from './content/tracks';
+import { trackList, themeForSlug } from './content/tracks';
 
 /**
  * The set of routes that get prerendered, together with the head metadata each
@@ -23,6 +23,14 @@ export interface RouteMeta {
   jsonLd: Record<string, unknown>;
   /** Excluded from sitemap.xml (the 404 page). */
   noIndex?: boolean;
+  /**
+   * Palette baked into the prerendered HTML.
+   *
+   * Without this the page ships neutral and only gets its identity once React
+   * hydrates, which shows as a flash of the wrong background on every cold
+   * load. Set here so the very first paint is already the right theme.
+   */
+  theme?: 'system' | 'world';
 }
 
 const socialImage = (id: string) => `${SITE_URL}/media/${id}.jpg`;
@@ -87,6 +95,7 @@ const trackRoutes: RouteMeta[] = trackList.map((track) => {
     title: track.seo.title,
     description: track.seo.description,
     canonical: `${SITE_URL}${track.path}`,
+    theme: track.theme,
     image: socialImage(lead ? lead.cover : projects[0].cover),
     jsonLd: {
       ...personJsonLd,
@@ -104,6 +113,7 @@ const projectRoutes: RouteMeta[] = flagshipProjects.map((project) => ({
   description: project.summary,
   canonical: `${SITE_URL}/work/${project.slug}/`,
   image: socialImage(project.cover),
+  theme: themeForSlug(project.slug) ?? undefined,
   jsonLd: {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',

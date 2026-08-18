@@ -1,79 +1,87 @@
+import { useState } from 'react';
 import { Link, href } from '../lib/router';
 import { profile } from '../content/profile';
 import { trackList } from '../content/tracks';
 import { flagshipsForTrack } from '../content/projects';
+import type { Track } from '../content/types';
 
 /**
- * The entry page.
+ * The split entry.
  *
- * A hiring reviewer arrives screening for one role. Asking which one, once, is
- * faster for them than making them filter a blended feed themselves — and it
- * means neither discipline has to be compressed into the other's page.
+ * Two full-height halves, each carrying its own palette, so the choice is made
+ * by looking rather than by reading. Hover, focus or touch previews an identity;
+ * the whole half is one link, so the target is enormous on every input device
+ * and reachable in a single Tab from the skip link.
  *
- * Deliberately: no track is preselected, neither card is visually secondary, and
- * both are real links to real prerendered URLs, so a direct link or a refresh
- * lands correctly and the choice survives being shared.
+ * Deliberately: neither side is preselected, neither is visually secondary, and
+ * the preview only changes emphasis — both halves stay legible at all times, so
+ * a keyboard user tabbing through never loses the side they are not on.
  */
 export function Landing() {
+  const [preview, setPreview] = useState<Track | null>(null);
+
   return (
-    <>
-      <section className="landing" aria-labelledby="landing-title">
-        <div className="shell landing__inner">
-          <p className="eyebrow">{profile.location}</p>
-          <h1 id="landing-title" className="landing__name">
-            {profile.name}
-          </h1>
-          <p className="landing__intro">
-            Unreal Engine artist working across environment art and technical art. Four-plus years in 3D, currently
-            leading 3D production at Analyzer Tensor Technologies in Pune.
-          </p>
+    <section className="split" data-preview={preview ?? 'none'} aria-labelledby="landing-title">
+      {/* The introduction sits above the seam. It is not inside either half, so
+          it never reads as belonging to one identity more than the other. */}
+      <div className="split__intro">
+        <p className="split__name" id="landing-title">
+          {profile.name}
+        </p>
+        <p className="split__claim">I build real-time systems and the worlds they bring to life.</p>
+        <p className="split__prompt">Choose what you want to explore.</p>
+      </div>
 
-          <h2 className="landing__question">What would you like to explore?</h2>
+      <ul className="split__halves">
+        {trackList.map((track) => (
+          <li key={track.id} data-theme={track.theme}>
+            <Link
+              className="half"
+              to={track.path}
+              onMouseEnter={() => setPreview(track.id)}
+              onMouseLeave={() => setPreview(null)}
+              onFocus={() => setPreview(track.id)}
+              onBlur={() => setPreview(null)}
+              onTouchStart={() => setPreview(track.id)}
+            >
+              <span className="half__banner">{track.banner}</span>
+              <span className="half__role">{track.roleLine}</span>
+              <span className="half__tagline">{track.tagline}</span>
 
-          <ul className="chooser">
-            {trackList.map((track) => (
-              <li key={track.id}>
-                <Link className="chooser__card" to={track.path} data-track={track.id}>
-                  <span className="chooser__label">{track.label}</span>
-                  <span className="chooser__sublabel">{track.sublabel}</span>
-                  <span className="chooser__bullets">
-                    {track.bullets.map((bullet) => (
-                      <span key={bullet}>{bullet}</span>
-                    ))}
-                  </span>
-                  <span className="chooser__meta">
-                    {flagshipsForTrack(track.id).length} case studies
-                    <span className="chooser__arrow" aria-hidden="true">
-                      →
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+              <span className="half__bullets">
+                {track.bullets.slice(0, 4).map((bullet) => (
+                  <span key={bullet}>{bullet}</span>
+                ))}
+              </span>
 
-          <p className="landing__note">
-            Both paths share the same experience, résumé and contact details — only the work shown and the order it is
-            shown in change. You can switch at any point from the header.
-          </p>
+              <span className="half__enter">
+                {flagshipsForTrack(track.id).length} case studies
+                <span className="half__arrow" aria-hidden="true">
+                  →
+                </span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-          <div className="landing__actions">
-            <a className="btn" href={href(profile.resume.path)} download={profile.resume.filename}>
-              {profile.resume.label}
-              <span className="btn__meta">{profile.resume.meta}</span>
-            </a>
-            <a className="btn" href={`mailto:${profile.email}`}>
-              Email me
-            </a>
-            <a className="btn" href={profile.links.artstation} target="_blank" rel="noopener noreferrer">
-              ArtStation <span className="btn__arrow">↗</span>
-            </a>
-            <a className="btn" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">
-              LinkedIn <span className="btn__arrow">↗</span>
-            </a>
-          </div>
-        </div>
-      </section>
-    </>
+      {/* Contact routes live on the entry page too: a reviewer who already knows
+          what they want should not have to enter a track to find the résumé. */}
+      <div className="split__actions">
+        <a className="btn" href={href(profile.resume.path)} download={profile.resume.filename}>
+          {profile.resume.label}
+          <span className="btn__meta">{profile.resume.meta}</span>
+        </a>
+        <a className="btn" href={`mailto:${profile.email}`}>
+          Email
+        </a>
+        <a className="btn" href={profile.links.artstation} target="_blank" rel="noopener noreferrer">
+          ArtStation <span className="btn__arrow">↗</span>
+        </a>
+        <a className="btn" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">
+          LinkedIn <span className="btn__arrow">↗</span>
+        </a>
+      </div>
+    </section>
   );
 }

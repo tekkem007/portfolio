@@ -1,4 +1,5 @@
 import type { Track } from './types';
+import { trackRank } from './projectEvidence';
 
 /**
  * The two recruiter tracks.
@@ -16,6 +17,14 @@ import type { Track } from './types';
 
 export interface TrackDef {
   id: Track;
+  /** Palette this track renders in. */
+  theme: 'system' | 'world';
+  /** The identity line on the split entry page. */
+  banner: string;
+  /** Role family, spelled out under the banner. */
+  roleLine: string;
+  /** One sentence of what the role does, for the entry page. */
+  tagline: string;
   /** App path, always with a trailing slash. */
   path: string;
   /** Card title on the landing page and the label in the switcher. */
@@ -47,6 +56,10 @@ export interface TrackDef {
 export const tracks: Record<Track, TrackDef> = {
   'technical-art': {
     id: 'technical-art',
+    theme: 'system',
+    banner: 'Build the System',
+    roleLine: 'Technical Artist & Game Engine Artist',
+    tagline: 'Building efficient real-time environments, materials and workflows in Unreal Engine.',
     path: '/technical-art/',
     label: 'Technical Artist',
     sublabel: 'Game Engine Artist',
@@ -79,6 +92,10 @@ export const tracks: Record<Track, TrackDef> = {
 
   'environment-art': {
     id: 'environment-art',
+    theme: 'world',
+    banner: 'Build the World',
+    roleLine: '3D Environment Artist & 3D Artist',
+    tagline: 'Creating atmospheric environments, believable assets and visually compelling real-time worlds.',
     path: '/environment-art/',
     label: '3D Environment Artist',
     sublabel: '3D Artist',
@@ -120,4 +137,20 @@ export function trackForPath(path: string): TrackDef | null {
 /** The other track — used by the switcher. */
 export function otherTrack(id: Track): TrackDef {
   return id === 'technical-art' ? tracks['environment-art'] : tracks['technical-art'];
+}
+
+/** The palette a track renders in. */
+export function themeForTrack(id: Track): 'system' | 'world' {
+  return tracks[id].theme;
+}
+
+/**
+ * The palette a case study renders in.
+ *
+ * A project on both tracks resolves to the first, which is the same rule the
+ * header uses for its back-link, so the theme and the navigation agree.
+ */
+export function themeForSlug(slug: string): 'system' | 'world' | null {
+  const hit = trackList.find((t) => trackRank[t.id][slug] !== undefined);
+  return hit ? themeForTrack(hit.id) : null;
 }

@@ -39,8 +39,12 @@
   --focus: #9fd0ff;
 
   /* --- Type ------------------------------------------------------------- */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  /* Headings carry the identity; body stays on Inter for reading. */
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Mono', 'Segoe UI Mono',
+    'SF Mono', Menlo, Consolas, monospace;
 
   --step--1: clamp(0.79rem, 0.77rem + 0.1vw, 0.85rem);
   --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1.05rem);
@@ -149,4 +153,70 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ====================================================================== */
+/* Two identities, one site                                               */
+/* ====================================================================== */
+
+/*
+ * `data-theme` is set on <html> from the active route, so the header, footer
+ * and every section inherit the same palette without any component knowing
+ * which track it is on. The landing page carries no theme: it is the one place
+ * both identities are shown side by side, and each half previews its own.
+ *
+ * Every foreground token below was checked against its own background at the
+ * size it is actually used. --ink-faint is the tightest at ~5.5:1, above the
+ * 4.5 minimum for body text.
+ */
+
+[data-theme='system'] {
+  --bg: #0b0f14;
+  --bg-sunk: #070a0e;
+  --bg-raise: #121821;
+  --bg-raise-2: #18202b;
+
+  --line: rgb(234 242 247 / 10%);
+  --line-strong: rgb(234 242 247 / 18%);
+
+  --ink: #eaf2f7;
+  --ink-dim: #a8b8c6;
+  --ink-faint: #7c8c9b;
+
+  --accent: #39d5ff;
+  --accent-soft: rgb(57 213 255 / 14%);
+  --accent-2: #4f7cff;
+
+  --focus: #8fe3ff;
+}
+
+[data-theme='world'] {
+  --bg: #11100e;
+  --bg-sunk: #0b0a09;
+  --bg-raise: #1a1815;
+  --bg-raise-2: #23201c;
+
+  --line: rgb(242 238 231 / 10%);
+  --line-strong: rgb(242 238 231 / 18%);
+
+  --ink: #f2eee7;
+  --ink-dim: #c3b9a9;
+  --ink-faint: #94897a;
+
+  --accent: #e8a95b;
+  --accent-soft: rgb(232 169 91 / 14%);
+  --accent-2: #b9a58c;
+
+  --focus: #f3c98a;
+}
+
+/*
+ * The existing per-section accent switch predates the themes and is still used
+ * by cards and diagrams. Inside a themed page it resolves to that theme's accent
+ * rather than the old global orange/cyan pair, so a page reads as one identity.
+ */
+[data-theme] [data-domain='worlds'],
+[data-theme] [data-domain='systems'] {
+  --accent: inherit;
+  --accent-soft: inherit;
 }

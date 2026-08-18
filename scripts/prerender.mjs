@@ -9,7 +9,7 @@
  * Runs after `vite build` and `vite build --ssr`, both of which the npm
  * `build` script invokes first.
  */
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -25,6 +25,32 @@ function escapeAttr(value) {
 /** JSON-LD must not be able to break out of its script element. */
 function escapeJsonLd(value) {
   return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
+/**
+ * Preload links for the fonts used above the fold.
+ *
+ * Fonts referenced from a stylesheet are only discovered after the CSS has been
+ * fetched and parsed, so the heading and body text swap late and LCP suffers.
+ * Preloading starts them in parallel with the stylesheet instead. Only the two
+ * families that render immediately are preloaded; JetBrains Mono is small-label
+ * decoration and can arrive whenever it likes.
+ */
+async function fontPreloads(base) {
+  let files = [];
+  try {
+    files = await readdir(resolve(DIST, 'assets'));
+  } catch {
+    return '';
+  }
+  const wanted = ['space-grotesk', 'inter-latin'];
+  return files
+    .filter((f) => f.endsWith('.woff2') && wanted.some((w) => f.startsWith(w)))
+    .map(
+      (f) =>
+        `<link rel="preload" as="font" type="font/woff2" crossorigin href="${base}assets/${f}" />`,
+    )
+    .join('\n    ');
 }
 
 function buildHead(route) {
@@ -60,12 +86,22 @@ async function main() {
   const template = await readFile(resolve(DIST, 'index.html'), 'utf8');
   const { render, routeManifest } = await import(pathToFileURL(SSR_ENTRY).href);
 
+  // Derived from the built stylesheet link so it tracks Vite's `base` rather
+  // than hardcoding the project-site prefix in a second place.
+  const assetBase = (template.match(/href="([^"]*)assets\/index-[^"]*\.css"/) || [, '/'])[1];
+  const preloads = await fontPreloads(assetBase);
+
   for (const route of routeManifest) {
     const appHtml = render(route.path);
     const html = template
-      .replace('<!--app-head-->', buildHead(route))
+      .replace('<!--app-head-->', `${preloads}\n    ${buildHead(route)}`)
       .replace('<!--app-html-->', appHtml)
-      .replace('<html lang="en">', `<html lang="en" data-route="${escapeAttr(route.path)}">`);
+      .replace(
+        '<html lang="en">',
+        `<html lang="en" data-route="${escapeAttr(route.path)}"${
+          route.theme ? ` data-theme="${escapeAttr(route.theme)}"` : ''
+        }>`,
+      );
 
     const outFile = resolve(DIST, route.file);
     await mkdir(dirname(outFile), { recursive: true });

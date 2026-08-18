@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './fonts.css';
 
 /* ============================================================ base ======= */
 
@@ -29,6 +30,10 @@ h1,
 h2,
 h3,
 h4 {
+  /* Space Grotesk carries the identity on headings; Inter stays on body copy,
+     where it is the more readable of the two at paragraph sizes. */
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
   margin: 0;
   line-height: 1.1;
   font-weight: 560;
@@ -2118,157 +2123,6 @@ ul {
 }
 
 /* ==================================================================== */
-/* Landing chooser                                                      */
-/* ==================================================================== */
-
-/* The entry page asks one question and offers two equal answers. It is
-   deliberately short: a reviewer should reach a track in one decision, not
-   scroll a homepage first. */
-.landing {
-  display: flex;
-  align-items: center;
-  min-height: calc(100svh - 5rem);
-  padding-block: var(--sp-8);
-}
-
-.landing__inner {
-  width: 100%;
-}
-
-.landing__name {
-  font-size: var(--step-4);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin: var(--sp-2) 0 var(--sp-4);
-}
-
-.landing__intro {
-  max-width: var(--measure);
-  color: var(--ink-dim);
-  font-size: var(--step-1);
-}
-
-.landing__question {
-  font-size: var(--step-2);
-  margin: var(--sp-8) 0 var(--sp-5);
-}
-
-.chooser {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  gap: var(--sp-5);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* Both cards get identical weight. Neither is the default, and nothing is
-   preselected — the visitor's role, not ours, decides which matters. */
-.chooser__card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-  height: 100%;
-  padding: var(--sp-6);
-  background: var(--bg-raise);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
-}
-
-.chooser__card[data-track='technical-art'] {
-  --card-accent: var(--systems);
-  --card-accent-soft: var(--systems-soft);
-}
-
-.chooser__card[data-track='environment-art'] {
-  --card-accent: var(--worlds);
-  --card-accent-soft: var(--worlds-soft);
-}
-
-.chooser__card:hover,
-.chooser__card:focus-visible {
-  border-color: var(--card-accent);
-  background: var(--bg-raise-2);
-  transform: translateY(-2px);
-}
-
-.chooser__label {
-  font-size: var(--step-2);
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--card-accent);
-}
-
-.chooser__sublabel {
-  font-size: var(--step--1);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-.chooser__bullets {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  margin-top: var(--sp-2);
-  color: var(--ink-dim);
-  font-size: var(--step-0);
-}
-
-.chooser__bullets > span {
-  padding-left: var(--sp-4);
-  position: relative;
-}
-
-.chooser__bullets > span::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.6em;
-  width: 6px;
-  height: 1px;
-  background: var(--card-accent);
-}
-
-.chooser__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  margin-top: auto;
-  padding-top: var(--sp-4);
-  border-top: 1px solid var(--line);
-  color: var(--ink-faint);
-  font-size: var(--step--1);
-}
-
-.chooser__arrow {
-  color: var(--card-accent);
-  transition: transform 0.2s ease;
-}
-
-.chooser__card:hover .chooser__arrow {
-  transform: translateX(4px);
-}
-
-.landing__note {
-  max-width: var(--measure);
-  margin-top: var(--sp-6);
-  color: var(--ink-faint);
-  font-size: var(--step--1);
-}
-
-.landing__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3);
-  margin-top: var(--sp-5);
-}
-
-/* ==================================================================== */
 /* Track page: focus list and the switch control                        */
 /* ==================================================================== */
 
@@ -2356,6 +2210,268 @@ ul {
   }
 
   .chooser__card:hover .chooser__arrow {
+    transform: none;
+  }
+}
+
+/* ==================================================================== */
+/* Split entry: Build the System / Build the World                      */
+/* ==================================================================== */
+
+/* Two halves, each carrying its own palette. The seam is the whole point, so
+   the layout is a grid rather than stacked sections: both identities are on
+   screen at once and neither can be scrolled past to reach the other. */
+.split {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr;
+  background: #08090c;
+  isolation: isolate;
+}
+
+.split__halves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transition: grid-template-columns 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 100svh;
+}
+
+.split__halves > li {
+  display: flex;
+  min-width: 0;
+  background: var(--bg);
+  /* Each half is its own theming scope, so the tokens inside resolve to that
+     identity without any JavaScript. */
+}
+
+.half {
+  --half-pad: clamp(1.5rem, 5vw, 4.5rem);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--half-pad);
+  padding-block-end: clamp(4.5rem, 12vh, 8rem);
+  color: var(--ink);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s ease;
+}
+
+/* A quiet structural motif per identity: a measured grid for the system side,
+   a soft horizon wash for the world side. Both are pure CSS — no image
+   request, nothing to wait for, and nothing that can fail to load. */
+.half::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+[data-theme='system'] .half::before {
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(120% 90% at 20% 100%, #000 20%, transparent 75%);
+}
+
+[data-theme='world'] .half::before {
+  background: radial-gradient(120% 80% at 70% 110%, var(--accent-soft) 0%, transparent 60%),
+    radial-gradient(90% 60% at 20% 0%, rgb(242 238 231 / 6%) 0%, transparent 70%);
+}
+
+.half:hover::before,
+.half:focus-visible::before {
+  opacity: 0.9;
+}
+
+.half__banner {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.2vw, 4.2rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  text-wrap: balance;
+}
+
+.half__role {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.half__tagline {
+  max-width: 34ch;
+  color: var(--ink-dim);
+  font-size: var(--step-0);
+}
+
+.half__bullets {
+  display: none;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  margin-top: var(--sp-2);
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+}
+
+.half__bullets > span::before {
+  content: '· ';
+  color: var(--accent);
+}
+
+.half__enter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+.half__arrow {
+  color: var(--accent);
+  transition: transform 0.3s ease;
+}
+
+.half:hover .half__arrow,
+.half:focus-visible .half__arrow {
+  transform: translateX(5px);
+}
+
+/* Previewing one identity lifts it and lets the other recede — but only to 88%
+   opacity, never to hidden. A keyboard user tabbing between the two must be
+   able to read the one they are not on. */
+@media (min-width: 48rem) {
+  .half__bullets {
+    display: flex;
+  }
+
+  .split[data-preview='technical-art'] .split__halves {
+    grid-template-columns: 1.14fr 1fr;
+  }
+
+  .split[data-preview='environment-art'] .split__halves {
+    grid-template-columns: 1fr 1.14fr;
+  }
+
+  .split[data-preview='technical-art'] .split__halves > li:last-child .half,
+  .split[data-preview='environment-art'] .split__halves > li:first-child .half {
+    opacity: 0.88;
+  }
+}
+
+/* The introduction floats over the seam so it belongs to neither side. */
+.split__intro {
+  position: absolute;
+  inset-inline: 0;
+  top: clamp(5.5rem, 14vh, 9rem);
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  padding-inline: var(--gutter);
+  text-align: center;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+
+.split__name {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #cdd6de;
+  margin: 0;
+}
+
+.split__claim {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #f4f7fa;
+  max-width: 24ch;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.split__prompt {
+  font-size: var(--step--1);
+  color: #9aa5b1;
+  margin: 0;
+}
+
+.split__actions {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--gutter);
+  background: linear-gradient(to top, #08090c 55%, transparent);
+}
+
+/* Mobile is a designed layout, not a squeezed desktop one: the halves become
+   two stacked panels sized so both are visible in the first viewport, and the
+   intro sits above them in normal flow rather than floating over the seam. */
+@media (max-width: 47.999rem) {
+  .split {
+    min-height: 0;
+  }
+
+  .split__halves {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .split__intro {
+    position: static;
+    padding-block: calc(var(--sp-8) + 2rem) var(--sp-5);
+    background: #08090c;
+  }
+
+  .half {
+    min-height: 46svh;
+    justify-content: flex-end;
+    padding-block-end: var(--sp-6);
+  }
+
+  .split__actions {
+    position: static;
+    background: #08090c;
+    padding-block: var(--sp-5) var(--sp-6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split__halves,
+  .half,
+  .half::before,
+  .half__arrow {
+    transition: none;
+  }
+
+  .half:hover .half__arrow,
+  .half:focus-visible .half__arrow {
     transform: none;
   }
 }
