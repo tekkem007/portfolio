@@ -107,6 +107,42 @@ export const MEDIA = [
     alt: 'Opening frame of the camera fly-through of The Silent Gate environment.',
   },
 
+
+  // --- Time of Day: Runtime Day/Night Lighting System (flagship) ---
+  // NOTE: unlike every other entry above, these five files are renders exported
+  // from the local Unreal project and are NOT yet published anywhere public.
+  // `src` therefore points at the artwork page rather than a CDN image, and
+  // `npm run media` relies on the copies already sitting in media-src/.
+  // Replace each `src` with its ArtStation CDN URL once the post is published.
+  {
+    id: 'tod-01',
+    src: 'https://www.artstation.com/artwork/EzBAXq',
+    w: 1920,
+    h: 803,
+    alt: 'The cave entrance lit by the Day preset: warm sunlight raking across pale rock, green grass in the foreground and the circular door in cool shadow.',
+  },
+  {
+    id: 'tod-02',
+    src: 'https://www.artstation.com/artwork/EzBAXq',
+    w: 1920,
+    h: 803,
+    alt: 'The same cave entrance lit by the Night preset: deep blue moonlight on the rock face with the two door lamps casting warm pools onto the doorway.',
+  },
+  {
+    id: 'tod-03',
+    src: 'https://www.artstation.com/artwork/EzBAXq',
+    w: 1204,
+    h: 1820,
+    alt: 'A table comparing every field of the FTimeOfDayPreset struct between the Day and Night presets, with the differing rows highlighted.',
+  },
+  {
+    id: 'tod-04',
+    src: 'https://www.artstation.com/artwork/EzBAXq',
+    w: 1600,
+    h: 3369,
+    alt: 'Five frames stacked vertically showing the same shot at five points along the night-to-day interpolation.',
+  },
+
   // --- Selected props and studies ---
   {
     id: 'hatch-01',
@@ -241,6 +277,17 @@ export const MEDIA = [
  * @type {{ id: string, src: string, poster: string, width: number, height: number, description: string }[]}
  */
 export const VIDEOS = [
+  {
+    id: 'tod-blend',
+    // Local render, not yet published; the file is committed directly under
+    // public/media/ rather than fetched.
+    src: 'https://www.artstation.com/artwork/EzBAXq',
+    poster: 'tod-01',
+    width: 1920,
+    height: 804,
+    description:
+      'The cave entrance cross-fading from the Day preset to the Night preset and back: sunlight drains from the rock face, the sky cools to deep blue, and the two door lamps rise from barely visible to the brightest thing in frame.',
+  },
   {
     id: 'silent-gate-flythrough',
     src: 'https://cdn.artstation.com/p/video_sources/003/202/558/ls-01.mp4',

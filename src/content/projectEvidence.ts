@@ -26,31 +26,35 @@ export const projectRank: Record<string, number> = {
   // The Silent Gate leads: it is the only flagship that is finished and shown
   // as a composed, lit shot rather than work in progress.
   'the-silent-gate': 1,
+  // Time of Day sits second: it is the strongest technical-art evidence in
+  // the grid — a shipped system with measured before/after numbers — and it
+  // reframes the same scene as pipeline work rather than environment art.
+  'time-of-day-system': 2,
   // Performance follows now the title reads "Environments & Performance". It is
   // the only project carrying measured numbers, and the strongest evidence for
   // the technical half of that positioning.
-  'performance-audit': 2,
+  'performance-audit': 3,
   // Technical art is the stated support skill.
-  'layered-material-system': 3,
+  'layered-material-system': 4,
   // Maintenance Hangar last of the flagships — still work in progress, so it
   // sets the standard a reviewer judges the others by if it leads.
-  'maintenance-hangar': 4,
+  'maintenance-hangar': 5,
   // 2026 hard-surface work.
-  'reactor-access-hatch': 5,
-  'arc-04-fusion-cell': 6,
+  'reactor-access-hatch': 6,
+  'arc-04-fusion-cell': 7,
   // 2024 craft studies.
-  'gilded-relic': 7,
-  'industrial-lpg-cylinder': 8,
-  'travellers-trio': 9,
-  bmo: 10,
+  'gilded-relic': 8,
+  'industrial-lpg-cylinder': 9,
+  'travellers-trio': 10,
+  bmo: 11,
   // Playable release. Last in the supporting grid because a browser game is the
   // least direct evidence for the stated environment-art role — not a judgement
   // on the work. Move this number to move the card.
-  'lastline-echoes-below': 11,
+  'lastline-echoes-below': 12,
   // 2022 — see `archivedSlugs`.
-  'metal-toy-car': 12,
-  checkmate: 13,
-  'uzui-swords': 14,
+  'metal-toy-car': 13,
+  checkmate: 14,
+  'uzui-swords': 15,
 };
 
 /**
@@ -102,16 +106,30 @@ export const projectSpecs: Record<string, ProjectSpec> = {
     ],
     assetSources: 'Material graph and layer set authored by me.',
   },
-  'the-silent-gate': {
-    role: 'Sole artist — modelling, texturing, foliage, lighting, camera',
+  'time-of-day-system': {
+    role: 'Technical artist — lighting pipeline, C++ tooling, optimisation',
     ownership: 'Personal project',
     status: 'Complete',
     responsibilities: [
-      'Modelled and textured the cliff, vault and foliage',
-      'Built the dual-light setup carrying the composition',
-      'Framed and animated the camera fly-through',
+      'Converted a baked level to fully dynamic Lumen (DX12/SM6, Virtual Shadow Maps)',
+      'Wrote the C++ Time of Day controller and its preset struct',
+      'Authored and tuned the Day and Night lighting presets',
+      'Cut dynamic shadow casters from 143 to 11',
     ],
-    assetSources: 'Authored by me end to end, including the camera move.',
+    assetSources:
+      'The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab), used as-is — models, materials and level layout are theirs. The lighting conversion, the C++ system, both presets and the optimisation are mine.',
+  },
+  'the-silent-gate': {
+    role: 'Lighting, composition and camera on a third-party environment',
+    ownership: 'Personal project',
+    status: 'Complete',
+    responsibilities: [
+      'Built the dual-light setup carrying the composition',
+      'Framed the shot and animated the camera fly-through',
+      'Graded the scene for depth and atmospheric perspective',
+    ],
+    assetSources:
+      'The environment is “Dreamscape: Stylized Environment Tower” by Polyart Studio (Fab, free-for-the-month giveaway) — models, materials, foliage and level layout are theirs. The lighting, composition and camera move are mine.',
   },
   'reactor-access-hatch': {
     role: 'Sole artist — hard-surface modelling, decals, materials',
@@ -137,6 +155,33 @@ export const projectSpecs: Record<string, ProjectSpec> = {
  * `howToCapture` exists so each gap is a ten-minute task rather than a vague ask.
  */
 export const projectEvidence: Record<string, EvidenceItem[]> = {
+  'time-of-day-system': [
+    {
+      label: 'Dynamic shadow casters',
+      value: '143 → 11',
+      status: 'verified',
+      source:
+        'Counted in-editor across all light components before and after the candle-Blueprint shadow fix; recorded in the project handover doc.',
+    },
+    {
+      label: 'Baked lighting data removed',
+      value: '1.1 GB',
+      status: 'verified',
+      source: 'Size of DemoMap_BuiltData.uasset, moved out of the content directory.',
+    },
+    {
+      label: 'Lights converted to Movable',
+      value: '49 standalone + 264 in Blueprints',
+      status: 'verified',
+      source: 'Enumerated in-editor: 34 Point, 12 Rect, 3 Spot, plus 2 per candle across 132 instances.',
+    },
+    {
+      label: 'Frame time, before and after',
+      status: 'awaiting-owner',
+      howToCapture:
+        'UE5: `stat unit` in PIE at a fixed camera, Cinematic scalability, before and after the shadow-caster fix. The optimisation is currently supported by a shadow-caster count, not a measured frame time.',
+    },
+  ],
   // The first project on this site to carry measured numbers. Every value below
   // was produced by the audit's own tooling and read out of a committed file —
   // none is quoted from memory. `source` names the file in each case.
