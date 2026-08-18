@@ -5,6 +5,12 @@
  *  - `/path/` resolves to `/path/index.html`
  *  - `/path` (no trailing slash) 301-redirects to `/path/` if the directory exists
  *  - anything unmatched returns 404 with the contents of 404.html
+ *  - text responses are gzipped, as Pages does
+ *
+ * That last one matters for benchmarking. Without it Lighthouse reports a large
+ * "enable text compression" opportunity that does not exist in production, and
+ * every local score reads 12-15 points below the deployed site — which makes
+ * local before/after comparisons of anything CSS- or JS-sized meaningless.
  *
  * That means a route that works here works on Pages, and a route that only
  * works under a permissive dev server fails here first.
@@ -12,6 +18,7 @@
 import { createReadStream } from 'node:fs';
 import { stat, readFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
+import { createGzip } from 'node:zlib';
 import { extname, join, normalize, resolve } from 'node:path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,6 +40,7 @@ const TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.woff2': 'font/woff2',
   '.avif': 'image/avif',
   '.webp': 'image/webp',
   '.jpg': 'image/jpeg',
@@ -56,6 +64,37 @@ async function statOrNull(path) {
   } catch {
     return null;
   }
+}
+
+/** Text formats Pages compresses. Images and fonts are already compressed. */
+const COMPRESSIBLE = new Set([
+  'text/html; charset=utf-8',
+  'text/javascript; charset=utf-8',
+  'text/css; charset=utf-8',
+  'application/json; charset=utf-8',
+  'image/svg+xml',
+  'application/xml; charset=utf-8',
+  'text/plain; charset=utf-8',
+]);
+
+/**
+ * Streams a file, gzipping it when the client asked and the type benefits.
+ *
+ * content-length is dropped for compressed responses: the byte count is only
+ * known after compression, and chunked is what a real CDN sends anyway.
+ */
+function sendFile(req, res, path, type, size) {
+  const wantsGzip = /\bgzip\b/.test(req.headers['accept-encoding'] ?? '');
+  const shouldGzip = wantsGzip && COMPRESSIBLE.has(type);
+
+  const headers = { 'content-type': type, 'accept-ranges': 'bytes', vary: 'accept-encoding' };
+  if (shouldGzip) headers['content-encoding'] = 'gzip';
+  else if (size !== undefined) headers['content-length'] = size;
+
+  res.writeHead(200, headers);
+  const stream = createReadStream(path);
+  if (shouldGzip) stream.pipe(createGzip()).pipe(res);
+  else stream.pipe(res);
 }
 
 const server = createServer(async (req, res) => {
@@ -94,8 +133,7 @@ const server = createServer(async (req, res) => {
     }
     const index = join(target, 'index.html');
     if (await statOrNull(index)) {
-      res.writeHead(200, { 'content-type': TYPES['.html'] });
-      createReadStream(index).pipe(res);
+      sendFile(req, res, index, TYPES['.html']);
       return;
     }
   }
@@ -130,12 +168,7 @@ const server = createServer(async (req, res) => {
       }
     }
 
-    res.writeHead(200, {
-      'content-type': type,
-      'accept-ranges': 'bytes',
-      'content-length': info.size,
-    });
-    createReadStream(target).pipe(res);
+    sendFile(req, res, target, type, info.size);
     return;
   }
 
