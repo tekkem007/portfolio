@@ -88,7 +88,8 @@ async function main() {
 
   // Derived from the built stylesheet link so it tracks Vite's `base` rather
   // than hardcoding the project-site prefix in a second place.
-  const assetBase = (template.match(/href="([^"]*)assets\/index-[^"]*\.css"/) || [, '/'])[1];
+  const cssHref = template.match(/href="([^"]*)assets\/index-[^"]*\.css"/);
+  const assetBase = cssHref ? cssHref[1] : '/';
   const preloads = await fontPreloads(assetBase);
 
   for (const route of routeManifest) {
