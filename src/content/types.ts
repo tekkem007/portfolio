@@ -27,6 +27,21 @@ export type Track = 'technical-art' | 'environment-art';
 /** Which half of the design system a piece of work belongs to. */
 export type Domain = 'worlds' | 'systems';
 
+/**
+ * Which filter an entry answers to in the unified environment/prop gallery.
+ *
+ * Two values, not one per label. The control offers All / Environments / Props,
+ * and a material study of environment surfacing belongs under Environments even
+ * though its own label says something more precise than "Environment".
+ */
+export type WorkGroup = 'environment' | 'prop';
+
+export interface WorkCategory {
+  /** Shown on the card. Describes the work accurately rather than flattening it. */
+  label: string;
+  group: WorkGroup;
+}
+
 /** Was this personal practice, employed work, freelance, or study? */
 export type Ownership = 'personal' | 'professional' | 'freelance' | 'study';
 
@@ -154,6 +169,12 @@ export interface Project {
    * list, so a 2022 study cannot sit beside 2026 work and set the standard.
    */
   archived?: boolean;
+  /**
+   * Category and filter group for the unified gallery. Supplied by
+   * `projectCategories` in `projectEvidence.ts`; absent on projects that are
+   * only shown on the technical track, which has no gallery.
+   */
+  category?: WorkCategory;
   /** Scannable header facts. Required on published projects. */
   spec?: ProjectSpec;
   /** Store-page facts. Present only on work that is published as playable. */

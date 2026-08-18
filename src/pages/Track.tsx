@@ -1,9 +1,11 @@
 import { href, Link } from '../lib/router';
 import { HeroScene } from '../components/HeroScene';
+import { CinematicHero } from '../components/CinematicHero';
+import { WorkGallery } from '../components/WorkGallery';
 import { SeaScene } from '../components/SeaScene';
 import { ProjectCard } from '../components/ProjectCard';
 import { profile, education } from '../content/profile';
-import { archivedForTrack, flagshipsForTrack, supportingForTrack } from '../content/projects';
+import { archivedForTrack, flagshipsForTrack, galleryForTrack, supportingForTrack } from '../content/projects';
 import { roles, leadership } from '../content/experience';
 import { capabilities, familiarity, learning, tools } from '../content/capabilities';
 import { tracks, otherTrack } from '../content/tracks';
@@ -26,6 +28,12 @@ export function Track({ track }: { track: TrackId }) {
   const supporting = supportingForTrack(track);
   const archived = archivedForTrack(track);
 
+  // A track with a `gallery` shows its work as one collection above Experience
+  // instead of a flagship grid plus a supporting grid further down. Only the
+  // environment track does; see the note on `TrackDef.gallery`.
+  const gallery = def.gallery;
+  const galleryItems = gallery ? galleryForTrack(track) : [];
+
   // Capability groups reordered so the ones this reviewer screens on come
   // first. Nothing is hidden — a technical reviewer still sees the art skills,
   // just below the engine ones.
@@ -41,8 +49,13 @@ export function Track({ track }: { track: TrackId }) {
 
   return (
     <>
-      <section className="hero" data-domain={track === 'technical-art' ? 'systems' : 'worlds'} aria-labelledby="hero-title">
-        <HeroScene />
+      <section
+        className="hero"
+        data-domain={track === 'technical-art' ? 'systems' : 'worlds'}
+        data-cinema={gallery ? '' : undefined}
+        aria-labelledby="hero-title"
+      >
+        {gallery ? <CinematicHero id={gallery.hero} caption={gallery.heroCaption} /> : <HeroScene />}
         <div className="shell hero__inner">
           <p className="eyebrow">{def.eyebrow}</p>
           <h1 id="hero-title">{def.headline}</h1>
@@ -86,21 +99,30 @@ export function Track({ track }: { track: TrackId }) {
       </section>
 
       {/* --- Selected work ----------------------------------------------- */}
-      <section className="section" id="work" aria-labelledby="work-title">
-        <div className="shell shell--media">
-          <div className="section-head">
-            <p className="eyebrow">Selected work</p>
-            <h2 id="work-title">{def.workHeading}</h2>
-            <p>{def.workIntro}</p>
-          </div>
+      {gallery ? (
+        <WorkGallery
+          heading={gallery.heading}
+          intro={gallery.intro}
+          items={galleryItems}
+          archived={archived}
+        />
+      ) : (
+        <section className="section" id="work" aria-labelledby="work-title">
+          <div className="shell shell--media">
+            <div className="section-head">
+              <p className="eyebrow">Selected work</p>
+              <h2 id="work-title">{def.workHeading}</h2>
+              <p>{def.workIntro}</p>
+            </div>
 
-          <div className="work-grid">
-            {flagships.map((project) => (
-              <ProjectCard key={project.slug} project={project} flagship />
-            ))}
+            <div className="work-grid">
+              {flagships.map((project) => (
+                <ProjectCard key={project.slug} project={project} flagship />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* --- Experience -------------------------------------------------- */}
       <section className="section section--railed" id="experience" aria-labelledby="experience-title">
@@ -151,7 +173,7 @@ export function Track({ track }: { track: TrackId }) {
       </section>
 
       {/* --- Supporting work --------------------------------------------- */}
-      {(supporting.length > 0 || archived.length > 0) && (
+      {!gallery && (supporting.length > 0 || archived.length > 0) && (
         <section className="section" id="more-work" aria-labelledby="more-work-title">
           <div className="shell shell--media">
             <div className="section-head">

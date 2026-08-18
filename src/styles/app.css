@@ -1,5 +1,8 @@
 @import './tokens.css';
 @import './fonts.css';
+/* Environment-track motion. Every selector inside is scoped to markup that
+   only that track renders, so importing it here cannot reach the other one. */
+@import './cinema.css';
 
 /* ============================================================ base ======= */
 

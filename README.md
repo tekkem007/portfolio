@@ -171,6 +171,24 @@ It now appears in the grid. Give it a `caseStudy` block as well and it automatic
 prerendered page at `/work/<slug>/`, its own metadata, and a sitemap entry — there is no second
 list to update.
 
+Which track it appears on comes from `trackRank` in `src/content/projectEvidence.ts`: a slug absent
+from a track's map is not shown on that track at all, and the number is the order.
+
+If the project is going on the **environment track**, three more maps in the same file control how
+its card reads. All three are optional and the card degrades gracefully without them.
+
+| Map                   | What it does                                                            |
+| --------------------- | ----------------------------------------------------------------------- |
+| `projectCategories`   | The category chip and which filter the card answers to (`environment` or `prop`). Environments get the wide editorial card; props get the tighter product frame. |
+| `projectDetailShots`  | A second, genuine image revealed on hover or focus, plus a label naming what it is. Use a real alternate angle, wireframe, unlit pass or breakdown sheet — never a decorative variant. |
+| `projectSpecs`        | Supplies the `Role` line on the card. Without it the card shows tools and year only. |
+
+### Adding a detail reveal
+
+Check the image before you point at it. The label is a factual claim about what the reviewer is
+looking at, so "Wireframe" has to be a wireframe. Several alt texts in the manifest have drifted
+from their images in the past; open the file in `public/media/` and confirm.
+
 ### Adding a playable release
 
 Work that ships as something you can run — a game or an interactive prototype — uses two extra
@@ -337,8 +355,13 @@ derived from `import.meta.env.BASE_URL` and `SITE_URL`, so nothing else needs to
 - Every image has real, descriptive alt text written per image — not filenames.
 - Body and secondary text measure at least 5:1 contrast against the background (WCAG AA needs 4.5:1).
 - Interactive controls are at least 44px tall.
-- `prefers-reduced-motion: reduce` collapses every transition and animation, and stops the WebGL
-  hero from starting at all.
+- `prefers-reduced-motion: reduce` collapses every transition and animation, stops the WebGL hero
+  from starting at all, and on the environment track removes the drift, the motes and the light
+  sweep outright rather than running them imperceptibly fast.
+- Nothing on the environment track is hover-only: every card state that hover produces is also
+  produced by `:focus-within`, which the card's title link carries.
+- Filtering the environment gallery keeps the filter control fixed in the viewport and never moves
+  focus, so the control you pressed is still under your cursor and still focused afterwards.
 - Route changes move focus to `<main>` and reset scroll.
 
 ## Performance and resilience
@@ -353,6 +376,12 @@ derived from `import.meta.env.BASE_URL` and `SITE_URL`, so nothing else needs to
   explicit dimensions — the page does not shift as they arrive.
 - **Reveals fail open.** Scroll reveals hide content only after confirming GSAP's ticker is actually
   running. If the frame loop is frozen or throttled, or GSAP fails to load, nothing is ever hidden.
+- The environment track does not load Three.js at all: its hero is a real render with CSS depth
+  plates rather than a WebGL scene, which takes 183 kB gzipped off that route and its blocking time
+  to zero. The cinematic layer that replaces it is 0.8 kB gzipped and is imported after first paint.
+- The hero parallax has no animation loop. Scroll events schedule at most one frame each and none
+  are scheduled while the page is still; the drift is a CSS animation that is paused, not
+  restarted, when the hero leaves the viewport or the visitor interacts with it.
 
 ---
 

@@ -1,0 +1,755 @@
+/* ====================================================================== */
+/* Cinematic layer — environment track only                               */
+/* ====================================================================== */
+
+/*
+ * One motion language, not a pile of effects.
+ *
+ * The vocabulary borrowed from animated film is narrow and deliberate: layered
+ * depth that separates as the camera moves, a quiet drift that stops the moment
+ * the viewer takes over, a held beat before a reveal, and a decisive settle at
+ * the end of it. Everything below is built from those four ideas and the two
+ * signature transitions at the bottom of this file.
+ *
+ * What it is not: speed lines, panels, flashes or glitch. If an effect would
+ * read as a genre reference rather than as cinematography, it is not here.
+ *
+ * Scope: every rule is nested under `.hero[data-cinema]`, `.section--gallery`
+ * or a `.sig-*` / `.cinema*` / `.gcard*` / `.gfilter*` / `.gallery-*` class,
+ * none of which exist on the technical track.
+ *
+ * Reduced motion: tokens.css already collapses every animation and transition
+ * globally. The rules here are written so that the collapsed state is the
+ * finished state — nothing depends on an animation running to become visible.
+ */
+
+:root {
+  /* Interaction feedback: fast enough to feel attached to the input. */
+  --cine-quick: 220ms;
+  /* State changes: a card settling, a filter closing a gap. */
+  --cine-base: 420ms;
+  /* Scene changes: entering a section, revealing a title. */
+  --cine-scene: 900ms;
+  /* Ambient: the drift, the motes. Long enough to be noticed only in passing. */
+  --cine-drift: 34s;
+
+  /* Quiet approach, decisive stop. This is the one that carries the style. */
+  --cine-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Symmetrical, for anything that has to feel like a camera rather than a UI. */
+  --cine-ease-cam: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ---------------------------------------------------------------- hero -- */
+
+/*
+ * Poster framing.
+ *
+ * The shared hero sets its headline at the site's full display scale, which
+ * over a photograph turns into four lines of 93px type and pushes the call to
+ * action off the bottom of a 900px screen. Here the type comes down and the
+ * spacing tightens until the whole composition — eyebrow, headline, standfirst,
+ * tool line and both buttons — fits inside one screen at 1440x900, which is
+ * what "the primary call to action is immediately usable" has to mean.
+ *
+ * Scoped to this track. The technical hero is untouched.
+ */
+.hero[data-cinema] {
+  min-height: min(94svh, 58rem);
+  padding-block: clamp(var(--sp-7), 8svh, var(--sp-8)) var(--sp-7);
+  isolation: isolate;
+}
+
+.hero[data-cinema] .hero__inner {
+  gap: var(--sp-4);
+}
+
+.hero[data-cinema] h1 {
+  font-size: clamp(2.3rem, 4.6vw, 4rem);
+  line-height: 1.04;
+  max-width: 19ch;
+  margin-bottom: 0;
+}
+
+.hero[data-cinema] .eyebrow {
+  margin-bottom: var(--sp-2);
+}
+
+.hero[data-cinema] .hero__standfirst {
+  max-width: 54ch;
+}
+
+.cinema {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Each plate is promoted only while the parallax is actually wired up. */
+  contain: paint;
+}
+
+.cinema__plate {
+  position: absolute;
+  inset: -8% 0 -8% 0;
+  will-change: auto;
+}
+
+.cinema.is-live .cinema__plate {
+  will-change: transform;
+}
+
+/*
+ * Background: the artwork itself.
+ *
+ * The image sits on its own element inside the plate so the slow push-in and
+ * the scroll parallax never write to the same transform.
+ */
+.cinema__drift {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.06);
+}
+
+.cinema.is-live .cinema__drift {
+  animation: cinema-push var(--cine-drift) var(--cine-ease-cam) infinite alternate;
+}
+
+/* Interaction and off-screen both park the camera rather than reset it. */
+.cinema.is-held .cinema__drift,
+.cinema.is-offscreen .cinema__drift,
+.cinema.is-offscreen .cinema__motes span {
+  animation-play-state: paused;
+}
+
+@keyframes cinema-push {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1.14) translate3d(-1.2%, -0.8%, 0);
+  }
+}
+
+.cinema__image,
+.cinema__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+ * Midground: haze.
+ *
+ * Warm at the horizon, cool in the depth — the same read a lit environment
+ * gives you, and the reason the plate separation is legible at all.
+ */
+.cinema__plate--mid {
+  background:
+    radial-gradient(75rem 40rem at 72% 34%, rgb(232 169 91 / 20%), transparent 64%),
+    radial-gradient(60rem 44rem at 14% 76%, rgb(185 165 140 / 12%), transparent 66%);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+/* Foreground: dust in the light. Eight motes, no canvas, no frame loop. */
+.cinema__motes {
+  position: absolute;
+  inset: 0;
+}
+
+.cinema__motes span {
+  position: absolute;
+  top: calc(8% + var(--i) * 11%);
+  left: calc(4% + var(--i) * 12%);
+  width: clamp(2px, 0.25vw, 4px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  filter: blur(0.5px);
+}
+
+.cinema.is-live .cinema__motes span {
+  animation: mote calc(var(--cine-drift) * 0.5) linear infinite;
+  animation-delay: calc(var(--i) * -2.6s);
+}
+
+@keyframes mote {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 3rem, 0);
+  }
+  18%,
+  72% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(2.5rem, -7rem, 0);
+  }
+}
+
+/*
+ * Veil.
+ *
+ * The hero copy has to clear WCAG AA over a photograph, and a photograph does
+ * not hold still. Rather than trusting the image, the veil guarantees the
+ * contrast: opaque under the text column, clearing towards the top right where
+ * the composition is worth seeing.
+ */
+.cinema__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, var(--bg) 0%, rgb(17 16 14 / 88%) 34%, rgb(17 16 14 / 58%) 68%, rgb(17 16 14 / 72%) 100%),
+    linear-gradient(180deg, rgb(17 16 14 / 70%) 0%, transparent 26%, transparent 62%, var(--bg) 100%);
+}
+
+/*
+ * On a narrow screen the diagonal runs out of room and buries the artwork
+ * behind the text column. The same contrast guarantee, rotated: dark where the
+ * copy sits, clearing towards the bottom where the shot can be seen.
+ */
+@media (max-width: 52rem) {
+  .cinema__veil {
+    background:
+      linear-gradient(180deg, rgb(17 16 14 / 92%) 0%, rgb(17 16 14 / 86%) 46%, rgb(17 16 14 / 40%) 74%, var(--bg) 100%);
+  }
+}
+
+.cinema__caption {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--sp-4);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+}
+
+@media (max-width: 52rem) {
+  .cinema__caption {
+    position: static;
+    padding: var(--sp-2) var(--gutter) 0;
+    text-align: left;
+  }
+}
+
+/* --- Title reveal ------------------------------------------------------ */
+
+/*
+ * A held beat, then the line resolves behind a moving edge.
+ *
+ * `backwards` fill is what makes this safe: the element's normal state is fully
+ * visible, so if animations never run — reduced motion, an old browser, CSS
+ * that failed to apply — the hero is simply a hero.
+ *
+ * The actions deliberately have no opacity step. The brief for this page is that
+ * the primary call to action is usable from the first frame, and an invisible
+ * button that is nonetheless clickable is worse than no animation at all.
+ */
+.hero[data-cinema] .eyebrow {
+  animation: cine-wipe var(--cine-scene) var(--cine-ease) 120ms backwards;
+}
+
+.hero[data-cinema] h1 {
+  animation: cine-wipe calc(var(--cine-scene) + 200ms) var(--cine-ease) 220ms backwards;
+}
+
+.hero[data-cinema] .hero__standfirst {
+  animation: cine-rise var(--cine-scene) var(--cine-ease) 520ms backwards;
+}
+
+.hero[data-cinema] .hero__meta {
+  animation: cine-rise var(--cine-scene) var(--cine-ease) 640ms backwards;
+}
+
+.hero[data-cinema] .hero__actions {
+  animation: cine-nudge var(--cine-base) var(--cine-ease) 760ms backwards;
+}
+
+@keyframes cine-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes cine-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.75rem, 0);
+  }
+}
+
+@keyframes cine-nudge {
+  from {
+    transform: translate3d(0, 0.5rem, 0);
+  }
+}
+
+/* ------------------------------------------------------------- gallery -- */
+
+.section--gallery {
+  position: relative;
+}
+
+.gfilter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.gfilter__set {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-raise);
+}
+
+.gfilter__btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  color: var(--ink-dim);
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition:
+    color var(--cine-quick) var(--cine-ease),
+    background-color var(--cine-quick) var(--cine-ease);
+}
+
+.gfilter__btn:hover {
+  color: var(--ink);
+}
+
+/* Coarse pointers get a target that is comfortable rather than merely legal. */
+@media (pointer: coarse) {
+  .gfilter__btn {
+    min-height: 44px;
+    padding-inline: 1.1rem;
+  }
+}
+
+.gfilter__btn[aria-pressed='true'] {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.gfilter__count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Grid -------------------------------------------------------------- */
+
+/*
+ * Environments take the full width and read horizontally; props sit three-up in
+ * a tighter frame. The size difference is the hierarchy — it is not a quality
+ * judgement, and the props keep the same facts, the same type and the same
+ * interaction as the environments so they do not read as leftovers.
+ */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(var(--sp-4), 2vw, var(--sp-6));
+}
+
+.gallery-grid__cell {
+  grid-column: span 2;
+}
+
+@media (min-width: 62rem) {
+  .gallery-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .gallery-grid__cell {
+    grid-column: span 6;
+  }
+
+  .gallery-grid__cell[data-group='prop'] {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 36rem) {
+  .gallery-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gallery-grid__cell,
+  .gallery-grid__cell[data-group='prop'] {
+    grid-column: span 1;
+  }
+}
+
+/* --- Card -------------------------------------------------------------- */
+
+.gcard {
+  position: relative;
+  height: 100%;
+  display: grid;
+  gap: var(--sp-4);
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition:
+    border-color var(--cine-base) var(--cine-ease),
+    box-shadow var(--cine-base) var(--cine-ease),
+    transform var(--cine-base) var(--cine-ease);
+}
+
+/*
+ * Depth on interaction, and never on hover alone.
+ *
+ * `:focus-within` carries the whole effect for keyboard users, because the card
+ * title is a link and is therefore the thing that receives focus.
+ */
+.gcard:hover,
+.gcard:focus-within {
+  border-color: var(--line-strong);
+  box-shadow: 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 55%);
+  transform: translate3d(0, -3px, 0);
+}
+
+.gcard:focus-within {
+  border-color: var(--accent);
+}
+
+@media (min-width: 62rem) {
+  .gallery-grid__cell[data-group='environment'] .gcard {
+    grid-template-columns: 1.15fr 1fr;
+    align-items: stretch;
+    gap: 0;
+  }
+}
+
+.gcard__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-sunk);
+  /* Reserved before the image arrives, so nothing shifts. */
+  aspect-ratio: 16 / 9;
+}
+
+.gallery-grid__cell[data-group='prop'] .gcard__media {
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 62rem) {
+  .gallery-grid__cell[data-group='environment'] .gcard__media {
+    aspect-ratio: auto;
+    min-height: 22rem;
+  }
+}
+
+.gcard__media picture,
+.gcard__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gcard__media > picture img {
+  transition: transform 1.2s var(--cine-ease);
+}
+
+.gcard:hover .gcard__media > picture img,
+.gcard:focus-within .gcard__media > picture img {
+  transform: scale(1.03);
+}
+
+/* --- The second image -------------------------------------------------- */
+
+/*
+ * Genuine project media, cross-faded in on interaction: an alternate angle, a
+ * detail, a breakdown sheet, or the same shot under the other lighting preset.
+ * Mounted on first interaction rather than upfront, so it costs nothing until
+ * it is wanted.
+ */
+.gcard__detail {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--cine-scene) var(--cine-ease-cam);
+}
+
+.gcard:hover .gcard__detail,
+.gcard:focus-within .gcard__detail {
+  opacity: 1;
+}
+
+.gcard__detail-label {
+  position: absolute;
+  left: var(--sp-3);
+  bottom: var(--sp-3);
+  z-index: 2;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: rgb(17 16 14 / 78%);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  opacity: 0;
+  transform: translate3d(0, 0.4rem, 0);
+  transition:
+    opacity var(--cine-base) var(--cine-ease),
+    transform var(--cine-base) var(--cine-ease);
+}
+
+.gcard:hover .gcard__detail-label,
+.gcard:focus-within .gcard__detail-label {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Card body --------------------------------------------------------- */
+
+.gcard__body {
+  padding: clamp(var(--sp-4), 2.2vw, var(--sp-6));
+  display: grid;
+  align-content: start;
+  gap: var(--sp-3);
+}
+
+.gcard__category {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.gcard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.gallery-grid__cell[data-group='environment'] .gcard__title {
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+}
+
+.gcard__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole card is the target; the link is what carries the focus ring. */
+.gcard__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.gcard__title a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.gcard__summary {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 46ch;
+}
+
+.gcard__spec {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.gcard__spec > div {
+  display: grid;
+  grid-template-columns: 3.6rem 1fr;
+  gap: var(--sp-3);
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.gcard__spec dt {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 0.15rem;
+}
+
+.gcard__spec dd {
+  margin: 0;
+  color: var(--ink-dim);
+  line-height: 1.45;
+}
+
+.gcard__cta {
+  font-size: 0.85rem;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gcard__cta .btn__arrow {
+  transition: transform var(--cine-base) var(--cine-ease);
+}
+
+.gcard:hover .gcard__cta .btn__arrow,
+.gcard:focus-within .gcard__cta .btn__arrow {
+  transform: translate3d(0.25rem, 0, 0);
+}
+
+/* ================================================== signature transitions */
+
+/*
+ * 1. Light sweep.
+ *
+ * A single warm pass across the image when a card is engaged — the read of a
+ * light source moving past a surface, not a shine or a shimmer. It runs once
+ * per engagement and is interrupted by leaving.
+ */
+.sig-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 38%,
+    rgb(232 169 91 / 22%) 48%,
+    rgb(242 238 231 / 28%) 52%,
+    transparent 62%
+  );
+  transform: translate3d(-60%, 0, 0);
+}
+
+.gcard:hover .sig-sweep,
+.gcard:focus-within .sig-sweep {
+  animation: sweep 1.1s var(--cine-ease-cam) 1;
+}
+
+@keyframes sweep {
+  0% {
+    opacity: 0;
+    transform: translate3d(-60%, 0, 0);
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(60%, 0, 0);
+  }
+}
+
+/*
+ * 2. Composition mask.
+ *
+ * A hairline that draws across the top of the gallery as it arrives, then a
+ * held beat before the section reads as open. This is the "cut to a new scene"
+ * beat: the page stops, one line moves, and the new section begins.
+ *
+ * Purely decorative and purely additive — it draws a rule that would otherwise
+ * not be there, so a browser that ignores it loses nothing.
+ */
+.sig-mask {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sig-mask::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--accent) 40%, var(--accent) 60%, transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  opacity: 0.55;
+}
+
+.sig-mask.is-open::before {
+  animation: mask-open var(--cine-scene) var(--cine-ease) forwards;
+}
+
+@keyframes mask-open {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ------------------------------------------------------- reduced motion -- */
+
+/*
+ * tokens.css already collapses durations globally. These rules go further and
+ * remove the *mechanisms*, so nothing is left mid-transform and the ambient
+ * layers stop existing rather than running imperceptibly fast.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .cinema__drift {
+    animation: none !important;
+    transform: scale(1.02);
+  }
+
+  .cinema__motes {
+    display: none;
+  }
+
+  .sig-sweep {
+    display: none;
+  }
+
+  .sig-mask::before {
+    transform: none;
+    animation: none !important;
+  }
+
+  .gcard:hover,
+  .gcard:focus-within {
+    transform: none;
+  }
+
+  .gcard:hover .gcard__media > picture img,
+  .gcard:focus-within .gcard__media > picture img {
+    transform: none;
+  }
+}

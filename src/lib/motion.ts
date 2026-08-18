@@ -97,3 +97,42 @@ export async function resetMotion(): Promise<void> {
   }
   started = false;
 }
+
+/**
+ * Opens the composition mask on any `[data-scene]` element as it arrives.
+ *
+ * Deliberately separate from `initMotion`: this needs no library, so a slow or
+ * blocked GSAP chunk cannot hold up the one transition that gives the gallery
+ * its entrance. It also runs once per element and then disconnects, so there is
+ * no observer left watching a section that has already been seen.
+ */
+let sceneObserver: IntersectionObserver | null = null;
+
+export function initScenes(): void {
+  if (typeof window === 'undefined') return;
+  if (typeof IntersectionObserver !== 'function') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const scenes = Array.from(document.querySelectorAll<HTMLElement>('[data-scene]'));
+  if (scenes.length === 0) return;
+
+  sceneObserver?.disconnect();
+  sceneObserver = new IntersectionObserver(
+    (entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-open');
+        observer.unobserve(entry.target);
+      }
+    },
+    { rootMargin: '0px 0px -12% 0px' },
+  );
+
+  scenes.forEach((scene) => sceneObserver?.observe(scene));
+}
+
+/** Tears the scene observer down on route change. */
+export function resetScenes(): void {
+  sceneObserver?.disconnect();
+  sceneObserver = null;
+}

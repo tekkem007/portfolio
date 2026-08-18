@@ -8,7 +8,7 @@ import { NotFound } from './pages/NotFound';
 import { useRouter } from './lib/router';
 import { trackForPath, themeForSlug } from './content/tracks';
 import { routeManifest } from './routes';
-import { initMotion, resetMotion } from './lib/motion';
+import { initMotion, initScenes, resetMotion, resetScenes } from './lib/motion';
 import './styles/app.css';
 
 /** Resolves an app path to a page. Routes are prerendered; this only mirrors them. */
@@ -64,12 +64,16 @@ export function App() {
     let cancelled = false;
     // Defer reveals past first paint; they are an enhancement, not layout.
     const id = window.setTimeout(() => {
-      if (!cancelled) void initMotion();
+      if (!cancelled) {
+        initScenes();
+        void initMotion();
+      }
     }, 60);
 
     return () => {
       cancelled = true;
       window.clearTimeout(id);
+      resetScenes();
       void resetMotion();
     };
   }, [path]);

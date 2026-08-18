@@ -1,4 +1,4 @@
-import type { EvidenceItem, ProjectSpec, Track } from './types';
+import type { EvidenceItem, ProjectSpec, Track, WorkCategory } from './types';
 
 /**
  * Project ranking, scannable specs, and the evidence ledger.
@@ -46,19 +46,72 @@ export const trackRank: Record<Track, Record<string, number>> = {
     'maintenance-hangar': 4,
     'lastline-echoes-below': 5,
   },
+  // Environments lead, then the props, strongest first. Time of Day appears on
+  // both tracks and is read differently on each: pipeline evidence there,
+  // environment lighting here. Its card says so.
   'environment-art': {
     'maintenance-hangar': 1,
-    'reactor-access-hatch': 2,
-    'arc-04-fusion-cell': 3,
-    'gilded-relic': 4,
-    'industrial-lpg-cylinder': 5,
-    'travellers-trio': 6,
-    bmo: 7,
-    'layered-material-system': 8,
-    'metal-toy-car': 9,
-    checkmate: 10,
-    'uzui-swords': 11,
+    'time-of-day-system': 2,
+    'layered-material-system': 3,
+    'reactor-access-hatch': 4,
+    'arc-04-fusion-cell': 5,
+    'gilded-relic': 6,
+    'industrial-lpg-cylinder': 7,
+    'travellers-trio': 8,
+    bmo: 9,
+    'metal-toy-car': 10,
+    checkmate: 11,
+    'uzui-swords': 12,
   },
+};
+
+/**
+ * Category label and filter group for the unified "Selected Environment & Prop
+ * Work" gallery on the environment track.
+ *
+ * The label is the honest description of what the piece is; the group is only
+ * which of the two filters it answers to. That is why the LPG cylinder is a
+ * Material Study filed under Props (it is one object, studied for its surface)
+ * while the layered material system is a Material Study filed under
+ * Environments (it surfaces a whole modular kit).
+ *
+ * A slug missing from this map simply renders without a category chip.
+ */
+export const projectCategories: Record<string, WorkCategory> = {
+  'maintenance-hangar': { label: 'Environment / Modular Kit', group: 'environment' },
+  'time-of-day-system': { label: 'Lighting Study', group: 'environment' },
+  'layered-material-system': { label: 'Material Study', group: 'environment' },
+  'reactor-access-hatch': { label: 'Prop', group: 'prop' },
+  'arc-04-fusion-cell': { label: 'Prop', group: 'prop' },
+  'gilded-relic': { label: 'Prop', group: 'prop' },
+  'industrial-lpg-cylinder': { label: 'Material Study', group: 'prop' },
+  "travellers-trio": { label: 'Product Render', group: 'prop' },
+  bmo: { label: 'Prop', group: 'prop' },
+  'metal-toy-car': { label: 'Prop', group: 'prop' },
+  checkmate: { label: 'Prop', group: 'prop' },
+  'uzui-swords': { label: 'Prop', group: 'prop' },
+};
+
+/**
+ * A second, genuine image per gallery entry, revealed on interaction.
+ *
+ * Every one of these already exists in the media manifest and is a real
+ * capture from the project it belongs to: an alternate angle, a detail, a
+ * breakdown sheet, or in Time of Day's case the same shot under the other
+ * lighting preset. Nothing here is a rendered-for-the-website flourish.
+ *
+ * A slug with no entry simply does not get the reveal; the card is otherwise
+ * identical. `label` names what the reviewer is being shown, because a picture
+ * swapping under the cursor with no caption is a puzzle, not evidence.
+ */
+export const projectDetailShots: Record<string, { id: string; label: string }> = {
+  'maintenance-hangar': { id: 'hangar-03', label: 'Unlit' },
+  'time-of-day-system': { id: 'tod-02', label: 'Night preset' },
+  'layered-material-system': { id: 'material-02', label: 'ID mask' },
+  'reactor-access-hatch': { id: 'hatch-02', label: 'Wireframe' },
+  'arc-04-fusion-cell': { id: 'fusion-cell-02', label: 'Wireframe' },
+  'gilded-relic': { id: 'gilded-relic-02', label: 'Texture maps' },
+  "travellers-trio": { id: 'luggage-02', label: 'Studio view' },
 };
 
 /** Lower sorts first. Ordered by hiring value for the stated primary role. */
@@ -171,6 +224,47 @@ export const projectSpecs: Record<string, ProjectSpec> = {
     status: 'Complete',
     responsibilities: ['Modelled to a real-time-friendly poly budget', 'Authored the layered emissive map'],
     assetSources: 'Authored by me.',
+  },
+  'gilded-relic': {
+    role: 'Sole artist — sculpting, materials, lookdev',
+    ownership: 'Personal project',
+    status: 'Complete',
+    responsibilities: [
+      'Sculpted the blade, filigree and gemstone settings in ZBrush',
+      'Authored the tri-metal material definition and refractive gems',
+    ],
+    assetSources: 'Authored by me.',
+  },
+  'industrial-lpg-cylinder': {
+    role: 'Sole artist — modelling, material authoring, rendering',
+    ownership: 'Study',
+    status: 'Complete',
+    responsibilities: [
+      'Modelled the cylinder and valve assembly',
+      'Authored the layered oxidation, grime and stencil wear',
+    ],
+    assetSources: 'Authored by me.',
+  },
+  "travellers-trio": {
+    role: 'Sole artist — modelling, materials, studio lighting',
+    ownership: 'Study',
+    status: 'Complete',
+    responsibilities: [
+      'Modelled the hard-shell luggage set with subdivision surfaces',
+      'Authored the orange-peel polycarbonate finish and the studio lighting',
+    ],
+    assetSources: 'Authored by me.',
+  },
+  bmo: {
+    role: 'Sole artist — modelling, UVs, baking, rendering',
+    ownership: 'Personal project (fan art)',
+    status: 'Complete',
+    responsibilities: [
+      'Built the model to a 7,500-triangle budget',
+      'Baked and rendered in Marmoset Toolbag',
+    ],
+    assetSources:
+      'Character design by Pendleton Ward / Cartoon Network. Model, textures and render by me.',
   },
 };
 

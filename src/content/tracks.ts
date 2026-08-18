@@ -48,6 +48,24 @@ export interface TrackDef {
   /** Heading for the supporting grid. */
   supportingHeading: string;
   supportingIntro: string;
+  /**
+   * Present on a track whose work is shown as one unified gallery instead of a
+   * flagship grid plus a supporting grid.
+   *
+   * The environment track uses it because splitting environments from props
+   * made the props read as leftovers, when in practice they are the same body
+   * of work at a different scale. The technical track keeps the two-grid layout:
+   * there, a case study and a published tool are genuinely different kinds of
+   * evidence and a reviewer reads them differently.
+   */
+  gallery?: {
+    heading: string;
+    intro: string;
+    /** Media id for the hero establishing shot. Must exist in the manifest. */
+    hero: string;
+    /** Short caption naming what the establishing shot actually is. */
+    heroCaption: string;
+  };
   /** Which capability groups lead on this track, by heading. */
   leadCapabilities: string[];
   seo: { title: string; description: string };
@@ -115,9 +133,15 @@ export const tracks: Record<Track, TrackDef> = {
     workHeading: 'Environments and assets',
     workIntro:
       'Modular environment work and the prop practice that feeds it. Every piece here is personal work, modelled and textured by me unless a breakdown states otherwise.',
-    supportingHeading: 'Props and craft studies',
-    supportingIntro:
-      'Hard-surface props, sculpting and weathering studies, and product visualisation — the practice that keeps the environment work sharp. Each card links out to where the piece is published.',
+    supportingHeading: 'Earlier studies',
+    supportingIntro: 'Older practice pieces, kept for completeness.',
+    gallery: {
+      heading: 'Selected Environment & Prop Work',
+      intro:
+        'Environments, the modular kits and materials that build them, and the prop practice that feeds both — in one place, strongest first. Every piece is personal or study work, modelled and textured by me unless the card says otherwise.',
+      hero: 'hangar-01',
+      heroCaption: 'Maintenance Hangar — Unreal Engine 5, work in progress',
+    },
     leadCapabilities: ['Environment art', 'Unreal Engine 5', 'Production & leadership', 'AI-assisted prototyping'],
     seo: {
       title: 'Vishnu Vardhan Tekkem — 3D Environment Artist, Unreal Engine 5',
