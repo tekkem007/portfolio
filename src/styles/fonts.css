@@ -1,13 +1,18 @@
 /**
- * Self-hosted variable fonts.
+ * Self-hosted variable fonts, subsetted to the characters this site uses.
  *
- * Declared by hand rather than importing the @fontsource-variable stylesheets,
- * because those ship every subset (cyrillic, greek, vietnamese) and the site is
- * English-only. Pointing each face at the latin file directly means three
- * requests totalling ~112 kB instead of a dozen.
+ * The files come from @fontsource-variable (all three SIL Open Font License
+ * 1.1) and are cut down by `python scripts/subset-fonts.py`, which reads the
+ * built pages to see what is actually rendered. The results are committed under
+ * src/fonts/ because CI installs npm packages only — re-run that script after
+ * adding copy that introduces a new character, and it will report anything that
+ * has fallen outside the kept set.
  *
- * All three are SIL Open Font License 1.1, vendored through npm and bundled by
- * Vite — nothing is fetched from a third-party CDN at runtime.
+ * No `unicode-range` here on purpose. It exists to split a family across several
+ * files so a browser can skip the ones it does not need; with a single subset
+ * per family it would only risk excluding a glyph the file actually contains.
+ *
+ * Nothing is fetched from a third-party CDN at runtime.
  */
 
 @font-face {
@@ -15,11 +20,7 @@
   font-style: normal;
   font-weight: 300 700;
   font-display: swap;
-  src: url('@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2')
-    format('woff2-variations');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
-    U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
-    U+FFFD;
+  src: url('../fonts/space-grotesk-subset.woff2') format('woff2-variations');
 }
 
 @font-face {
@@ -27,10 +28,7 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2-variations');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
-    U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
-    U+FFFD;
+  src: url('../fonts/inter-subset.woff2') format('woff2-variations');
 }
 
 @font-face {
@@ -38,9 +36,5 @@
   font-style: normal;
   font-weight: 100 800;
   font-display: swap;
-  src: url('@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2')
-    format('woff2-variations');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
-    U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
-    U+FFFD;
+  src: url('../fonts/jetbrains-mono-subset.woff2') format('woff2-variations');
 }

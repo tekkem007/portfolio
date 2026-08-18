@@ -43,7 +43,7 @@ async function fontPreloads(base) {
   } catch {
     return '';
   }
-  const wanted = ['space-grotesk', 'inter-latin'];
+  const wanted = ['space-grotesk-subset', 'inter-subset'];
   return files
     .filter((f) => f.endsWith('.woff2') && wanted.some((w) => f.startsWith(w)))
     .map(
