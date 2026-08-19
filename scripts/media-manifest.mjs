@@ -28,7 +28,7 @@ export const MEDIA = [
     src: 'https://cdna.artstation.com/p/assets/images/images/097/815/906/large/vishnu-vardhan-tekkem-screenshot-2026-04-04-071053.webp',
     w: 1919,
     h: 1032,
-    alt: 'Wide high-angle view of a sci-fi maintenance hangar built from a modular kit, with a central lit maintenance platform, overhead gantries and yellow crane supports.',
+    alt: 'Wide high-angle view of a sci-fi maintenance hangar built from a modular kit, captured in the Unreal Engine viewport, with a central lit maintenance platform, overhead gantries and yellow crane supports.',
   },
   {
     id: 'hangar-02',
@@ -102,7 +102,7 @@ export const MEDIA = [
     src: 'https://cdna.artstation.com/p/assets/images/images/097/815/432/large/vishnu-vardhan-tekkem-ls-01-0033.webp',
     w: 2560,
     h: 1440,
-    alt: 'Stylised environment: a sunlit meadow with a central tree leading to a circular high-security vault door set into a mossy cliff face, lit by warm entryway torches.',
+    alt: 'The cave entrance at night: a circular latticed door set into a rock face, lit only by two warm lamps either side of it, with a tree and grass in cool blue shadow.',
   },
 
 
@@ -141,7 +141,7 @@ export const MEDIA = [
     src: 'https://cdnb.artstation.com/p/assets/images/images/101/678/873/large/vishnu-vardhan-tekkem-04-blend-steps.jpg',
     w: 1600,
     h: 2699,
-    alt: 'Five frames stacked vertically showing the same shot at five points along the night-to-day interpolation.',
+    alt: 'Four frames of the same shot stacked vertically, stepping from the Day preset at the top to the Night preset at the bottom.',
   },
 
   // --- Selected props and studies ---
@@ -150,7 +150,7 @@ export const MEDIA = [
     src: 'https://cdna.artstation.com/p/assets/images/images/097/815/614/large/vishnu-vardhan-tekkem-screenshot-2026-04-04-074345.webp',
     w: 1919,
     h: 1034,
-    alt: 'Sub-Level 04 reactor access hatch: a stylised pill-shaped pressure door in cream and cerulean blue with oversized external hinges and a manual handle.',
+    alt: 'The Sub-Level 04 reactor access hatch open in Adobe Substance 3D Painter, the texture layout on the left and the 3D view on the right: a stylised pill-shaped pressure door in cream and cerulean blue with brass hinges, a manual handle, a circular port and a red caution decal.',
   },
   {
     id: 'hatch-02',
@@ -164,7 +164,7 @@ export const MEDIA = [
     src: 'https://cdnb.artstation.com/p/assets/images/images/097/815/543/large/vishnu-vardhan-tekkem-screenshot-2026-04-04-073850.webp',
     w: 1919,
     h: 1032,
-    alt: 'ARC-04 Fusion Cell: a hexagonal hard-surface power core with cyan emissive cooling rods and red warning indicators.',
+    alt: 'The ARC-04 Fusion Cell open in Adobe Substance 3D Painter, the texture set on the left and the 3D view on the right: a faceted drum-shaped power core in pale grey with white banding, cyan triangular decals and small red indicator marks.',
   },
   {
     id: 'fusion-cell-02',
@@ -178,7 +178,7 @@ export const MEDIA = [
     src: 'https://cdnb.artstation.com/p/assets/images/images/075/881/015/large/vishnu-vardhan-tekkem-marmoedited01.jpg',
     w: 1920,
     h: 1080,
-    alt: 'The Gilded Relic: an ornate short blade with gold filigree hilt, inlaid gemstones and glowing blue runes along the steel edge.',
+    alt: 'The Gilded Relic: an ornate short blade with a gold filigree hilt, a red gem in the pommel and a blue gem at the guard, and blue rune markings along the gilded blade above a polished steel edge.',
   },
   {
     id: 'gilded-relic-02',
@@ -199,7 +199,7 @@ export const MEDIA = [
     src: 'https://cdna.artstation.com/p/assets/images/images/075/122/330/large/vishnu-vardhan-tekkem-snapshot.jpg',
     w: 1920,
     h: 1080,
-    alt: 'Three hard-shell suitcases in matte cerulean blue with semi-gloss black trim, lit with a three-point studio setup.',
+    alt: 'Three hard-shell suitcases in cerulean blue with a ribbed shell and a subtle orange-peel finish, dark grey corner guards, handles and spinner wheels, arranged on a dark studio backdrop.',
   },
   {
     id: 'luggage-02',
@@ -220,21 +220,21 @@ export const MEDIA = [
     src: 'https://cdna.artstation.com/p/assets/images/images/050/890/870/large/vishnu-vardhan-tekkem-car1.jpg',
     w: 1920,
     h: 1080,
-    alt: 'Die-cast metal toy car rendered with worn painted metal and chrome trim.',
+    alt: 'A muscle car in semi-gloss dark olive green with a faint metallic speckle in the paint, black wheels, grille and bumpers, and four plain round headlights, on a grey studio backdrop.',
   },
   {
     id: 'checkmate-01',
     src: 'https://cdnb.artstation.com/p/assets/images/images/050/902/663/large/vishnu-vardhan-tekkem-render-01.jpg',
     w: 1920,
     h: 1080,
-    alt: 'Chessboard with fully modelled pieces rendered in Cycles.',
+    alt: 'A chess set mid-game on a black and cream board, warmly lit at a low angle with a chess clock out of focus behind it.',
   },
   {
     id: 'uzui-01',
     src: 'https://cdnb.artstation.com/p/assets/images/images/051/073/113/large/vishnu-vardhan-tekkem-render01.jpg',
     w: 1920,
     h: 1080,
-    alt: 'Pair of stylised nichirin blades modelled in Blender.',
+    alt: 'Two large curved nichirin cleavers joined by a chain, shown as an untextured clay render on display stands against a plain white backdrop.',
   },
 
   // --- LASTLINE: ECHOES BELOW (itch.io) ---

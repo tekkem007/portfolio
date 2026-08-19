@@ -345,7 +345,7 @@ export const projects: Project[] = [
         { id: 'tod-01', caption: 'Day preset — sun at −52°, exposure bias −4.0, lamps at 0.8× their authored intensity.' },
         { id: 'tod-02', caption: 'Night preset — the same camera and geometry, with only the preset changed.' },
         { id: 'tod-03', caption: 'Every field of the preset struct, Day against Night. The highlighted rows are what actually differs.' },
-        { id: 'tod-04', caption: 'Five points along the night-to-day interpolation.' },
+        { id: 'tod-04', caption: 'Four points along the blend, Day through to Night.' },
       ],
     },
   },

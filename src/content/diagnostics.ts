@@ -56,7 +56,7 @@ export const diagnostics: Record<string, DiagnosticSet> = {
       {
         id: 'tod-04',
         label: 'Blend',
-        note: 'Five frames stacked along the night-to-day interpolation, showing the controller mid-transition.',
+        note: 'Four frames of the same shot stacked, stepping from the Day preset down to the Night preset, with the controller caught mid-blend.',
       },
       {
         id: 'tod-03',

@@ -176,9 +176,9 @@ function DualLightingDiagram() {
     <svg viewBox="0 0 760 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="light-t light-d">
       <title id="light-t">Dual lighting as the eye path</title>
       <desc id="light-d">
-        A wide cinematic frame in which cool ambient mountain shadow is punctured by a warm, high-contrast pool of
-        entryway torchlight at the circular vault door. The eye travels from the sunlit meadow along the rock pathing to
-        that focal point, while the palette desaturates with distance.
+        A wide cinematic frame in which cool ambient shadow is punctured by a warm, high-contrast pool of lamplight at
+        the circular door. The eye travels from the foreground grass along the rock pathing to that focal point, while
+        the palette desaturates with distance.
       </desc>
 
       <defs>
@@ -212,27 +212,27 @@ function DualLightingDiagram() {
       <circle cx="560" cy="130" r="30" fill="none" stroke="var(--worlds)" strokeWidth="1.6" />
       <circle cx="560" cy="130" r="16" fill="none" stroke="var(--worlds)" strokeWidth="1" opacity="0.7" />
       <text x="600" y="126" className={STRONG}>
-        Vault door
+        Circular door
       </text>
       <text x="600" y="145" className={LABEL}>
         focal point
       </text>
 
       <text x="24" y="186" className={STRONG}>
-        Sunlit meadow
+        Foreground grass
       </text>
       <text x="24" y="60" className={LABEL}>
-        Cool ambient — mountain shadow
+        Cool ambient — moonlight on rock
       </text>
       <text x="452" y="60" className={LABEL}>
-        Warm, high contrast — entryway torches
+        Warm, high contrast — door lamps
       </text>
 
       <text x="0" y="248" className={BODY}>
         Foreground palette vibrant → desaturates with distance
       </text>
       <text x="0" y="272" className={BODY}>
-        Rock pathing and the central tree carry the eye from grass to mountain
+        Rock pathing and the central tree carry the eye from the grass to the rock face
       </text>
     </svg>
   );
