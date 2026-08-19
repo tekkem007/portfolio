@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { Project, WorkGroup } from '../content/types';
 import { galleryCounts } from '../content/projects';
 import { GalleryCard } from './GalleryCard';
+import { Picture } from './Picture';
 
 type Filter = 'all' | WorkGroup;
 
@@ -196,6 +197,16 @@ export function WorkGallery({
             <div className="archive__grid">
               {archived.map((project) => (
                 <article className="archive__item" key={project.slug}>
+                  {/* Inside a closed <details>, so nothing here is fetched until
+                      someone opens it — the cheapest possible lazy loading, and
+                      the reason these covers can be shown at all rather than
+                      shipped and never rendered. */}
+                  <div className="archive__media">
+                    <Picture
+                      id={project.cover}
+                      sizes="(min-width: 100rem) 20vw, (min-width: 46rem) 30vw, 92vw"
+                    />
+                  </div>
                   <h3>
                     {project.externalUrl ? (
                       <a href={project.externalUrl} target="_blank" rel="noopener noreferrer">

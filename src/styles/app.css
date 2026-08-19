@@ -1465,6 +1465,30 @@ ul {
   border-radius: var(--radius);
 }
 
+/*
+ * A thumbnail per entry.
+ *
+ * These are 2022 studies, so they are small on purpose — enough to tell one
+ * from another at a glance, not enough to compete with current work three
+ * sections above. The ratio is reserved so opening the disclosure does not
+ * shift the page a second time as the images arrive.
+ */
+.archive__media {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--bg-sunk);
+  margin-bottom: var(--sp-2);
+}
+
+.archive__media picture,
+.archive__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .archive__item h3 {
   font-size: var(--step-0);
 }

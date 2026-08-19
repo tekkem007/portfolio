@@ -475,7 +475,7 @@ export const projects: Project[] = [
   {
     slug: 'metal-toy-car',
     title: 'Metal Toy Car',
-    summary: 'An early hard-surface study in worn painted metal and chrome, modelled in 3ds Max.',
+    summary: 'An early hard-surface study — a toy muscle car in semi-gloss dark green with a faint metallic flake in the paint, modelled in 3ds Max.',
     domain: 'worlds',
     ownership: 'study',
     evidence: 'verified',
