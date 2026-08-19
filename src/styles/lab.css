@@ -165,7 +165,7 @@
 .syspanel__state {
   appearance: none;
   border: 1px solid transparent;
-  border-radius: 2px;
+  border-radius: var(--button-radius);
   padding: 0.35rem 0.75rem;
   min-height: 34px;
   font-family: var(--font-mono);
@@ -759,14 +759,15 @@
   gap: 2px;
   padding: 3px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--button-radius);
   background: var(--bg-sunk);
 }
 
 .diag__tab {
   appearance: none;
   border: 0;
-  border-radius: 2px;
+  /* Concentric with the tablist: its radius less the 3px of padding between. */
+  border-radius: calc(var(--button-radius) - 3px);
   padding: 0.45rem 0.8rem;
   min-height: 34px;
   flex: 1 1 auto;

@@ -1,27 +1,29 @@
-import { useState } from 'react';
 import { Link, href } from '../lib/router';
 import { profile } from '../content/profile';
 import { trackList } from '../content/tracks';
 import { flagshipsForTrack } from '../content/projects';
-import type { Track } from '../content/types';
 
 /**
  * The split entry.
  *
  * Two full-height halves, each carrying its own palette, so the choice is made
- * by looking rather than by reading. Hover, focus or touch previews an identity;
- * the whole half is one link, so the target is enormous on every input device
- * and reachable in a single Tab from the skip link.
+ * by looking rather than by reading. The whole half is one link, so the target
+ * is enormous on every input device and reachable in a single Tab from the skip
+ * link.
+ *
+ * Engaging one identity saturates it and lets the other recede, and that is
+ * done entirely in CSS — see `.split__halves:hover` and `:focus-within` in
+ * app.css. It used to be React state driven by pointer callbacks, which meant a
+ * re-render on every hover and a stuck half whenever a pointerleave went
+ * missing. Hover state is something the browser already tracks correctly.
  *
  * Deliberately: neither side is preselected, neither is visually secondary, and
- * the preview only changes emphasis — both halves stay legible at all times, so
- * a keyboard user tabbing through never loses the side they are not on.
+ * engaging one only changes emphasis — both halves stay legible in every state,
+ * so a keyboard user tabbing through never loses the side they are not on.
  */
 export function Landing() {
-  const [preview, setPreview] = useState<Track | null>(null);
-
   return (
-    <section className="split" data-preview={preview ?? 'none'} aria-labelledby="landing-title">
+    <section className="split" aria-labelledby="landing-title">
       {/* The introduction sits above the seam. It is not inside either half, so
           it never reads as belonging to one identity more than the other. */}
       <div className="split__intro">
@@ -35,15 +37,7 @@ export function Landing() {
       <ul className="split__halves">
         {trackList.map((track) => (
           <li key={track.id} data-theme={track.theme}>
-            <Link
-              className="half"
-              to={track.path}
-              onMouseEnter={() => setPreview(track.id)}
-              onMouseLeave={() => setPreview(null)}
-              onFocus={() => setPreview(track.id)}
-              onBlur={() => setPreview(null)}
-              onTouchStart={() => setPreview(track.id)}
-            >
+            <Link className="half" to={track.path}>
               <span className="half__banner">{track.banner}</span>
               <span className="half__role">{track.roleLine}</span>
               <span className="half__tagline">{track.tagline}</span>

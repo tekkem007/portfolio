@@ -75,10 +75,18 @@ ul {
   list-style: none;
 }
 
+/*
+ * The focus ring, and only the ring.
+ *
+ * This rule used to also set border-radius: 2px, which meant focusing any
+ * control quietly reshaped it — a 6px button became a 2px one for as long as it
+ * was focused, and the ring around it changed with it. An outline already
+ * follows its element's own border-radius, so the rounding here was never
+ * needed and was actively overriding every control on the site.
+ */
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
 /* Focus rings only where they help; never suppressed for keyboard users. */
@@ -174,7 +182,7 @@ ul {
   background: var(--bg-raise-2);
   color: var(--ink);
   border: 1px solid var(--accent);
-  border-radius: var(--radius);
+  border-radius: var(--button-radius);
   transform: translateY(-160%);
   transition: transform 0.18s var(--ease);
 }
@@ -405,7 +413,7 @@ ul {
   gap: var(--sp-3);
   padding: 0.7rem 1.15rem;
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
+  border-radius: var(--button-radius);
   background: transparent;
   color: var(--ink);
   font: inherit;
@@ -2195,7 +2203,7 @@ ul {
   gap: 1px;
   padding: var(--sp-2) var(--sp-3);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--button-radius);
   text-decoration: none;
   line-height: 1.15;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -2252,6 +2260,11 @@ ul {
    the layout is a grid rather than stacked sections: both identities are on
    screen at once and neither can be scrolled past to reach the other. */
 .split {
+  /* One duration and one curve for every part of the emphasis, so the halves,
+     the type and the column widths all resolve together. */
+  --split-dur: 320ms;
+  --split-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
   position: relative;
   min-height: 100svh;
   display: grid;
@@ -2263,7 +2276,7 @@ ul {
 .split__halves {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  transition: grid-template-columns 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: grid-template-columns 0.45s var(--split-ease);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -2276,6 +2289,15 @@ ul {
   background: var(--bg);
   /* Each half is its own theming scope, so the tokens inside resolve to that
      identity without any JavaScript. */
+
+  /*
+   * Balanced default. Both sides sit slightly under full saturation and
+   * slightly under full type size, so neither is preselected and both have
+   * somewhere to go when one is engaged.
+   */
+  --half-sat: 0.82;
+  --half-bright: 1;
+  --half-type: 0.9;
 }
 
 .half {
@@ -2292,7 +2314,21 @@ ul {
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  transition: background 0.4s ease;
+
+  /*
+   * The whole half is one interactive region: background, motif, type and the
+   * enter line all shift together, because they are one choice.
+   *
+   * A filter rather than an overlay, so nothing has to be layered above the
+   * text and nothing can end up covering a link. Text size is a real font-size
+   * change rather than a transform, which keeps it crisp at every step; the
+   * half is bottom-aligned inside `overflow: hidden`, so it grows upward into
+   * space it already owns instead of pushing the page around.
+   */
+  filter: saturate(var(--half-sat)) brightness(var(--half-bright));
+  transition:
+    filter var(--split-dur) var(--split-ease),
+    background 0.4s ease;
 }
 
 /* A quiet structural motif per identity: a measured grid for the system side,
@@ -2326,7 +2362,8 @@ ul {
 
 .half__banner {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5.2vw, 4.2rem);
+  font-size: calc(clamp(2rem, 5.2vw, 4.2rem) * var(--half-type));
+  transition: font-size var(--split-dur) var(--split-ease);
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.03em;
@@ -2336,7 +2373,8 @@ ul {
 
 .half__role {
   font-family: var(--font-mono);
-  font-size: var(--step--1);
+  font-size: calc(var(--step--1) * var(--half-type));
+  transition: font-size var(--split-dur) var(--split-ease);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-dim);
@@ -2345,7 +2383,8 @@ ul {
 .half__tagline {
   max-width: 34ch;
   color: var(--ink-dim);
-  font-size: var(--step-0);
+  font-size: calc(var(--step-0) * var(--half-type));
+  transition: font-size var(--split-dur) var(--split-ease);
 }
 
 .half__bullets {
@@ -2354,7 +2393,8 @@ ul {
   gap: var(--sp-2) var(--sp-4);
   margin-top: var(--sp-2);
   color: var(--ink-faint);
-  font-size: var(--step--1);
+  font-size: calc(var(--step--1) * var(--half-type));
+  transition: font-size var(--split-dur) var(--split-ease);
 }
 
 .half__bullets > span::before {
@@ -2370,7 +2410,8 @@ ul {
   padding-top: var(--sp-4);
   border-top: 1px solid var(--line);
   font-family: var(--font-mono);
-  font-size: var(--step--1);
+  font-size: calc(var(--step--1) * var(--half-type));
+  transition: font-size var(--split-dur) var(--split-ease);
   color: var(--ink-faint);
 }
 
@@ -2384,25 +2425,102 @@ ul {
   transform: translateX(5px);
 }
 
-/* Previewing one identity lifts it and lets the other recede — but only to 88%
-   opacity, never to hidden. A keyboard user tabbing between the two must be
-   able to read the one they are not on. */
+/*
+ * Engaging one identity.
+ *
+ * Entirely CSS. There is no pointer tracking and no state in React, which means
+ * no re-render per hover, nothing to get stuck if a pointerleave is missed, and
+ * the pointer leaving the split resolves itself.
+ *
+ * Pointer emphasis is gated behind a real hover capability. On touch, tapping
+ * would otherwise latch :hover and leave one half greyed out until you tapped
+ * elsewhere — so touch gets both halves at the balanced default and one tap
+ * navigates, with no arm-then-activate step.
+ *
+ * Focus is not gated: a keyboard is a keyboard whatever the screen is.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .split__halves:hover > li:hover {
+    --half-sat: 1.1;
+    --half-type: 1;
+  }
+
+  .split__halves:hover > li:not(:hover) {
+    --half-sat: 0.3;
+    --half-bright: 0.92;
+    --half-type: 0.8;
+  }
+}
+
+.split__halves:focus-within > li:focus-within {
+  --half-sat: 1.1;
+  --half-type: 1;
+}
+
+.split__halves:focus-within > li:not(:focus-within) {
+  --half-sat: 0.3;
+  --half-bright: 0.92;
+  --half-type: 0.8;
+}
+
 @media (min-width: 48rem) {
   .half__bullets {
     display: flex;
   }
 
-  .split[data-preview='technical-art'] .split__halves {
+  /*
+   * The engaged half also takes a little more width. `:has()` is what lets the
+   * grid react to which child is engaged; where it is unsupported the columns
+   * simply stay even and every other part of the effect still runs.
+   */
+  .split__halves:has(> li:first-child:hover),
+  .split__halves:has(> li:first-child:focus-within) {
     grid-template-columns: 1.14fr 1fr;
   }
 
-  .split[data-preview='environment-art'] .split__halves {
+  .split__halves:has(> li:last-child:hover),
+  .split__halves:has(> li:last-child:focus-within) {
     grid-template-columns: 1fr 1.14fr;
   }
+}
 
-  .split[data-preview='technical-art'] .split__halves > li:last-child .half,
-  .split[data-preview='environment-art'] .split__halves > li:first-child .half {
-    opacity: 0.88;
+/*
+ * Opposing alignment.
+ *
+ * The system side reads from the left edge, the world side from the right, so
+ * the two lean away from each other and leave the centre open — which is where
+ * the seam and the shared identity line already are. Mirrored, not duplicated:
+ * the alignment flips, the padding and rhythm do not.
+ */
+.split__halves > li:first-child .half {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.split__halves > li:last-child .half {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.split__halves > li:last-child .half__bullets {
+  justify-content: flex-end;
+}
+
+/*
+ * Narrow screens keep the mirrored headline and enter line, because that is
+ * what carries the idea, but a right-aligned paragraph on a phone is genuinely
+ * harder to scan — so the longer text reverts to the ragged-right setting
+ * everything else on the site uses.
+ */
+@media (max-width: 47.999rem) {
+  .split__halves > li:last-child .half__tagline,
+  .split__halves > li:last-child .half__bullets {
+    align-self: stretch;
+    text-align: left;
+  }
+
+  .split__halves > li:last-child .half__bullets {
+    justify-content: flex-start;
   }
 }
 
