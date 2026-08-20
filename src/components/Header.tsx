@@ -93,7 +93,7 @@ export function Header() {
     <header className="site-header" data-scrolled={scrolled}>
       <div className="shell site-header__inner">
         <Link to="/" className="wordmark" aria-label={`${profile.name} — choose a portfolio`}>
-          <b>Vishnu Vardhan Tekkem</b>
+          <b>{profile.name}</b>
           <span>{active ? tracks[active].label : profile.shortRole}</span>
         </Link>
 

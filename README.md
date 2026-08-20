@@ -150,15 +150,52 @@ diagram, list the claims it makes and check each against the source text first.
 
 ## Editing content
 
-All copy lives in `src/content/`. Nothing is hard-coded in components.
+Everything that says something about Vishnu or the work — names, headlines,
+project copy, measurements, dates — lives in `src/content/`. Section headings and a
+few structural labels live in the component that renders them, because they
+describe the page rather than the person. The tables below say which is which.
 
-| File               | Holds                                                              |
-| ------------------ | ------------------------------------------------------------------ |
-| `profile.ts`       | Name, role, hero copy, About paragraphs, email, social links, SEO   |
-| `projects.ts`      | Every project card and the three full case studies                  |
-| `experience.ts`    | Work history and the leadership section                             |
-| `capabilities.ts`  | Skills groups, the "also familiar with" note, and tools             |
-| `types.ts`         | The content model, with the rules each field is bound by            |
+After any edit: `npm run build`, check it, commit, push. GitHub Actions deploys.
+
+### The content files
+
+| File                 | Holds                                                                     |
+| -------------------- | ------------------------------------------------------------------------- |
+| `profile.ts`         | Name, short role, About paragraphs, availability, email, links, résumé, education |
+| `tracks.ts`          | Everything that differs between the two portfolios: banners, hero headline and standfirst, tool chips, the "What this covers" bullets, both work-section headings and intros, and the per-page SEO title and description |
+| `projects.ts`        | Every project: title, summary, year, software, tags, and the full case studies including their gallery captions |
+| `systemBriefs.ts`    | The Problem / Constraints / System / Result text on the technical cards    |
+| `diagnostics.ts`     | The Diagnostic View tab labels and the caption under each one              |
+| `projectEvidence.ts` | Measurements, the role line, the category chip, the detail-reveal label, and which projects appear on which track and in what order |
+| `experience.ts`      | Work history and the Experience section prose                             |
+| `capabilities.ts`    | Skills groups, the familiarity and learning notes, and the tools list      |
+| `types.ts`           | The content model, with the rule each field is bound by                    |
+
+Image alt text is not here: it lives in `scripts/media-manifest.mjs`, and the
+committed copy the site reads is `src/content/media.generated.json`. Edit both,
+or re-run `npm run media`. Check the picture before you describe it — see
+[Adding a detail reveal](#adding-a-detail-reveal).
+
+### Text that lives in components
+
+These are headings and field labels, not content. Each appears once.
+
+| Text                                                   | File                          |
+| ------------------------------------------------------ | ----------------------------- |
+| The two lines under the name on the entry page          | `pages/Landing.tsx`           |
+| `What this covers`, `Experience`, `What I actually do`, `About`, `Based in`, `Contact`, `Let's talk about the work`, and the Tools section heading | `pages/Track.tsx` |
+| `Selected work` above each work section                 | `SystemGallery.tsx`, `WorkGallery.tsx` |
+| `All` / `Environments` / `Props`                        | `WorkGallery.tsx`             |
+| `Problem` / `Constraints` / `System` / `Result`, `Measured`, `What it taught` | `SystemCard.tsx` |
+| `Role` / `Tools` / `Year` on the environment cards       | `GalleryCard.tsx`             |
+| `My role` / `Ownership` / `Status` / `What I did` / `Assets:` | `ProjectFacts.tsx`      |
+| `Year` / `Role` / `Software` / `Focus` / `Contents` in the case-study rail | `CaseStudyRail.tsx` |
+| `Gallery` / `The work` / `Next` / `More breakdowns`      | `pages/CaseStudy.tsx`         |
+| Diagram titles and their descriptions                    | `components/Diagrams.tsx`     |
+| The 404 message                                          | `pages/NotFound.tsx`          |
+
+The header wordmark and the footer read `profile.ts`, so changing the name there
+changes it everywhere.
 
 ### Adding a project
 
