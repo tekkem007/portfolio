@@ -204,9 +204,10 @@
 .syspanel__stage {
   position: relative;
   background: var(--bg-sunk);
-  /* The source frames are 1200x481. Reserving their real ratio means the panel
-     shows the whole composition and nothing shifts as it loads. */
-  aspect-ratio: 1200 / 481;
+  /* Reserving the frames' real ratio means the panel shows the whole
+     composition rather than cropping it, and nothing shifts as it loads.
+     Keep this in step with tod-01 and tod-02 in the media manifest. */
+  aspect-ratio: 1920 / 807;
   overflow: hidden;
 }
 
